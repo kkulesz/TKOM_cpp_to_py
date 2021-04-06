@@ -180,6 +180,10 @@ a = 3; // Error! ------ Variable is undefined!
 
 Analiza od lewej do prawej.  Rekursja lewostronnie zstępująca.
 
+#### Analizator semantyczny
+
+Sprawdzanie czy struktury mają sens w kontekście języka.
+
 #### Struktury danych
 
 - bufor tymczasowy
@@ -191,16 +195,20 @@ Analiza od lewej do prawej.  Rekursja lewostronnie zstępująca.
 
 ```
 ... do dokonczenia...
-function		= 
-type 			= "int" | "bool" | "float" | "string"
-boolean_operator= "&&" | "||"
+for_statment		= "for" "(" <variable_declaration> ";" <condition> ";" <instruction> ")" ...
+if_statment			= "if" "(" <condition> ")" <instruction>|( "{"<instruction_block>"}")
+variable_declaration= <type> <variable_name> ["=" ...]
+function_declaration= <type> <variable_name> "(" [<type><variable_name>][{","<type> <variable_name}]")" "{" <instruction_block> "}"
+type 				= "int" | "bool" | "float" | "string"
+aritmetic_opeator	= "+" | "/" | "-" | "*"
+boolean_operator	= "&&" | "||"
 comparison_operator = "!=" | "==" | ">" | "<" | ">=" | "<=" 
-variable_name	= <start_of_var> , [char]
-start_of_var 	= <alphabet_char> | "_"
-char 			= <digit> | <alphabet_char>
-alphabet_char 	= [a-z] | [A-Z]
-digit			= "0"|<non_zero_digit>
-non_zero_digit 	= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+variable_name		= <start_of_var> , [char]
+start_of_var 		= <alphabet_char> | "_"
+char 				= <digit> | <alphabet_char>
+alphabet_char 		= [a-z] | [A-Z]
+digit				= "0"|<non_zero_digit>
+non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 ```
 
@@ -208,7 +216,7 @@ non_zero_digit 	= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 #### Dodatkowe
 
-Nie można pozwolić żeby nazwy funkcji/zmiennych "nadpisywały" słowa kluczowe któregokolwiek z języków.
+Nie można pozwolić żeby nazwy funkcji/zmiennych "nadpisywały" słowa kluczowe któregokolwiek z języków/języka docelowego
 
 ``` 
 cpp_keywords = if, else, while, for, class, int, long, double, true, false, ...
