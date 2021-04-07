@@ -51,7 +51,7 @@ Dodatkowo, na standardowe wyjście wypisywane będą komunikaty o błędach oraz
 
 Do każdego modułu zostaną napisane odpowiednie testy jednostkowe(np. czy lekser odpowiednio rozpoznaje tokeny).
 
-Zostanie także przetestowana komunikacja pomiedzy modułami sąsiadującymi.
+Zostanie przetestowana komunikacja pomiedzy modułami sąsiadującymi.
 
 Zostaną także napisane testy funkcjonalne całego translatora.
 
@@ -184,11 +184,11 @@ a = 3; // Error! Line: 11, column 1; Variable is undefined!
 
 #### Lekser
 
-Ślezdenie linii i kolumny, rozpoznawanie tokenów i przekazywanie ich do parsera. Pomijanie nadmiarowych białych znaków.
+Śledzenie linii i kolumny, rozpoznawanie tokenów i przekazywanie ich do parsera. Pomijanie nadmiarowych białych znaków.
 
 #### Parser
 
-Tworzenie drzewa składniowego. Analiza od lewej do prawej.  Rekursja lewostronnie zstępująca. Walidacja składni. Zapisywanie odpowiednich tokenów do talbicy symboli.
+Tworzenie drzewa składniowego. Analiza od lewej do prawej.  Rekursja lewostronnie zstępująca. Walidacja składni. Zapisywanie odpowiednich tokenów do tablicy symboli.
 
 #### Analizator semantyczny
 
@@ -232,7 +232,7 @@ comparision			= <comparison_operand> <comparison_operator> <comparison_operand>
 comparison_operand	= <variable_name> | <literal>
 
 variable_declaration= <type> <variable_assignment>
-function_declaration= <type> <variable_name> "(" [<type><variable_name>][{","<type> <variable_name}] ")"<scope>
+function_declaration= <type> <variable_name> "(" [<type><variable_name>][{","<type> <variable_name}] ")"<function_scope>
 variable_assignment	= <variable_name> "=" <right_value> <end_of_ins>
 
 type 				= "int" | "bool" | "float" | "string"
