@@ -33,13 +33,9 @@ Konrad Kulesza 300247
   - while
 - funkcje
 
-#### Założenia
-
-wejście: kompilowalny jeden plik .cpp
-
 ### We/wy
 
-Program będzie wywoływany z argumentem wejściowym z nazwą pliku do przetłumaczenia, np:`./translator nazwa_pliku.cpp`
+Program będzie wywoływany z argumentem wejściowym z nazwą jednego pliku do przetłumaczenia, np:`./translator nazwa_pliku.cpp`
 
 W tym samym folderze zostanie utworzony przetłumaczony plik źródłowy w języku python `nazwa_pliku.py`
 
@@ -55,7 +51,7 @@ Zostanie przetestowana komunikacja pomiedzy modułami sąsiadującymi.
 
 Zostaną także napisane testy funkcjonalne całego translatora.
 
-Dodatkowo, pojawią się też testy polegające na porównaniu wyników kodu wejściowego i wyjściowego.
+Dodatkowo, pojawią się też testy polegające na porównaniu wyników skompilowanego kodu wejściowego i zinterpretowanego kodu wyjściowego.
 
 #### Przykładowe konstrukcje / testy funkcjonalne
 
@@ -150,30 +146,31 @@ Komunikat błędu(ostrzeżenia) będzie posiadał:
 - rodzaj błędu
 - miejsce wystąpienia błędu; linijka, kolumna
 - opis błędu( np. na którym etapie )
+- na jakim etapie przetwarzania wystąpił błąd
 
 
 
 ##### Przykładowe błędy:
 
 ```
-for( i a b ); // Error! Line: 6, column: 1; Syntax error: for_statment
+for( i a b ); // Error! Line: 6, column: 1; Syntax error: for_statment ; parser
 ```
 
 ```
-else if{} // Error! Line: 11, column 1; Syntax error: if_else_statment
+else if{} // Error! Line: 11, column 1; Syntax error: if_else_statment ; parser
 ```
 
 ```
-class = 5; // Error! Line: 11, column 1; Keyword violation
+class = 5; // Error! Line: 11, column 1; Keyword violation ; parser
 ```
 
 ```
-0abc = 2; // Error! Line: 11, column 1; Variable name error
+0abc = 2; // Error! Line: 11, column 1; Variable name error ; parser/analizator_semantyczny
 ```
 
 ```
 // int a=1;
-a = 3; // Error! Line: 11, column 1; Variable is undefined!
+a = 3; // Error! Line: 11, column 1; Variable is undefined! ; analizator_semantyczny
 ```
 
 
@@ -207,7 +204,7 @@ statment			= <if_statment> | <for_statment> | <while_statement>
 
 print_with_nl		= <start_print> "std::endl" <end_of_ins>
 print_without_nl	= <start_print> <enf_of_ins>
-start_print			= "std::cout<<" ( <variable_name> | <literal> | <condition> )
+start_print			= "std::cout<<" (<variable_name> | <literal> | <condition>)
 while_statement		= "while" "(" <complex_condition> ")" <scope>
 for_statment		= "for" "(" <variable_declaration> ";" <complex_condition> ";" <instruction> ")" <scope>
 if_statment			= "if" "(" <complex_condition> ")" <scope> [ "else" <scope>]
@@ -286,6 +283,8 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 
 
+
+
 - wstępny algorytm generowania kodu
 
 1. pobieraj znaki aż do rozpoznania tokenu
@@ -296,17 +295,16 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
    - jeżeli przypisane - czy zmienna jest w dostępna w danym bloku?
 3. sprawdź poprawność
    - czy typy zmiennych się zgadzają?
-4. przetłumacz struktury języka c++ na odpowiadające im struktury w języku Python
+4. przetłumacz strukture języka c++ na odpowiadającą mu strukture w języku Python
+   - zachowaj odpowiednią "tabulacje" bloków instrukcji
 
 
 
 #### Dodatkowe
 
-Nie można pozwolić żeby nazwy funkcji/zmiennych "nadpisywały" słowa kluczowe któregokolwiek z języków
+1. Nie można pozwolić żeby nazwy funkcji/zmiennych "nadpisywały" słowa kluczowe któregokolwiek z języków
 
 ``` 
 cpp_keywords = if, else, while, for, class, int, long, double, true, false, ...
 python_keywords = if, elif, else, while, for, in, range, class, def, True, False, ...
 ```
-
-  
