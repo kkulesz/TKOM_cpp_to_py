@@ -17,7 +17,8 @@ Konrad Kulesza 300247
 ### Założenia
 
 - wyrażenia `#include <...>` będą ignorowane. W języku wejściowym powinno być wykorzysytwane tylko `<stdio>` ze względu na `std::cout, std::endl`
-- wyrażenia `using namespace...` będą pomijane
+- wyrażenia `using namespace...` będą pomijane. Akceptowane są tylko jawne przestrzenie nazw
+  - np. translator nie rozpozna samego `cout<<`, musi być jawnie napisane `std::cout<<`
 - jeden plik na wejściu. Poprawny składniowo(możliwy do skompilowania za pomocą `g++`)
 - jeden plik na wyjściu
 - brak możliwości nadpisania słów kluczowych zarówno jezyka wejściowego jak i wyjściowego
@@ -263,7 +264,7 @@ bool_literal		= "true" | "false"
 float_literal		= {digit} "." {digit}
 integer_literal		= <non_zero_digit> {digit}
 
-char_string			= (<digit> | <special_char> | <alphabet_char> | <char> | <end_of_ins>) {char_string}
+char_string			= (<special_char>| <char> | <end_of_ins>) {char_string}
 
 aritmetic_opeator	= "+" | "/" | "-" | "*"
 boolean_operator	= "&&" | "||"
