@@ -14,6 +14,14 @@ Konrad Kulesza 300247
 
 ## Dokumentacja wstępna
 
+### Założenia
+
+- wyrażenia `#include <...>` będą ignorowane. W języku wejściowym powinno być wykorzysytwane tylko `<stdio>` ze względu na `std::cout, std::endl`
+- wyrażenia `using namespace...` będą pomijane
+- jeden plik na wejściu. Poprawny składniowo(możliwy do skompilowania za pomocą `g++`)
+- jeden plik na wyjściu
+- brak możliwości nadpisania słów kluczowych zarówno jezyka wejściowego jak i wyjściowego
+
 ### Podzbiór języka C++
 
 - komentarze
@@ -32,6 +40,8 @@ Konrad Kulesza 300247
   - for
   - while
 - funkcje
+
+  
 
 ### We/wy
 
@@ -53,9 +63,12 @@ Zostaną także napisane testy funkcjonalne całego translatora.
 
 Dodatkowo, pojawią się też testy polegające na porównaniu wyników skompilowanego kodu wejściowego i zinterpretowanego kodu wyjściowego.
 
-#### Przykładowe konstrukcje / testy funkcjonalne
+#### Testy funkcjonalne
+
+Poniższe testy przedstawiają dodatkowo w jaki sposób bedą tłumaczone niektóre z konstruckji języka C++ do języka Python
 
 ```
+## 1.0.variable_assignemt 
 int a = 5;
 int b = 10;
 double c = 100.00;
@@ -68,6 +81,7 @@ result = (a+b)*c/20
 ```
 
 ```
+## 2.0.if_else_statment
 bool cond = true;
 int a = 15;
 if(a<15){
@@ -85,6 +99,7 @@ elif cond:
 ```
 
 ```
+## 3.0.for_statment
 for(int i=0; i<10; i=i+1){
 	std::cout<<i<<std::endl;
 }
@@ -94,36 +109,44 @@ for i in range(0, 10):
 ```
 
 ```while()
-int main(){
-	int i=0;
-	while( i<10 ){
-		++i;
-	}
+## 4.0.while_statment_test
+int i=0;
+while( i<10 ){
+	++i;
 }
 -----
-def main():
-	i=0
-	while i<20:
-		++i
+i=0
+while i<20:
+	++i
 ```
 
 ```
+## 5.0.function_declaration
 void fun(int a){
 	a = a + 2;
-	/*
-	komentarz wielolinijkowy
-	*/
 	std::cout<<a;
-	
+	return a;
 }
 -----
-def fun(a: int){
+def fun(a: int):
 	a=a+2
-	'''
-	komentarz wielolinijkowy
-	'''
 	print(a)
-}
+	return a
+```
+
+```
+## 6.0.multiline_comment
+/*
+essa
+komentarz
+	uga buga
+*/
+-----
+'''
+essa
+komentarz
+	uga buga
+'''
 ```
 
 
@@ -173,10 +196,6 @@ class = 5; // Error! Line: 11, column 1; Keyword violation ; parser
 a = 3; // Error! Line: 11, column 1; Variable is undefined! ; analizator_semantyczny
 ```
 
-
-
-
-
 ### Opis realizacji modułów
 
 #### Lekser
@@ -202,8 +221,8 @@ single_line_comment	= "//" <string_char> <end_of_line>
 print				= <print_without_nl> | <print_with_nl>
 statment			= <if_statment> | <for_statment> | <while_statement>
 
-print_with_nl		= <start_print> "std::endl" <end_of_ins>
-print_without_nl	= <start_print> <enf_of_ins>
+print_with_nl		= <start_print> "std::endl"
+print_without_nl	= <start_print> 
 start_print			= "std::cout<<" (<variable_name> | <literal> | <condition>)
 while_statement		= "while" "(" <complex_condition> ")" <scope>
 for_statment		= "for" "(" <variable_declaration> ";" <complex_condition> ";" <instruction> ")" <scope>
@@ -220,8 +239,8 @@ function_scope		= <start_of_scope> [<return> [<right_value>] <end_of_ins>] "}"
 scope				= <start_of_scope>  "}"
 start_of_scope		= "{" <instruction_block>
 
-instruction_block	= single_instruction {instruction_block}
-single_instruction	= <variable_declaration> | <variable_assignment> | <statment> | <print>
+instruction_block	= <single_instruction>  {instruction_block}
+single_instruction	= (<variable_declaration> | <variable_assignment> | <statment> | <print>) <end_of_ins>
 
 complex_condition	= <single_condition> | <complex_condition> [ <boolean_operator> <complex_condition>]
 single_condition	= <literal> | <comparision>
@@ -230,7 +249,7 @@ comparison_operand	= <variable_name> | <literal>
 
 variable_declaration= <type> <variable_assignment>
 function_declaration= <type> <variable_name> "(" [<type><variable_name>][{","<type> <variable_name}] ")"<function_scope>
-variable_assignment	= <variable_name> "=" <right_value> <end_of_ins>
+variable_assignment	= <variable_name> "=" <right_value>
 
 type 				= "int" | "bool" | "float" | "string"
 
@@ -265,27 +284,31 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 #### Wstępny-hasłowy pomysł na implementację
 
-- Klasy/struktury danych
-  - Token
-  - Statment
+- ###### Klasy/struktury danych
+  
+  - Token - klasa bazowa tokenów.
+  - Statment - klasa bazowa wyrażeń złożonych. Rodzaje tych wyrażeń:
     - if, else
     - while
     - for
-  - Function
+  - Function - klasa opisująca funkcję. Atrybuty:
     - typ wartości zwracanej
     - lista argumentów
-  - Variable
+    - lista instrukcji
+  - Variable - klasa opisująca zmienną. Atrubyty:
+    - nazwa
     - typ danych
-  - bufor tymczasowy
-  - stos zmiennych
-    - globalny
-    - lokalny
+  - bufor tymczasowy - do przechowywania kolejnych porcji kodu wejściowego z którego wyodrębniane będą tokeny
+  - tablica symboli - zawiera rekord dla każdej zmiennej.  
+    - globalna
+    - lokalna
+  - drzewo rozbioru - struktura składająca się z wierzchołków. W liściach będą przetrzymywane tokeny, natomiast w nieliściach bardziej zaawansowane struktury(np. `while_statement`)
 
 
 
 
 
-- wstępny algorytm generowania kodu
+- ###### Wstępny algorytm przetwarzania/generowania kodu
 
 1. pobieraj znaki aż do rozpoznania tokenu
    - czy token występuje w podzbiorze języka?
@@ -296,15 +319,6 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 3. sprawdź poprawność
    - czy typy zmiennych się zgadzają?
 4. przetłumacz strukture języka c++ na odpowiadającą mu strukture w języku Python
-   - zachowaj odpowiednią "tabulacje" bloków instrukcji
+   - zachowaj odpowiednią "tabulacje" bloków instrukcji(zmienna pilnująca "poziomu zagnieżdżenia" bloków)
 
 
-
-#### Dodatkowe
-
-1. Nie można pozwolić żeby nazwy funkcji/zmiennych "nadpisywały" słowa kluczowe któregokolwiek z języków
-
-``` 
-cpp_keywords = if, else, while, for, class, int, long, double, true, false, ...
-python_keywords = if, elif, else, while, for, in, range, class, def, True, False, ...
-```
