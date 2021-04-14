@@ -53,20 +53,29 @@ class TokenType(Enum):
     FLOAT_LITERAL = auto
 
     # types ids
-    INT_ID = auto
-    STRING_ID = auto
-    BOOL_ID = auto
-    FLOAT_ID = auto
+    INT_TYPE = auto
+    STRING_TYPE = auto
+    BOOL_TYPE = auto
+    FLOAT_TYPE = auto
 
 
 class Token:
-    def __init__(self, token_type: TokenType, line: int, column: int):
+    def __init__(self, token_type: TokenType, line: int, column: int, value=None):
         self.type = token_type
         self.line = line
         self.column = column
+        self.value = value
 
     def get_position(self):
         return self.line, self.column
 
     def get_type(self):
         return self.type
+
+    def get_value(self):
+        return self.value
+
+    # for debug
+    def __repr__(self):
+        # INT(6): 1,15
+        return f'{self.type.name}({self.value}): pos({self.line}, {self.column})'

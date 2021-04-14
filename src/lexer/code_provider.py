@@ -8,11 +8,21 @@ class CodeProvider:
         self.stream = input_stream
         self.curr_char = self.get_next_char()
 
-    '''
-    trzeba pomyslec jak zrobic z get_char i get_next_char
-    '''
+    def get_char(self):
+        return self.curr_char
 
+    def move_to_next_char(self):
+        self.curr_char = self.stream.read(1)
 
+        if self.curr_char == '\n':
+            self.line += 1
+            self.column = 0  # column count start from 1!
+
+        self.column += 1
+
+    def move_and_get_char(self):
+        self.move_to_next_char()
+        return self.get_char()
 
     def get_position(self):
         return self.line, self.column
