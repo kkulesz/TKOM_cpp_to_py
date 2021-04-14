@@ -19,7 +19,7 @@ Konrad Kulesza 300247
 - wyrażenia `#include <...>` będą ignorowane. W języku wejściowym powinno być wykorzysytwane tylko `<stdio>` ze względu na `std::cout, std::endl`
 - wyrażenia `using namespace...` będą pomijane. Akceptowane są tylko jawne przestrzenie nazw
   - np. translator nie rozpozna samego `cout<<`, musi być jawnie napisane `std::cout<<`
-- jeden plik na wejściu. Poprawny składniowo(możliwy do skompilowania za pomocą `g++`)
+- jeden plik na wejściu. Poprawny składniowo(możliwy do skompilowania za pomocą `g++`) BLAD!!!! dopsiać że wyjście ma być poprawne
 - jeden plik na wyjściu
 - brak możliwości nadpisania słów kluczowych zarówno jezyka wejściowego jak i wyjściowego
 
@@ -62,7 +62,7 @@ Zostanie przetestowana komunikacja pomiedzy modułami sąsiadującymi.
 
 Zostaną także napisane testy funkcjonalne całego translatora.
 
-Dodatkowo, pojawią się też testy polegające na porównaniu wyników skompilowanego kodu wejściowego i zinterpretowanego kodu wyjściowego.
+Dodatkowo, pojawią się też testy polegające na porównaniu wyników skompilowanego kodu wejściowego i zinterpretowanego kodu wyjściowego. // BLAD jak będzie poprawne to bedzie to i tamto??
 
 #### Testy funkcjonalne
 
@@ -82,12 +82,12 @@ result = (a+b)*c/20
 ```
 
 ```
-## 2.0.if_else_statment
+## 2.0.if_else_statment //BLAD wywalic elif
 bool cond = true;
 int a = 15;
 if(a<15){
 	a=a+2;
-}else if(cond){
+}else{
 	a=a-2;
 }
 -----
@@ -95,7 +95,7 @@ cond = true
 a = 15
 if a<15:
 	a=a+2
-elif cond:
+else:
 	a=a-2
 ```
 
@@ -211,10 +211,12 @@ Tworzenie drzewa składniowego. Analiza od lewej do prawej.  Rekursja lewostronn
 
 Sprawdzanie czy struktury mają sens w kontekście języka. Sprawdzanie typów.
 
+#### Generator kodu BLAD!!!
+
 ### Składnia
 
 ```
-
+//WYWALICA FORA I JENDEGO PRINTA
 comment				= <single_line_comment> | <multi_line_comment>
 multi_line_comment	= "/*" <string_char> "*/"
 single_line_comment	= "//" <string_char> <end_of_line>
@@ -259,7 +261,7 @@ start_of_var 		= <alphabet_char> | "_"
 
 literal				= <bool_literal> | <float_literal> | <string_literal> | <integer_literal>
 
-string_literal		= <cudzysłow> char_string <cudzysłów>
+string_literal		= <cudzysłow> char_string <cudzysłów> //PO ANGIELSKU xDDDDDDDDDD
 bool_literal		= "true" | "false"
 float_literal		= {digit} "." {digit}
 integer_literal		= <non_zero_digit> {digit}
