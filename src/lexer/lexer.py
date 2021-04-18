@@ -76,27 +76,36 @@ class Lexer:
             character = self.code_provider.move_and_get_char()
             while character != '"':
                 string += character
+                character = self.code_provider.move_and_get_char()
 
             self.move_pointer()  # move so next char will not be quote
             return Token(TokenType.STRING_LITERAL, string)
         return None
 
-    def get_characters_to_new_line(self):
-        pass
-
-    def get_characters_to_enf_of_multiline(self):
-        pass
-
     def try_operators_or_comments(self):
-        # double char
-        # == && || >= <= !=
+        tmp_token = None
+        candidate = self.code_provider.get_char()
+        if candidate in TokenDicts.single_char_tokens:
+            tmp_token_type = TokenDicts.single_char_tokens[candidate]
+            tmp_token = Token(tmp_token_type)
 
-        # comments
-        # // /*
+        candidate += self.code_provider.move_and_get_char()
+        if candidate in TokenDicts.double_char_tokens:
+            tmp_token_type = TokenDicts.double_char_tokens[candidate]
 
-        # single char
-        # + - / !
-        return None
+            if tmp_token_type == TokenType.START_SINGLE_LINE_COMMENT:
+                comment_value = self.get_characters_to_new_line()
+                tmp_token = Token(TokenType.SINGLE_LINE_COMMENT, comment_value)
+
+            elif tmp_token_type == TokenType.START_MULTI_LINE_COMMENT:
+                comment_value = self.get_characters_to_end_of_multiline()
+                tmp_token = Token(TokenType.MULTI_LINE_COMMENT, comment_value)
+
+            else:
+                tmp_token = Token(tmp_token_type)
+
+            self.move_pointer()
+        return tmp_token
 
     def get_undefined_and_move(self):
         char = self.code_provider.get_char()
@@ -111,6 +120,27 @@ class Lexer:
                 word_so_far += new_char
                 new_char = self.code_provider.move_and_get_char()
         return word_so_far
+
+    def get_characters_to_new_line(self):
+        string_of_chars = ""
+        character = self.code_provider.move_and_get_char()
+        while character != '\n':
+            string_of_chars += character
+            character = self.code_provider.move_and_get_char()
+        return string_of_chars
+
+    def get_characters_to_end_of_multiline(self):
+        string_of_chars = ""
+        character = self.code_provider.move_and_get_char()
+        next_character = self.code_provider.move_and_get_char()
+        maybe_end_of_comment = character + next_character
+        while maybe_end_of_comment != '*/':
+            #  TODO: jeżeli znajduje EOF to podnieś błąd!
+            string_of_chars += character
+            character = next_character
+            next_character = self.code_provider.move_and_get_char()
+            maybe_end_of_comment = character + next_character
+        return string_of_chars
 
     def move_pointer(self):
         _ = self.code_provider.move_and_get_char()

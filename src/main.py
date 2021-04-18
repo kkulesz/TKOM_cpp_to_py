@@ -23,9 +23,6 @@ def main():
 
     program = init_all(sys.argv[1])
 
-    # integer = ord('1') - ord('0')
-    # print(integer)
-
 
 if __name__ == "__main__":
     main()

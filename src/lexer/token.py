@@ -12,6 +12,8 @@ class TokenType(Enum):
     START_SINGLE_LINE_COMMENT = auto()
     START_MULTI_LINE_COMMENT = auto()
     END_MULTI_LINE_COMMENT = auto()
+    SINGLE_LINE_COMMENT = auto()
+    MULTI_LINE_COMMENT = auto()
     NEW_LINE = auto()
 
     # brackets
@@ -89,10 +91,6 @@ class Token:
 
 
 class TokenDicts:
-    bool_operators = {
-
-    }
-
     acceptable_keywords = {
         'return': TokenType.RETURN_KW,
         'for': TokenType.FOR_KW,
@@ -105,7 +103,7 @@ class TokenDicts:
 
         'int': TokenType.INT_TYPE,
         'bool': TokenType.BOOL_TYPE,
-        'std::string': TokenType.STRING_TYPE
+        'string': TokenType.STRING_TYPE
     }
 
     double_char_tokens = {
@@ -133,4 +131,5 @@ class TokenDicts:
         ')': TokenType.CL_BRACKET,
         '{': TokenType.OP_CURLY_BRACKET,
         '}': TokenType.CL_CURLY_BRACKET,
+        ';': TokenType.SEMICOLON
     }
