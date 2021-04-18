@@ -224,7 +224,7 @@ single_line_comment	= "//" <string_char> <end_of_line>
 
 statment			= <if_statment> | <for_statment> | <while_statement>
 
-print			    = "std::cout<<" (<identifier> | <literal> | <condition>) "<<std::endl"
+print			    = "std" <namespace_op> <stream_out_op> (<identifier> | <literal> | <condition>) <stream_out_op> <namespace_op> "endl"
 while_statement		= "while" "(" <complex_condition> ")" <scope>
 if_statment			= "if" "(" <complex_condition> ")" <scope> [ "else" <scope>]
 
@@ -257,6 +257,9 @@ identifier  		= <alphabet_char> , {char}
 
 literal				= <bool_literal> | <float_literal> | <string_literal> | <integer_literal>
 
+stream_out_op       = "<<"
+namespace_op        = "::"
+std                 = "std"
 string_literal		= <quote> char_string <quote>
 bool_literal		= "true" | "false"
 integer_literal		= <non_zero_digit> {digit}
