@@ -211,7 +211,8 @@ Tworzenie drzewa składniowego. Analiza od lewej do prawej.  Rekursja lewostronn
 
 Sprawdzanie czy struktury mają sens w kontekście języka. Sprawdzanie typów.
 
-#### Generator kodu BLAD!!!
+#### Generator kodu
+Generowanie kodu w języku Python na podstawie dostarczanych struktur
 
 ### Składnia
 
@@ -221,22 +222,18 @@ comment				= <single_line_comment> | <multi_line_comment>
 multi_line_comment	= "/*" <string_char> "*/"
 single_line_comment	= "//" <string_char> <end_of_line>
 
-print				= <print_without_nl> | <print_with_nl>
 statment			= <if_statment> | <for_statment> | <while_statement>
 
-print_with_nl		= <start_print> "std::endl"
-print_without_nl	= <start_print> 
-start_print			= "std::cout<<" (<variable_name> | <literal> | <condition>)
+print			    = "std::cout<<" (<identifier> | <literal> | <condition>) "<<std::endl"
 while_statement		= "while" "(" <complex_condition> ")" <scope>
-for_statment		= "for" "(" <variable_declaration> ";" <complex_condition> ";" <instruction> ")" <scope>
 if_statment			= "if" "(" <complex_condition> ")" <scope> [ "else" <scope>]
 
 
-right_value			= <literal> | <aritmetic_operation> | <variable_name>
+right_value			= <literal> | <aritmetic_operation> | <identifier>
 
 
 aritmetic_operation	= <arithmetic_component> <arithmetic_operand> <arithmetic_component>
-aritmetic_component	= ( "("<arithmetic_operation>")" ) |<literal>|<variable_name>| <arithmetic_operation>
+aritmetic_component	= ( "("<arithmetic_operation>")" ) |<literal>|<identifier>| <arithmetic_operation>
 
 function_scope		= <start_of_scope> [<return> [<right_value>] <end_of_ins>] "}"
 scope				= <start_of_scope>  "}"
@@ -248,31 +245,29 @@ single_instruction	= (<variable_declaration> | <variable_assignment> | <statment
 complex_condition	= <single_condition> | <complex_condition> [ <boolean_operator> <complex_condition>]
 single_condition	= <literal> | <comparision>
 comparision			= <comparison_operand> <comparison_operator> <comparison_operand>
-comparison_operand	= <variable_name> | <literal>
+comparison_operand	= <identifier> | <literal>
 
 variable_declaration= <type> <variable_assignment>
-function_declaration= <type> <variable_name> "(" [<type><variable_name>][{","<type> <variable_name}] ")"<function_scope>
-variable_assignment	= <variable_name> "=" <right_value>
+function_declaration= <type> <identifier> "(" [<type><identifier>][{","<type> <identifier}] ")"<function_scope>
+variable_assignment	= <identifier> "=" <right_value>
 
-type 				= "int" | "bool" | "float" | "string"
+type 				= "int" | "bool" | "string"
 
-variable_name		= <start_of_var> , [char]
-start_of_var 		= <alphabet_char> | "_"
+identifier  		= <alphabet_char> , {char}
 
 literal				= <bool_literal> | <float_literal> | <string_literal> | <integer_literal>
 
-string_literal		= <cudzysłow> char_string <cudzysłów> //PO ANGIELSKU xDDDDDDDDDD
+string_literal		= <quote> char_string <quote>
 bool_literal		= "true" | "false"
-float_literal		= {digit} "." {digit}
 integer_literal		= <non_zero_digit> {digit}
 
-char_string			= (<special_char>| <char> | <end_of_ins>) {char_string}
+char_string			= (<special_char> | <char> | <end_of_ins>) {char_string}
 
 aritmetic_opeator	= "+" | "/" | "-" | "*"
 boolean_operator	= "&&" | "||"
 comparison_operator = "!=" | "==" | ">" | "<" | ">=" | "<=" 
 
-end_of_line			= "\n" //zastanowić się
+end_of_line			= "\n"
 end_of_ins			= ";"
 char 				= <digit> | <alphabet_char>
 alphabet_char 		= [a-z] | [A-Z]
