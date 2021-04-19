@@ -49,27 +49,27 @@ class TokenType(Enum):
     # literals
     INT_LITERAL = auto()
     STRING_LITERAL = auto()
-    TRUE_LITERAL = auto()
-    FALSE_LITERAL = auto()
-    # types ids
-    INT_TYPE = auto()
-    STRING_TYPE = auto()
-    BOOL_TYPE = auto()
+
+
 
     # statements keywords
     RETURN_KW = auto()
-    FOR_KW = auto()
-    WHILE = auto()
+    WHILE_KW = auto()
     IF_KW = auto()
     ELSE_KW = auto()
     STD_KW = auto()
     COUT_KW = auto()
     ENDL_KW = auto()
+    INT_KW = auto()
+    STRING_KW = auto()
+    BOOL_KW = auto()
+    TRUE_KW = auto()
+    FALSE_KW = auto()
 
 
 
 class Token:
-    def __init__(self, token_type: TokenType, value=None, line: int = 0, column: int = 0):
+    def __init__(self, token_type: TokenType, value="", line: int = 0, column: int = 0):
         self.type = token_type
         self.line = line
         self.column = column
@@ -89,28 +89,32 @@ class Token:
         # INT(6): 1,15 --example
         return f'{self.type.name} \t {self.value} \t pos({self.line}, {self.column})'
 
+    # def __str__(self):
+    #     # INT(6): 1,15 --example
+    #     return f'{self.type.name} \t {self.value} \t pos({self.line}, {self.column})'
+
 
 class TokenDicts:
     acceptable_keywords = {
         'return': TokenType.RETURN_KW,
-        'for': TokenType.FOR_KW,
-        'while': TokenType.WHILE,
+        'while': TokenType.WHILE_KW,
         'if': TokenType.IF_KW,
         'else': TokenType.ELSE_KW,
         'std': TokenType.STD_KW,
         'cout': TokenType.COUT_KW,
         'endl': TokenType.ENDL_KW,
-
-        'int': TokenType.INT_TYPE,
-        'bool': TokenType.BOOL_TYPE,
-        'string': TokenType.STRING_TYPE
+        'int': TokenType.INT_KW,
+        'bool': TokenType.BOOL_KW,
+        'string': TokenType.STRING_KW,
+        'true': TokenType.TRUE_KW,
+        'false': TokenType.FALSE_KW
     }
 
     double_char_tokens = {
         '::': TokenType.NAMESPACE_OPERATOR,
         '<<': TokenType.STREAM_OPERATOR,
-        '<=': TokenType.GREATER_EQUAL,
-        '>=': TokenType.LESS_EQUAL,
+        '<=': TokenType.LESS_EQUAL,
+        '>=': TokenType.GREATER_EQUAL,
         '==': TokenType.EQUAL,
         '!=': TokenType.NOT_EQUAL,
         '//': TokenType.START_SINGLE_LINE_COMMENT,
@@ -131,5 +135,7 @@ class TokenDicts:
         ')': TokenType.CL_BRACKET,
         '{': TokenType.OP_CURLY_BRACKET,
         '}': TokenType.CL_CURLY_BRACKET,
-        ';': TokenType.SEMICOLON
+        ';': TokenType.SEMICOLON,
+        '>': TokenType.GREATER,
+        '<': TokenType.LESS
     }
