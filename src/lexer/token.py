@@ -3,7 +3,6 @@ from enum import Enum, auto, unique
 
 @unique
 class TokenType(Enum):
-
     UNDEFINED = auto()
 
     EOF = auto()
@@ -50,8 +49,6 @@ class TokenType(Enum):
     INT_LITERAL = auto()
     STRING_LITERAL = auto()
 
-
-
     # statements keywords
     RETURN_KW = auto()
     WHILE_KW = auto()
@@ -65,7 +62,6 @@ class TokenType(Enum):
     BOOL_KW = auto()
     TRUE_KW = auto()
     FALSE_KW = auto()
-
 
 
 class Token:
@@ -137,5 +133,6 @@ class TokenDicts:
         '}': TokenType.CL_CURLY_BRACKET,
         ';': TokenType.SEMICOLON,
         '>': TokenType.GREATER,
-        '<': TokenType.LESS
+        '<': TokenType.LESS,
+        '\n': TokenType.NEW_LINE
     }

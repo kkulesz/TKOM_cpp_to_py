@@ -1,6 +1,3 @@
-from io import StringIO
-
-
 class CodeProvider:
     def __init__(self, input_stream):
         self.line = 1
