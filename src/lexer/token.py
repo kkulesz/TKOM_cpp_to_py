@@ -134,5 +134,5 @@ class TokenDicts:
         ';': TokenType.SEMICOLON,
         '>': TokenType.GREATER,
         '<': TokenType.LESS,
-        '\n': TokenType.NEW_LINE
+        # '\n': TokenType.NEW_LINE
     }

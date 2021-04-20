@@ -132,7 +132,6 @@ class LexerTest(unittest.TestCase):
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
-
     def test_plus(self):
         input_str = """+"""
         expected_tokens = [
@@ -265,45 +264,46 @@ class LexerTest(unittest.TestCase):
             Token(TokenType.LESS)
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
-##################################
-    def test_start_single_line_comment(self):
-        input_str = """//"""
-        expected_tokens = [
-            Token(TokenType.START_SINGLE_LINE_COMMENT)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
 
-    def test_start_multi_line_comment(self):
-        input_str = """/*"""
-        expected_tokens = [
-            Token(TokenType.START_MULTI_LINE_COMMENT)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
-
-    def test_end_multi_line_comment(self):
-        input_str = """*/"""
-        expected_tokens = [
-            Token(TokenType.END_MULTI_LINE_COMMENT)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
-
-    # def test_single_line_comment(self):
-    #     input_str = """//comment"""
+    ################################## tests when comments are not tokens
+    # def test_start_single_line_comment(self):
+    #     input_str = """//"""
     #     expected_tokens = [
-    #         Token(TokenType.SINGLE_LINE_COMMENT, "comment")
+    #         Token(TokenType.START_SINGLE_LINE_COMMENT)
     #     ]
     #     self.assert_expected_tokens(input_str, expected_tokens)
     #
-    # def test_multi_line_comment(self):
-    #     input_str = """/*
-    #     comment
-    #     */"""
+    # def test_start_multi_line_comment(self):
+    #     input_str = """/*"""
     #     expected_tokens = [
-    #         Token(TokenType.MULTI_LINE_COMMENT, """
-    #     comment
-    #     """)
+    #         Token(TokenType.START_MULTI_LINE_COMMENT)
     #     ]
     #     self.assert_expected_tokens(input_str, expected_tokens)
+    #
+    # def test_end_multi_line_comment(self):
+    #     input_str = """*/"""
+    #     expected_tokens = [
+    #         Token(TokenType.END_MULTI_LINE_COMMENT)
+    #     ]
+    #     self.assert_expected_tokens(input_str, expected_tokens)
+    ##################################
+    def test_single_line_comment(self):
+        input_str = """//comment"""
+        expected_tokens = [
+            Token(TokenType.SINGLE_LINE_COMMENT, "comment")
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
+
+    def test_multi_line_comment(self):
+        input_str = """/*
+        comment
+        */"""
+        expected_tokens = [
+            Token(TokenType.MULTI_LINE_COMMENT, """
+        comment
+        """)
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
 
     def test_simple_main(self):
         input_str = """
@@ -311,13 +311,13 @@ class LexerTest(unittest.TestCase):
             std::cout<<"Hello world!"<<std::endl;
         }"""
         expected_tokens = [
-            Token(TokenType.NEW_LINE),  # nl
+            # Token(TokenType.NEW_LINE),  # nl
             Token(TokenType.INT_KW),
             Token(TokenType.IDENTIFIER, "main"),
             Token(TokenType.OP_BRACKET),
             Token(TokenType.CL_BRACKET),
             Token(TokenType.OP_CURLY_BRACKET),
-            Token(TokenType.NEW_LINE),  # nl
+            # Token(TokenType.NEW_LINE),  # nl
             Token(TokenType.STD_KW),
             Token(TokenType.NAMESPACE_OPERATOR),
             Token(TokenType.COUT_KW),
@@ -328,7 +328,7 @@ class LexerTest(unittest.TestCase):
             Token(TokenType.NAMESPACE_OPERATOR),
             Token(TokenType.ENDL_KW),
             Token(TokenType.SEMICOLON),
-            Token(TokenType.NEW_LINE),  # nl
+            # Token(TokenType.NEW_LINE),  # nl
             Token(TokenType.CL_CURLY_BRACKET),
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
