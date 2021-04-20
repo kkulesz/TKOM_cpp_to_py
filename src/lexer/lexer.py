@@ -4,16 +4,15 @@ from src.lexer.token import TokenType, TokenDicts, Token
 
 class Lexer:
     def __init__(self, code_provider):
-        self.code_provider = code_provider
+        self.__code_provider = code_provider
         self.token = None
-        self.curr_pos = None
 
     def get_token(self):
         return self.token
 
     def build_and_get_token(self):
         self.__ignore_whites()
-        line, col = self.code_provider.get_position()
+        line, col = self.__get_position()
         token = self.__try_match()
         token.column = col
         token.line = line
@@ -22,12 +21,11 @@ class Lexer:
         return self.token
 
     def __ignore_whites(self):
-        curr_char = self.code_provider.get_char()
+        curr_char = self.__get_char()
         while curr_char in [' ', '\t', '\n']:  # \n
-            curr_char = self.code_provider.move_and_get_char()
+            curr_char = self.__move_and_get_char()
 
     def __try_match(self):
-        self.curr_pos = self.code_provider.get_position()
         # instead of 'if else' everywhere
         return self.__try_eof() or \
                self.__try_id_or_keyword() or \
@@ -38,7 +36,7 @@ class Lexer:
 
     # try methods
     def __try_eof(self):
-        if self.code_provider.get_char() == '':
+        if self.__get_char() == '':
             return Token(TokenType.EOF)
         return None
 
@@ -54,30 +52,30 @@ class Lexer:
 
     def __try_number(self):
         value_so_far = 0
-        digit_candidate = self.code_provider.get_char()
+        digit_candidate = self.__get_char()
         if digit_candidate.isdigit():
             if digit_candidate == '0':
                 self.__move_pointer()
                 return Token(TokenType.INT_LITERAL, value_so_far)
 
             value_so_far = ord(digit_candidate) - ord('0')
-            digit_candidate = self.code_provider.move_and_get_char()
+            digit_candidate = self.__move_and_get_char()
             while digit_candidate.isdigit():
                 value_so_far *= 10
                 value_so_far += ord(digit_candidate) - ord('0')
-                digit_candidate = self.code_provider.move_and_get_char()
+                digit_candidate = self.__move_and_get_char()
             return Token(TokenType.INT_LITERAL, value_so_far)
 
         return None
 
     def __try_string(self):
-        character = self.code_provider.get_char()
+        character = self.__get_char()
         if character == '"':
             string = ''
-            character = self.code_provider.move_and_get_char()
+            character = self.__move_and_get_char()
             while character != '"':
                 string += character
-                character = self.code_provider.move_and_get_char()
+                character = self.__move_and_get_char()
 
             self.__move_pointer()  # move so next char will not be quote
             return Token(TokenType.STRING_LITERAL, string)
@@ -85,12 +83,12 @@ class Lexer:
 
     def __try_operators_or_comments(self):
         tmp_token = None
-        candidate = self.code_provider.get_char()
+        candidate = self.__get_char()
         if candidate in TokenDicts.single_char_tokens:
             tmp_token_type = TokenDicts.single_char_tokens[candidate]
             tmp_token = Token(tmp_token_type)
 
-        candidate += self.code_provider.move_and_get_char()
+        candidate += self.__move_and_get_char()
         if candidate in TokenDicts.double_char_tokens:
             tmp_token_type = TokenDicts.double_char_tokens[candidate]
 
@@ -109,42 +107,51 @@ class Lexer:
         return tmp_token
 
     def __get_undefined_and_move(self):
-        char = self.code_provider.get_char()
+        char = self.__get_char()
         self.__move_pointer()  # move so we can continue after undefined
-        LexerError(self.code_provider.get_position(), "unidentified token").warning()
+        LexerError(self.__get_position(), "unidentified token").warning()
         return Token(TokenType.UNDEFINED, char)
 
     def __read_word(self):
         word_so_far = ""
-        new_char = self.code_provider.get_char()
+        new_char = self.__get_char()
         if new_char.isalpha():
             while new_char.isalpha() or new_char.isdigit():
                 word_so_far += new_char
-                new_char = self.code_provider.move_and_get_char()
+                new_char = self.__move_and_get_char()
         return word_so_far
 
     def __get_characters_to_new_line(self):
         string_of_chars = ""
-        character = self.code_provider.move_and_get_char()
+        character = self.__move_and_get_char()
         while character != '\n' and character != '':
             string_of_chars += character
-            character = self.code_provider.move_and_get_char()
+            character = self.__move_and_get_char()
         return string_of_chars
 
     def __get_characters_to_end_of_multiline(self):
         string_of_chars = ""
-        character = self.code_provider.move_and_get_char()
-        next_character = self.code_provider.move_and_get_char()
+        character = self.__move_and_get_char()
+        next_character = self.__move_and_get_char()
         maybe_end_of_comment = character + next_character
         while maybe_end_of_comment != '*/':
             if maybe_end_of_comment == "":
-                LexerError(self.code_provider.get_position(), "no end of multi-line comment").warning()
+                LexerError(self.__get_position, "no end of multi-line comment").warning()
                 return string_of_chars
             string_of_chars += character
             character = next_character
-            next_character = self.code_provider.move_and_get_char()
+            next_character = self.__move_and_get_char()
             maybe_end_of_comment = character + next_character
         return string_of_chars #[:-1]
 
     def __move_pointer(self):
-        _ = self.code_provider.move_and_get_char()
+        _ = self.__code_provider.move_and_get_char()
+
+    def __move_and_get_char(self):
+        return self.__code_provider.move_and_get_char()
+
+    def __get_char(self):
+        return self.__code_provider.get_char()
+
+    def __get_position(self):
+        return self.__code_provider.get_position()
