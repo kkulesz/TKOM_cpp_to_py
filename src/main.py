@@ -23,6 +23,13 @@ def main():
 
     program = init_all(sys.argv[1])
 
+    # print("essa")
+    #
+    # def essa(essa):
+    #     print(essa)
+    #
+    # essa("essa")
+
 
 if __name__ == "__main__":
     main()
