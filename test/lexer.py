@@ -230,7 +230,7 @@ class LexerTest(unittest.TestCase):
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
-    def test_output_strean_operator(self):
+    def test_output_stream_operator(self):
         input_str = """<<"""
         expected_tokens = [
             Token(TokenType.STREAM_OPERATOR)
@@ -262,6 +262,27 @@ class LexerTest(unittest.TestCase):
         input_str = """<"""
         expected_tokens = [
             Token(TokenType.LESS)
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
+
+    def test_integer_literal(self):
+        input_str = """123"""
+        expected_tokens = [
+            Token(TokenType.INT_LITERAL, 123)
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
+
+    def test_string_literal(self):
+        input_str = '''"essa"'''
+        expected_tokens = [
+            Token(TokenType.STRING_LITERAL, "essa")
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
+
+    def test_string_literal_when_quotes_inside(self):
+        input_str = '''"es\\\"sa"'''
+        expected_tokens = [
+            Token(TokenType.STRING_LITERAL, '''es\\\"sa''')
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 

@@ -69,13 +69,15 @@ class Lexer:
         return None
 
     def __try_string(self):
-        character = self.__get_char()
-        if character == '"':
+        curr_character = self.__get_char()
+        if curr_character == '"':
             string = ''
-            character = self.__move_and_get_char()
-            while character != '"':
-                string += character
-                character = self.__move_and_get_char()
+            prev_character = curr_character
+            curr_character = self.__move_and_get_char()
+            while not(curr_character == '"' and prev_character != "\\"):
+                string += curr_character
+                prev_character = curr_character
+                curr_character = self.__move_and_get_char()
 
             self.__move_pointer()  # move so next char will not be quote
             return Token(TokenType.STRING_LITERAL, string)
