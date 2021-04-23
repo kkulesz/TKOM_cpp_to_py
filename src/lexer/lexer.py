@@ -78,6 +78,9 @@ class Lexer:
                 string += curr_character
                 prev_character = curr_character
                 curr_character = self.__move_and_get_char()
+                if curr_character == "":
+                    LexerError(self.__get_position(), "no end of string provided!").warning()
+                    break
 
             self.__move_pointer()  # move so next char will not be quote
             return Token(TokenType.STRING_LITERAL, string)
