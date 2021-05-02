@@ -49,7 +49,7 @@ class TokenType(Enum):
     INT_LITERAL = auto()
     STRING_LITERAL = auto()
 
-    # statements keywords
+    # keywords
     RETURN_KW = auto()
     WHILE_KW = auto()
     IF_KW = auto()

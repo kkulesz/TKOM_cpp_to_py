@@ -3,17 +3,19 @@ import sys
 from src.lexer.code_provider import CodeProvider
 from src.lexer.lexer import Lexer
 from src.lexer.token import TokenType
+from src.parser.parser import Parser
 
 
 def init_all(input_file):
     file = open(input_file, "rt")
     code_provider = CodeProvider(file)
     lexer = Lexer(code_provider)
+    parser = Parser(lexer)
 
-    token = lexer.build_and_get_token()
+    token = parser.parse()
     while token.get_type() != TokenType.EOF:
         print(token)
-        token = lexer.build_and_get_token()
+        token = parser.parse()
 
 
 def main():
