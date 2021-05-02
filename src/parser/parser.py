@@ -6,13 +6,15 @@ from src.parser.utils import Utils
 
 
 # TODO: zastanowic się:
-#   czy nie klasyfikować std::string i std::cout<< i <<std::endl
+#   czy nie klasyfikować std::string i std::cout<< i <<std::endl <--------raczej to
 #   ALBO
 #   używać using namespace std;
 
+# TODO: następnie:
+#   __parse_arguments
+#   __parser_value dokonczyc:
+#       __parse_math_expression
 
-# TODO: __parse_r_value
-# TODO: __parse_arguments
 
 
 class Parser:
@@ -42,11 +44,12 @@ class Parser:
                self.__parse_id_starting
 
     def __parse_declaration(self):
-        maybe_type_token = self.__get_current_token()
-        if not self.__check_if_one_of_tokens(Utils.types_token):
+        maybe_type_token = self.__check_if_one_of_tokens(Utils.types_token)
+        if not maybe_type_token:
             return None
 
         id_token = self.__demand_next_token(TokenType.IDENTIFIER)
+        self.__get_next_token()
 
         maybe_function_declaration = self.__parse_function_declaration(maybe_type_token, id_token)
         if maybe_function_declaration:
@@ -60,7 +63,8 @@ class Parser:
         return VariableDeclaration(maybe_type_token, id_token)
 
     def __parse_r_value(self):
-        maybe_literal = self.__check_if_one_of_tokens([TokenType.INT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE_KW, TokenType.FALSE_KW])
+        maybe_literal = self.__check_if_one_of_tokens(
+            [TokenType.INT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE_KW, TokenType.FALSE_KW])
         if maybe_literal:
             return Literal(maybe_literal)
 
@@ -84,7 +88,6 @@ class Parser:
         pass
 
     def __parse_variable_declaration(self, maybe_type_token, id_token):
-        self.__get_next_token()
         if not self.__check_current_token(TokenType.ASSIGN):
             return None
         self.__get_next_token()
@@ -134,12 +137,15 @@ class Parser:
         # << std :: endl ;
         pass
 
-    # utils functions
+    # demand functions
     def __demand_one_of_tokens(self, list_of_tokens_types, expected_message):
-        if self.__check_if_one_of_tokens(list_of_tokens_types):
-            return
-        current_token_type = self.__current_token.get_type()
-        ParserSyntaxError(self.__current_token.get_position(), current_token_type, expected_message).fatal()
+        maybe_token = self.__check_if_one_of_tokens(list_of_tokens_types)
+        if maybe_token:
+            return maybe_token
+
+        ParserSyntaxError(self.__current_token.get_position(),
+                          self.__current_token.get_type(),
+                          expected_message).fatal()
 
     def __demand_next_token(self, expected_token_type):
         self.__get_next_token()
@@ -148,17 +154,26 @@ class Parser:
     def __demand_current_token(self, expected_token_type):
         if self.__check_current_token(expected_token_type):
             return self.__current_token
-        ParserSyntaxError(self.__current_token.get_position(), self.__current_token.get_type(), expected_token_type).fatal()
 
+        ParserSyntaxError(self.__current_token.get_position(),
+                          self.__current_token.get_type(),
+                          expected_token_type).fatal()
+
+    # check functions
     def __check_current_token(self, expected_token_type):
         return self.__current_token.get_type() == expected_token_type
 
-    def __check_if_one_of_tokens(self,list_of_tokens_types):
+    def __check_next_token(self, expected_token_type):
+        self.__get_next_token()
+        return self.__current_token.get_type() == expected_token_type
+
+    def __check_if_one_of_tokens(self, list_of_tokens_types):
         for token_type in list_of_tokens_types:
             if self.__check_current_token(token_type):
                 return self.__current_token
         return None
 
+    # get functions
     def __get_current_token(self):
         return self.__current_token
 
