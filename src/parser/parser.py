@@ -9,12 +9,13 @@ class Parser:
 
     def parse(self):
         program = []
-
+        self.__get_next_token()
         while self.__get_current_token().get_type() == TokenType.EOF:
             new_ins = self.__parse_instruction()
             if new_ins is None:
                 pass  # error no instruction
             program.append(new_ins)
+            self.__get_next_token()
 
         return program
 

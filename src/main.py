@@ -12,10 +12,8 @@ def init_all(input_file):
     lexer = Lexer(code_provider)
     parser = Parser(lexer)
 
-    token = parser.parse()
-    while token.get_type() != TokenType.EOF:
-        print(token)
-        token = parser.parse()
+    program = parser.parse()
+    print(program)
 
 
 def main():
