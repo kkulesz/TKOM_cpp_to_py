@@ -6,16 +6,20 @@ from src.errors import ParserDevelopmentError
 
 
 class Literal(AstNode):
-    def __init__(self, literal_token, value=None):
-        self.type, self.value = Literal.init_literal(literal_token, value)
+    def __init__(self, literal_token):
+        self.type, self.value = Literal.init_literal(literal_token)
+
+    def __repr__(self):
+        return f"(Literial={self.value})"
 
     @staticmethod
-    def init_literal(literal_token, value):
+    def init_literal(literal_token):
         literal_type = literal_token.get_type()
+        value = literal_token.get_value()
         if literal_type == TokenType.INT_LITERAL and isinstance(value, int):
             return Types.INT, value
         elif literal_type == TokenType.STRING_LITERAL and isinstance(value, str):
-            return Types.STRING
+            return Types.STRING, value
         elif literal_type == TokenType.TRUE_KW or literal_type == TokenType.FALSE_KW:
             return Types.BOOLEAN, literal_type == TokenType.TRUE_KW
         else:

@@ -13,7 +13,7 @@ def init_all(input_file):
     parser = Parser(lexer)
 
     program = parser.parse()
-    print(program)
+    #print(program)
 
 
 def main():

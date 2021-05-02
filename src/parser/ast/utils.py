@@ -2,16 +2,26 @@ from enum import Enum, auto, unique
 from src.lexer.token import TokenType
 
 
+
+
 @unique
 class Types(Enum):
     INT = auto()
     STRING = auto()
     BOOLEAN = auto()
 
+
+class Dictionaries:
+    token_to_ast_types_dict = {
+        TokenType.INT_KW: Types.INT,
+        TokenType.STRING_KW: Types.STRING,
+        TokenType.BOOL_KW: Types.BOOLEAN
+    }
+
     default_values = {
-        INT: 0,
-        STRING: '',
-        BOOLEAN: False
+        Types.INT: 0,
+        Types.STRING: '',
+        Types.BOOLEAN: False
     }
 
 
