@@ -29,3 +29,9 @@ class ParserSyntaxError(ParserError):
     def __init__(self, position, expected_token, got_token):
         self.message = f"Expected: {expected_token}, but got: {got_token}"
         super(ParserSyntaxError, self).__init__(position, self.message)
+
+
+class ParserDevelopmentError(ParserError):
+    def __init__(self, position, message):
+        self.message = f"DEVELOPMENT ERROR: {message}"
+        super(ParserDevelopmentError, self).__init__(position, self.message)
