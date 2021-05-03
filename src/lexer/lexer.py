@@ -46,9 +46,38 @@ class Lexer:
             token_type = TokenDicts.acceptable_keywords[candidate]
             return Token(token_type)
         elif candidate != "":
+            maybe_std_keyword = self.__try_std_keywords(candidate)
+            if maybe_std_keyword:
+                self.__move_pointer()
+                return maybe_std_keyword
             return Token(TokenType.IDENTIFIER, candidate)
 
         return None
+
+    def __try_std_keywords(self, candidate):
+        if candidate != "std":
+            return None
+        maybe_namespace_operator = self.__get_char() + self.__move_and_get_char()
+        if maybe_namespace_operator != "::":
+            LexerError(self.__get_position(), "invalid std token!").fatal()
+
+        rest_of_word = ''
+        for i in range(0,4):
+            rest_of_word += self.__move_and_get_char()
+
+        if rest_of_word == "cout":
+            rest_of_word += self.__move_and_get_char()
+            rest_of_word += self.__move_and_get_char()
+            if rest_of_word == "cout<<":
+                return Token(TokenType.COUT_KW)
+        elif rest_of_word == "endl":
+            return Token(TokenType.ENDL_KW)
+        elif rest_of_word == "stri":
+            rest_of_word += self.__move_and_get_char()
+            rest_of_word += self.__move_and_get_char()
+            if rest_of_word == "string":
+                return Token(TokenType.STRING_KW)
+        LexerError(self.__get_position(), "invalid std token!").fatal()
 
     def __try_number(self):
         value_so_far = 0

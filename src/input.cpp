@@ -1,3 +1,4 @@
 int a = 11;
 bool b = true;
-string c= "jaki napis";
+std::string c= "jaki napis";
+//string g = "costam";

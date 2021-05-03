@@ -13,7 +13,6 @@ class TokenType(Enum):
     END_MULTI_LINE_COMMENT = auto()
     SINGLE_LINE_COMMENT = auto()
     MULTI_LINE_COMMENT = auto()
-    NEW_LINE = auto()
 
     # brackets
     OP_BRACKET = auto()
@@ -41,8 +40,6 @@ class TokenType(Enum):
     GREATER_EQUAL = auto()
 
     ASSIGN = auto()
-
-    NAMESPACE_OPERATOR = auto()  # '::'
     STREAM_OPERATOR = auto()  # '<<'
 
     # literals
@@ -96,18 +93,13 @@ class TokenDicts:
         'while': TokenType.WHILE_KW,
         'if': TokenType.IF_KW,
         'else': TokenType.ELSE_KW,
-        'std': TokenType.STD_KW,
-        'cout': TokenType.COUT_KW,
-        'endl': TokenType.ENDL_KW,
         'int': TokenType.INT_KW,
         'bool': TokenType.BOOL_KW,
-        'string': TokenType.STRING_KW,
         'true': TokenType.TRUE_KW,
         'false': TokenType.FALSE_KW
     }
 
     double_char_tokens = {
-        '::': TokenType.NAMESPACE_OPERATOR,
         '<<': TokenType.STREAM_OPERATOR,
         '<=': TokenType.LESS_EQUAL,
         '>=': TokenType.GREATER_EQUAL,
@@ -134,5 +126,4 @@ class TokenDicts:
         ';': TokenType.SEMICOLON,
         '>': TokenType.GREATER,
         '<': TokenType.LESS,
-        # '\n': TokenType.NEW_LINE
     }

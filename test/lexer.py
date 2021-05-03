@@ -76,22 +76,22 @@ class LexerTest(unittest.TestCase):
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
-    def test_std_keyword(self):
-        input_str = """std"""
-        expected_tokens = [
-            Token(TokenType.STD_KW)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
-
     def test_cout_keyword(self):
-        input_str = """cout"""
+        input_str = """std::cout<<"""
         expected_tokens = [
             Token(TokenType.COUT_KW)
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
     def test_endl_keyword(self):
-        input_str = """endl"""
+        input_str = """std::endl"""
+        expected_tokens = [
+            Token(TokenType.ENDL_KW)
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
+
+    def test_string_keyword(self):
+        input_str = """std::string"""
         expected_tokens = [
             Token(TokenType.ENDL_KW)
         ]
@@ -223,20 +223,6 @@ class LexerTest(unittest.TestCase):
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
-    def test_namespace_operator(self):
-        input_str = """::"""
-        expected_tokens = [
-            Token(TokenType.NAMESPACE_OPERATOR)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
-
-    def test_output_stream_operator(self):
-        input_str = """<<"""
-        expected_tokens = [
-            Token(TokenType.STREAM_OPERATOR)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
-
     def test_greater_equal(self):
         input_str = """>="""
         expected_tokens = [
@@ -332,24 +318,16 @@ class LexerTest(unittest.TestCase):
             std::cout<<"Hello world!"<<std::endl;
         }"""
         expected_tokens = [
-            # Token(TokenType.NEW_LINE),  # nl
             Token(TokenType.INT_KW),
             Token(TokenType.IDENTIFIER, "main"),
             Token(TokenType.OP_BRACKET),
             Token(TokenType.CL_BRACKET),
             Token(TokenType.OP_CURLY_BRACKET),
-            # Token(TokenType.NEW_LINE),  # nl
-            Token(TokenType.STD_KW),
-            Token(TokenType.NAMESPACE_OPERATOR),
             Token(TokenType.COUT_KW),
-            Token(TokenType.STREAM_OPERATOR),
             Token(TokenType.STRING_LITERAL, "Hello world!"),
             Token(TokenType.STREAM_OPERATOR),
-            Token(TokenType.STD_KW),
-            Token(TokenType.NAMESPACE_OPERATOR),
             Token(TokenType.ENDL_KW),
             Token(TokenType.SEMICOLON),
-            # Token(TokenType.NEW_LINE),  # nl
             Token(TokenType.CL_CURLY_BRACKET),
         ]
         self.assert_expected_tokens(input_str, expected_tokens)

@@ -12,7 +12,11 @@ def init_all(input_file):
     lexer = Lexer(code_provider)
     parser = Parser(lexer)
 
-    program = parser.parse()
+    token = lexer.build_and_get_token()
+    while token.get_type() != TokenType.EOF:
+        print(token)
+        token = lexer.build_and_get_token()
+    # program = parser.parse()
     #print(program)
 
 
