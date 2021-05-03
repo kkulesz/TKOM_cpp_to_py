@@ -74,5 +74,15 @@ class Dictionaries:
         ArithmeticOperatorTypes.MINUS: '-',
         ArithmeticOperatorTypes.DIVIDE: '/',
         ArithmeticOperatorTypes.MULTIPLY: '*',
-        #TODO:dokonczyc
+
+        BooleanOperatorTypes.EQUAL: '==',
+        BooleanOperatorTypes.NOT_EQUAL: '!=',
+        BooleanOperatorTypes.GREATER: '>',
+        BooleanOperatorTypes.GREATER_EQUAL: '>=',
+        BooleanOperatorTypes.LESS: '<',
+        BooleanOperatorTypes.LESS_EQUAL: '<=',
+
+        LogicalOperatorTypes.NOT: 'not',
+        LogicalOperatorTypes.OR: 'or',
+        LogicalOperatorTypes.AND: 'and'
     }
