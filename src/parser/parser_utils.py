@@ -1,7 +1,7 @@
 from src.lexer.token import TokenType
 
 
-class Utils:
+class ParserUtils:
     python_forbidden_keywords = ['and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else',
                                  'expect', 'False', 'finally', 'for', 'from', 'global', 'if', 'import', 'in',
                                  'is', 'lambda', 'None', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'True',
@@ -14,5 +14,5 @@ class Utils:
 
     forbidden_ids = python_forbidden_keywords + cpp_forbidden_keywords
 
-    types_token = [TokenType.INT_KW, TokenType.BOOL_KW, TokenType.STRING_KW] # TODO: pomyslec co z tym stringiem
+    type_tokens = [TokenType.INT_KW, TokenType.BOOL_KW, TokenType.STRING_KW]
 

@@ -1,6 +1,6 @@
 # semi_complex - they cannot contain complex nodes
 from src.parser.ast.ast_node import AstNode
-from src.parser.ast.utils import Types, Dictionaries
+from src.parser.ast.ast_utils import *
 
 
 class VariableDeclaration(AstNode):

@@ -2,7 +2,7 @@ from src.errors import ParserSyntaxError
 from src.lexer.token import TokenType
 from src.parser.ast.semi_complex import *
 from src.parser.ast.primitives import *
-from src.parser.utils import Utils
+from src.parser.parser_utils import ParserUtils
 
 
 # TODO: następnie:
@@ -38,7 +38,7 @@ class Parser:
                self.__parse_id_starting
 
     def __parse_declaration(self):
-        maybe_type_token = self.__check_if_one_of_tokens(Utils.types_token)
+        maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
         if not maybe_type_token:
             return None
 

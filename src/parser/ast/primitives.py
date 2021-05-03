@@ -1,6 +1,6 @@
 # primitives - leaves of AST, they cannot contain other nodes
 from src.parser.ast.ast_node import AstNode
-from src.parser.ast.utils import Types, ArithmeticOperatorTypes, BooleanOperatorTypes, LogicalOperatorTypes
+from src.parser.ast.ast_utils import *
 from src.lexer.token import TokenType
 from src.errors import ParserDevelopmentError
 
