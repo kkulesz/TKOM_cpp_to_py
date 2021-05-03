@@ -5,7 +5,7 @@ from src.parser.ast.utils import Types, Dictionaries
 
 class VariableDeclaration(AstNode):
     def __init__(self, variable_type_token, id_token, value=None):
-        self.type = Dictionaries.token_to_ast_types_dict[variable_type_token.get_type()]
+        self.type = Dictionaries.token_to_types[variable_type_token.get_type()]
         self.name = id_token.get_value()
         if value is None:
             self.value = Dictionaries.default_values[self.type]

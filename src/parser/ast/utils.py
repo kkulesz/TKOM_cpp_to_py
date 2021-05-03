@@ -2,27 +2,11 @@ from enum import Enum, auto, unique
 from src.lexer.token import TokenType
 
 
-
-
 @unique
 class Types(Enum):
     INT = auto()
     STRING = auto()
     BOOLEAN = auto()
-
-
-class Dictionaries:
-    token_to_ast_types_dict = {
-        TokenType.INT_KW: Types.INT,
-        TokenType.STRING_KW: Types.STRING,
-        TokenType.BOOL_KW: Types.BOOLEAN
-    }
-
-    default_values = {
-        Types.INT: 0,
-        Types.STRING: '',
-        Types.BOOLEAN: False
-    }
 
 
 @unique
@@ -31,13 +15,6 @@ class ArithmeticOperatorTypes(Enum):
     MINUS = auto()
     MULTIPLY = auto()
     DIVIDE = auto()
-
-    dictionary = {
-        TokenType.PLUS: PLUS,
-        TokenType.MINUS: MINUS,
-        TokenType.STAR: MULTIPLY,
-        TokenType.FORWARD_SLASH: DIVIDE
-    }
 
 
 @unique
@@ -49,15 +26,6 @@ class BooleanOperatorTypes(Enum):
     LESS = auto()
     LESS_EQUAL = auto()
 
-    dictionary = {
-        TokenType.EQUAL: EQUAL,
-        TokenType.NOT_EQUAL: NOT_EQUAL,
-        TokenType.GREATER: GREATER,
-        TokenType.GREATER_EQUAL: GREATER_EQUAL,
-        TokenType.LESS: LESS,
-        TokenType.LESS_EQUAL: LESS_EQUAL
-    }
-
 
 @unique
 class LogicalOperatorTypes(Enum):
@@ -65,8 +33,38 @@ class LogicalOperatorTypes(Enum):
     OR = auto()
     AND = auto()
 
-    dictionary = {
-        TokenType.NOT: NOT,
-        TokenType.OR: OR,
-        TokenType.AND: AND
+
+class Dictionaries:
+    token_to_types = {
+        TokenType.INT_KW: Types.INT,
+        TokenType.STRING_KW: Types.STRING,
+        TokenType.BOOL_KW: Types.BOOLEAN
+    }
+
+    default_values = {
+        Types.INT: 0,
+        Types.STRING: '',
+        Types.BOOLEAN: False
+    }
+
+    token_to_arithmetic_operator = {
+        TokenType.PLUS: ArithmeticOperatorTypes.PLUS,
+        TokenType.MINUS: ArithmeticOperatorTypes.MINUS,
+        TokenType.STAR: ArithmeticOperatorTypes.MULTIPLY,
+        TokenType.FORWARD_SLASH: ArithmeticOperatorTypes.DIVIDE
+    }
+
+    token_to_boolean_operator = {
+        TokenType.EQUAL: BooleanOperatorTypes.EQUAL,
+        TokenType.NOT_EQUAL: BooleanOperatorTypes.NOT_EQUAL,
+        TokenType.GREATER: BooleanOperatorTypes.GREATER,
+        TokenType.GREATER_EQUAL: BooleanOperatorTypes.GREATER_EQUAL,
+        TokenType.LESS: BooleanOperatorTypes.LESS,
+        TokenType.LESS_EQUAL: BooleanOperatorTypes.LESS_EQUAL
+    }
+
+    token_to_logical_operator = {
+        TokenType.NOT: LogicalOperatorTypes.NOT,
+        TokenType.OR: LogicalOperatorTypes.OR,
+        TokenType.AND: LogicalOperatorTypes.AND
     }

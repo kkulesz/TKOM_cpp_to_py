@@ -5,16 +5,10 @@ from src.parser.ast.primitives import *
 from src.parser.utils import Utils
 
 
-# TODO: zastanowic się:
-#   czy nie klasyfikować std::string i std::cout<< i <<std::endl <--------raczej to
-#   ALBO
-#   używać using namespace std;
-
 # TODO: następnie:
 #   __parse_arguments
 #   __parser_value dokonczyc:
 #       __parse_math_expression
-
 
 
 class Parser:
@@ -67,6 +61,11 @@ class Parser:
             [TokenType.INT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE_KW, TokenType.FALSE_KW])
         if maybe_literal:
             return Literal(maybe_literal)
+
+        maybe_id = self.__check_current_token(TokenType.IDENTIFIER)
+        if maybe_id:
+            return Variable(maybe_id)
+
 
         # TODO:maybe_arithmetic_expression = self.__parse_arithmetic_expression
         #  maybe_variable
@@ -161,11 +160,13 @@ class Parser:
 
     # check functions
     def __check_current_token(self, expected_token_type):
-        return self.__current_token.get_type() == expected_token_type
+        if self.__current_token.get_type() == expected_token_type:
+            return self.__current_token
+        return None
 
     def __check_next_token(self, expected_token_type):
         self.__get_next_token()
-        return self.__current_token.get_type() == expected_token_type
+        return self.__check_current_token()
 
     def __check_if_one_of_tokens(self, list_of_tokens_types):
         for token_type in list_of_tokens_types:

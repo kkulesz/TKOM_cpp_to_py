@@ -64,3 +64,13 @@ class LogicalOperator(AstNode):
             return LogicalOperatorTypes[token_type]
         else:
             ParserDevelopmentError(token_operator.get_position(), "bad token in logical operation!")
+
+
+class Variable(AstNode):
+    def __init__(self, id_token):
+        if TokenType.IDENTIFIER != id_token.get_type():
+            ParserDevelopmentError(id_token.get_position(), "bad token in arithmetic operation!")
+        self.name = id_token.get_value()
+
+    def __repr__(self):
+        return f"(Variable={self.name})"
