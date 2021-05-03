@@ -6,9 +6,11 @@ from src.parser.parser_utils import ParserUtils
 
 
 # TODO: następnie:
-#   __parse_arguments
-#   __parser_value dokonczyc:
-#       __parse_math_expression
+#   __parse_function_declaration
+#       __parse_arguments
+#   __parse_print
+#   __parse_id_starting
+#   __parse statements
 
 
 class Parser:
@@ -56,20 +58,53 @@ class Parser:
         self.__demand_current_token(TokenType.SEMICOLON)
         return VariableDeclaration(maybe_type_token, id_token)
 
-    def __parse_r_value(self):
-        maybe_literal = self.__check_if_one_of_tokens(
-            [TokenType.INT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE_KW, TokenType.FALSE_KW])
+    def __parse_additive_factor(self):
+        additive_factor = None
+        maybe_literal = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
         if maybe_literal:
-            return Literal(maybe_literal)
+            additive_factor = Literal(maybe_literal)
 
         maybe_id = self.__check_current_token(TokenType.IDENTIFIER)
         if maybe_id:
-            return Variable(maybe_id)
+            additive_factor = Variable(maybe_id)
 
+        if self.__check_current_token(TokenType.OP_BRACKET):
+            self.__get_next_token()
+            # TODO: zastanowic sie co z nawiasami, czy trzeba jakos explicite to zapisywac czy bedzie wynikalo z
+            #  kontekstu
+            additive_factor = self.__parse_arithmetic_expression()
+            self.__demand_current_token(TokenType.CL_BRACKET)
 
-        # TODO:maybe_arithmetic_expression = self.__parse_arithmetic_expression
-        #  maybe_variable
-        #  ParserError expected right_value but got token
+        self.__get_next_token()
+        return additive_factor
+
+    def __parse_multiplicative_factor(self):
+        multiplicative_factor = self.__parse_additive_factor()
+        if multiplicative_factor:
+            while self.__check_if_one_of_tokens(ParserUtils.multiplicative_operator_tokens):
+                multiplicative_token = self.__demand_one_of_tokens(ParserUtils.multiplicative_operator_tokens,
+                                                                   "multiplicative operator")
+                self.__get_next_token()
+                multiplicative_factor = ArithmeticExpression(multiplicative_factor,
+                                                             ArithmeticOperator(multiplicative_token),
+                                                             self.__parse_additive_factor())
+
+        return multiplicative_factor
+
+    def __parse_arithmetic_expression(self):
+        result = self.__parse_multiplicative_factor()
+
+        if result:
+            while self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens):
+                additive_token = self.__demand_one_of_tokens(ParserUtils.additive_operator_tokens, "additive operator")
+                self.__get_next_token()
+                result = ArithmeticExpression(result, ArithmeticOperator(additive_token),
+                                              self.__parse_additive_factor())
+
+        return result
+
+    def __parse_r_value(self):
+        return self.__parse_arithmetic_expression()
 
     def __parse_function_declaration(self, maybe_type_token, id_token):
         if not self.__check_current_token(TokenType.OP_BRACKET):
@@ -91,7 +126,7 @@ class Parser:
             return None
         self.__get_next_token()
         value = self.__parse_r_value()
-        self.__demand_next_token(TokenType.SEMICOLON)
+        self.__demand_current_token(TokenType.SEMICOLON)
         return VariableDeclaration(maybe_type_token, id_token, value)
 
     def __parse_id_starting(self):
@@ -131,7 +166,7 @@ class Parser:
         pass
 
     def __parse_print(self):
-        # std :: cout <<
+        # std::cout <<
         # __parse_print_argument
         # << std :: endl ;
         pass
@@ -155,8 +190,9 @@ class Parser:
             return self.__current_token
 
         ParserSyntaxError(self.__current_token.get_position(),
-                          self.__current_token.get_type(),
-                          expected_token_type).fatal()
+                          expected_token_type,
+                          self.__current_token.get_type()
+                          ).fatal()
 
     # check functions
     def __check_current_token(self, expected_token_type):

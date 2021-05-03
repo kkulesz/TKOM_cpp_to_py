@@ -14,5 +14,15 @@ class ParserUtils:
 
     forbidden_ids = python_forbidden_keywords + cpp_forbidden_keywords
 
-    type_tokens = [TokenType.INT_KW, TokenType.BOOL_KW, TokenType.STRING_KW]
+    type_tokens = \
+        [TokenType.INT_KW, TokenType.BOOL_KW, TokenType.STRING_KW]
+
+    literal_tokens = \
+        [TokenType.INT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE_KW, TokenType.FALSE_KW]
+
+    multiplicative_operator_tokens = \
+        [TokenType.STAR, TokenType.FORWARD_SLASH]
+
+    additive_operator_tokens = \
+        [TokenType.PLUS, TokenType.MINUS]
 

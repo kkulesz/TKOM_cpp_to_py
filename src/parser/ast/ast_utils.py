@@ -35,16 +35,16 @@ class LogicalOperatorTypes(Enum):
 
 
 class Dictionaries:
-    token_to_types = {
-        TokenType.INT_KW: Types.INT,
-        TokenType.STRING_KW: Types.STRING,
-        TokenType.BOOL_KW: Types.BOOLEAN
-    }
-
     default_values = {
         Types.INT: 0,
         Types.STRING: '',
         Types.BOOLEAN: False
+    }
+
+    token_to_types = {
+        TokenType.INT_KW: Types.INT,
+        TokenType.STRING_KW: Types.STRING,
+        TokenType.BOOL_KW: Types.BOOLEAN
     }
 
     token_to_arithmetic_operator = {
@@ -67,4 +67,12 @@ class Dictionaries:
         TokenType.NOT: LogicalOperatorTypes.NOT,
         TokenType.OR: LogicalOperatorTypes.OR,
         TokenType.AND: LogicalOperatorTypes.AND
+    }
+
+    operator_to_string = {
+        ArithmeticOperatorTypes.PLUS: '+',
+        ArithmeticOperatorTypes.MINUS: '-',
+        ArithmeticOperatorTypes.DIVIDE: '/',
+        ArithmeticOperatorTypes.MULTIPLY: '*',
+        #TODO:dokonczyc
     }

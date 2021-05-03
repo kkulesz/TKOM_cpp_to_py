@@ -1,4 +1,4 @@
-# semi_complex - they cannot contain complex nodes
+# semi_complex - they consists of primitives and other semi_complex, but do not introduce new scope
 from src.parser.ast.ast_node import AstNode
 from src.parser.ast.ast_utils import *
 
@@ -26,8 +26,14 @@ class Condition(AstNode):
     pass
 
 
-class ArithmeticOperation(AstNode):
-    pass
+class ArithmeticExpression(AstNode):
+    def __init__(self, left_operand, operator, right_operand):
+        self.left_operand = left_operand
+        self.operator = operator
+        self.right_operand = right_operand
+
+    def __repr__(self):
+        return f"ArithmeticExpr: ({self.left_operand}{self.operator}{self.right_operand})"
 
 
 class PrintStatement(AstNode):

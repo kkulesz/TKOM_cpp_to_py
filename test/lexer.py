@@ -93,7 +93,7 @@ class LexerTest(unittest.TestCase):
     def test_string_keyword(self):
         input_str = """std::string"""
         expected_tokens = [
-            Token(TokenType.ENDL_KW)
+            Token(TokenType.STRING_KW)
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
@@ -101,13 +101,6 @@ class LexerTest(unittest.TestCase):
         input_str = """int"""
         expected_tokens = [
             Token(TokenType.INT_KW)
-        ]
-        self.assert_expected_tokens(input_str, expected_tokens)
-
-    def test_string_keyword(self):
-        input_str = """string"""
-        expected_tokens = [
-            Token(TokenType.STRING_KW)
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
@@ -272,7 +265,8 @@ class LexerTest(unittest.TestCase):
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
-    ################################## tests when comments are not tokens
+    ##################################
+    # tests when comments are not tokens
     # def test_start_single_line_comment(self):
     #     input_str = """//"""
     #     expected_tokens = [
