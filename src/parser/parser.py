@@ -8,10 +8,10 @@ from src.parser.parser_utils import ParserUtils
 
 # TODO: następnie:
 #   __parse_function_declaration
-#       __parse_arguments
-#   __parse_print
+#       __parse scope
 #   __parse_id_starting
-#   __parse statements
+#       __variable assignment
+#       __function_invocation
 
 
 class Parser:
@@ -138,6 +138,9 @@ class Parser:
         return VariableDeclaration(maybe_type_token, id_token, value)
 
     def __parse_id_starting(self):
+        id_token = self.__check_current_token(TokenType.IDENTIFIER)
+        if not id_token:
+            return None
         pass
 
     def __parse_assignment(self):
@@ -174,10 +177,15 @@ class Parser:
         pass
 
     def __parse_print(self):
-        # std::cout <<
-        # __parse_print_argument
-        # << std :: endl ;
-        pass
+        if not self.__check_current_token(TokenType.COUT_KW):
+            return None
+        self.__demand_next_token(TokenType.STREAM_OPERATOR)
+        self.__get_next_token()
+        statement_to_print = self.__parse_r_value()
+        self.__demand_current_token(TokenType.STREAM_OPERATOR)
+        self.__demand_next_token(TokenType.ENDL_KW)  # TODO: make this optional and set flag in statement
+        self.__demand_next_token(TokenType.SEMICOLON)
+        return PrintStatement(statement_to_print)
 
     # demand functions
     def __demand_one_of_tokens(self, list_of_tokens_types, expected_message):

@@ -1,7 +1,7 @@
 # semi_complex - they consists of primitives and other semi_complex, but do not introduce new scope
 from src.parser.ast.ast_node import AstNode
 from src.parser.ast.ast_utils import *
-from src.parser.ast.primitives import  *
+from src.parser.ast.primitives import *
 
 
 class VariableDeclaration(AstNode):
@@ -39,4 +39,8 @@ class ArithmeticExpression(AstNode):
 
 
 class PrintStatement(AstNode):
-    pass
+    def __init__(self, to_print):
+        self.to_print = to_print
+
+    def __repr__(self):
+        return f"PrintStatement: {self.to_print}"
