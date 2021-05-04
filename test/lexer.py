@@ -77,7 +77,7 @@ class LexerTest(unittest.TestCase):
         self.assert_expected_tokens(input_str, expected_tokens)
 
     def test_cout_keyword(self):
-        input_str = """std::cout<<"""
+        input_str = """std::cout"""
         expected_tokens = [
             Token(TokenType.COUT_KW)
         ]
@@ -244,6 +244,13 @@ class LexerTest(unittest.TestCase):
         ]
         self.assert_expected_tokens(input_str, expected_tokens)
 
+    def test_stream_operator(self):
+        input_str = """<<"""
+        expected_tokens = [
+            Token(TokenType.STREAM_OPERATOR)
+        ]
+        self.assert_expected_tokens(input_str, expected_tokens)
+
     def test_integer_literal(self):
         input_str = """123"""
         expected_tokens = [
@@ -318,6 +325,7 @@ class LexerTest(unittest.TestCase):
             Token(TokenType.CL_BRACKET),
             Token(TokenType.OP_CURLY_BRACKET),
             Token(TokenType.COUT_KW),
+            Token(TokenType.STREAM_OPERATOR),
             Token(TokenType.STRING_LITERAL, "Hello world!"),
             Token(TokenType.STREAM_OPERATOR),
             Token(TokenType.ENDL_KW),

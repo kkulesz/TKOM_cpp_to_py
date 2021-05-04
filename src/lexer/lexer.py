@@ -66,10 +66,7 @@ class Lexer:
             rest_of_word += self.__move_and_get_char()
 
         if rest_of_word == "cout":
-            rest_of_word += self.__move_and_get_char()
-            rest_of_word += self.__move_and_get_char()
-            if rest_of_word == "cout<<":
-                return Token(TokenType.COUT_KW)
+            return Token(TokenType.COUT_KW)
         elif rest_of_word == "endl":
             return Token(TokenType.ENDL_KW)
         elif rest_of_word == "stri":
