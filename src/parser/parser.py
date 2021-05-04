@@ -7,8 +7,6 @@ from src.parser.parser_utils import ParserUtils
 
 
 # TODO: następnie:
-#   __parse condition
-#   __parse_function_declaration
 #       __parse scope
 
 
@@ -26,7 +24,8 @@ class Parser:
                 pass  # error no instruction
             print(new_ins)
             program.append(new_ins)
-            # if isinstance(new_ins, IfStatement):
+            if isinstance(new_ins, IfStatement) and new_ins.else_instructions is None:
+                continue
             self.__get_next_token()
 
         return program
@@ -236,18 +235,18 @@ class Parser:
         self.__demand_next_token(TokenType.OP_BRACKET)
         self.__get_next_token()
         condition = self.__parse_condition()
-        if not condition:
-            ParserError(self.__get_position(), "condition is a must in if statement!")
+        if condition is None:
+            ParserError(self.__get_position(), "condition is a must in if statement!").fatal()
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
-        #TODO: instructions
+        # TODO: instructions
         if_instructions = []
         self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
-        # if self.__check_next_token(TokenType.ELSE_KW):
-        #     self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
-        #     #TODO: instructions
-        #     else_instruction = []
-        #     self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        if self.__check_next_token(TokenType.ELSE_KW):
+            self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
+            # TODO: instructions
+            else_instruction = []
+            self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
 
         return IfStatement(condition, if_instructions, else_instruction)
 
@@ -258,11 +257,11 @@ class Parser:
         self.__demand_next_token(TokenType.OP_BRACKET)
         self.__get_next_token()
         condition = self.__parse_condition()
-        if not condition:
-            ParserError(self.__get_position(), "condition is a must in while statement!")
+        if condition is None:
+            ParserError(self.__get_position(), "condition is a must in while statement!").fatal()
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
-        #TODO: instructions
+        # TODO: instructions
         instructions = []
         self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
         return WhileStatement(condition, instructions)

@@ -32,5 +32,10 @@ return (a+b+c);
 fun3();
 fun4(a,b, "string");
 
-if(a){}
+if(a){} else {}
+if(a+b){} else{}
+if(true){}
+
 while(a){}
+while(a*b){}
+
