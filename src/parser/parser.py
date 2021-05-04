@@ -152,8 +152,7 @@ class Parser:
         if maybe_function_invocation:
             return maybe_function_invocation
 
-        # TODO: wymyslic jakis lepszy komunikat
-        ParserSyntaxError(self.__get_position(), TokenType.ASSIGN, self.__get_current_token())
+        ParserError(self.__get_position(), "invalid token after id!")
 
     def __parse_assignment(self, id_token):
         if not self.__check_next_token(TokenType.ASSIGN):

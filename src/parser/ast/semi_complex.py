@@ -4,6 +4,27 @@ from src.parser.ast.ast_utils import *
 from src.parser.ast.primitives import *
 
 
+class Literal(AstNode):
+    def __init__(self, literal_token):
+        self.type, self.value = Literal.init_literal(literal_token)
+
+    def __repr__(self):
+        return f"(Literal={self.value})"
+
+    @staticmethod
+    def init_literal(literal_token):
+        literal_type = literal_token.get_type()
+        value = literal_token.get_value()
+        if literal_type == TokenType.INT_LITERAL and isinstance(value, int):
+            return Type(Token(TokenType.INT_KW)), value
+        elif literal_type == TokenType.STRING_LITERAL and isinstance(value, str):
+            return Type(Token(TokenType.STRING_KW)), value
+        elif literal_type == TokenType.TRUE_KW or literal_type == TokenType.FALSE_KW:
+            return Type(Token(TokenType.BOOL_KW)), literal_type == TokenType.TRUE_KW
+        else:
+            ParserDevelopmentError(literal_token.get_position(), "bad token in literal!").fatal()
+
+
 class VariableDeclaration(AstNode):
     def __init__(self, type_token, id_token, value=None):
         # self.type = Dictionaries.token_to_types[type_token.get_type()]

@@ -1,31 +1,11 @@
 # primitives - leaves of AST, they do not contain other nodes
 from src.parser.ast.ast_node import AstNode
 from src.parser.ast.ast_utils import *
-from src.lexer.token import TokenType
+from src.lexer.token import TokenType, Token
 from src.errors import ParserDevelopmentError
 
 
 # TODO: GET RID OF DEVELOPMENT ERRORS WHEN
-
-class Literal(AstNode):
-    def __init__(self, literal_token):
-        self.type, self.value = Literal.init_literal(literal_token)
-
-    def __repr__(self):
-        return f"(Literal={self.value})"
-
-    @staticmethod
-    def init_literal(literal_token):
-        literal_type = literal_token.get_type()
-        value = literal_token.get_value()
-        if literal_type == TokenType.INT_LITERAL and isinstance(value, int):
-            return Types.INT, value
-        elif literal_type == TokenType.STRING_LITERAL and isinstance(value, str):
-            return Types.STRING, value
-        elif literal_type == TokenType.TRUE_KW or literal_type == TokenType.FALSE_KW:
-            return Types.BOOLEAN, literal_type == TokenType.TRUE_KW
-        else:
-            ParserDevelopmentError(literal_token.get_position(), "bad token in literal!").fatal()
 
 
 class ArithmeticOperator(AstNode):
