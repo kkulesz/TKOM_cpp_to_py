@@ -38,7 +38,7 @@ class Parser:
                self.__parse_if() or \
                self.__parse_print() or \
                self.__parse_while() or \
-               self.__parse_id_starting
+               self.__parse_id_starting()
 
     def __parse_declaration(self):
         maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
@@ -138,16 +138,29 @@ class Parser:
         return VariableDeclaration(maybe_type_token, id_token, value)
 
     def __parse_id_starting(self):
-        id_token = self.__check_current_token(TokenType.IDENTIFIER)
-        if not id_token:
+        maybe_id_token = self.__check_current_token(TokenType.IDENTIFIER)
+        if not maybe_id_token:
             return None
-        pass
 
-    def __parse_assignment(self):
-        # __demand(id)
-        # =
-        # __parse_r_value ;
-        pass
+        maybe_assignment = self.__parse_assignment(maybe_id_token)
+        if maybe_assignment:
+            return maybe_assignment
+
+        maybe_function_invocation = self.__parse_function_invocation()
+        if maybe_function_invocation:
+            return maybe_function_invocation
+
+        # TODO: wymyslic jakis lepszy komunikat
+        ParserSyntaxError(self.__get_position(), TokenType.ASSIGN, self.__get_current_token())
+
+    def __parse_assignment(self, id_token):
+        if not self.__check_next_token(TokenType.ASSIGN):
+            return None
+
+        self.__get_next_token()
+        value = self.__parse_r_value()
+        self.__demand_current_token(TokenType.SEMICOLON)
+        return VariableAssignment(id_token, value)
 
     def __parse_function_invocation(self):
         # __demand id (

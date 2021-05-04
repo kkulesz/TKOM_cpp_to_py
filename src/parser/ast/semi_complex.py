@@ -23,6 +23,9 @@ class VariableAssignment(AstNode):
         self.name = Id(id_token)
         self.value = value
 
+    def __repr__(self):
+        return f"VariableAssignment: {self.name} = {self.value}; "
+
 
 class Condition(AstNode):
     pass
@@ -43,4 +46,4 @@ class PrintStatement(AstNode):
         self.to_print = to_print
 
     def __repr__(self):
-        return f"PrintStatement: {self.to_print}"
+        return f"PrintStatement: {self.to_print};"
