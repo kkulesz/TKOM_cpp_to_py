@@ -41,7 +41,7 @@ class ArithmeticOperator(AstNode):
             ParserDevelopmentError(token_operator.get_position(), "bad token in arithmetic operation!").fatal()
 
     def __repr__(self):
-        return Dictionaries.operator_to_string[self.type]
+        return Dictionaries.primitive_to_string[self.type]
 
 
 class BooleanOperator(AstNode):
@@ -70,11 +70,21 @@ class LogicalOperator(AstNode):
             ParserDevelopmentError(token_operator.get_position(), "bad token in logical operation!").fatal()
 
 
-class Variable(AstNode):
+class Id(AstNode):
     def __init__(self, id_token):
         if TokenType.IDENTIFIER != id_token.get_type():
             ParserDevelopmentError(id_token.get_position(), "bad token in arithmetic operation!").fatal()
         self.name = id_token.get_value()
 
     def __repr__(self):
-        return f"(Variable={self.name})"
+        return f"(id={self.name})"
+
+
+class Type(AstNode):
+    def __init__(self, type_token):
+        if type_token.get_type() not in Dictionaries.token_to_types:
+            ParserDevelopmentError(type_token.get_position(), "not a type token!").fatal()
+        self.type = Dictionaries.token_to_types[type_token.get_type()]
+
+    def __repr__(self):
+        return Dictionaries.primitive_to_string[self.type]

@@ -1,5 +1,6 @@
 from src.errors import ParserSyntaxError
 from src.lexer.token import TokenType
+from src.parser.ast.complex import *
 from src.parser.ast.semi_complex import *
 from src.parser.ast.primitives import *
 from src.parser.parser_utils import ParserUtils
@@ -66,7 +67,7 @@ class Parser:
 
         maybe_id = self.__check_current_token(TokenType.IDENTIFIER)
         if maybe_id:
-            additive_factor = Variable(maybe_id)
+            additive_factor = Id(maybe_id)
 
         if self.__check_current_token(TokenType.OP_BRACKET):
             self.__get_next_token()
@@ -106,20 +107,27 @@ class Parser:
     def __parse_r_value(self):
         return self.__parse_arithmetic_expression()
 
-    def __parse_function_declaration(self, maybe_type_token, id_token):
-        if not self.__check_current_token(TokenType.OP_BRACKET):
+    def __parse_function_declaration_arguments(self):
+        maybe_id_token = self.__check_next_token(TokenType.IDENTIFIER)
+        if not maybe_id_token:
             return None
 
-        # __parse_function_arguments
-        # demand )
-        # demand{
-        # instructions = []
-        # while
-        # jezeli return
-        #   to demand __parse_r_value
-        #   ;
-        # }
-        pass
+        arguments_fo_far = [Id(maybe_id_token)]
+        while self.__check_next_token(TokenType.COMA):
+            arguments_fo_far.append(Id(self.__demand_next_token(TokenType.IDENTIFIER)))
+
+        return arguments_fo_far
+
+    def __parse_function_declaration(self, type_token, id_token):
+        if not self.__check_current_token(TokenType.OP_BRACKET):
+            return None
+        arguments = self.__parse_function_declaration_arguments()
+        self.__demand_current_token(TokenType.CL_BRACKET)
+        self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
+        instructions = []
+        # TODO: DEMAND SCOPE( instructions.append while return)
+        self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        return FunctionDeclaration(type_token, id_token, arguments, instructions)
 
     def __parse_variable_declaration(self, maybe_type_token, id_token):
         if not self.__check_current_token(TokenType.ASSIGN):
@@ -202,7 +210,7 @@ class Parser:
 
     def __check_next_token(self, expected_token_type):
         self.__get_next_token()
-        return self.__check_current_token()
+        return self.__check_current_token(expected_token_type)
 
     def __check_if_one_of_tokens(self, list_of_tokens_types):
         for token_type in list_of_tokens_types:

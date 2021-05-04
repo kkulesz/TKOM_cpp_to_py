@@ -13,6 +13,7 @@ class TokenType(Enum):
     END_MULTI_LINE_COMMENT = auto()
     SINGLE_LINE_COMMENT = auto()
     MULTI_LINE_COMMENT = auto()
+    COMA = auto()
 
     # brackets
     OP_BRACKET = auto()
@@ -126,4 +127,5 @@ class TokenDicts:
         ';': TokenType.SEMICOLON,
         '>': TokenType.GREATER,
         '<': TokenType.LESS,
+        ',': TokenType.COMA
     }

@@ -69,7 +69,7 @@ class Dictionaries:
         TokenType.AND: LogicalOperatorTypes.AND
     }
 
-    operator_to_string = {
+    primitive_to_string = {
         ArithmeticOperatorTypes.PLUS: '+',
         ArithmeticOperatorTypes.MINUS: '-',
         ArithmeticOperatorTypes.DIVIDE: '/',
@@ -84,5 +84,9 @@ class Dictionaries:
 
         LogicalOperatorTypes.NOT: 'not',
         LogicalOperatorTypes.OR: 'or',
-        LogicalOperatorTypes.AND: 'and'
+        LogicalOperatorTypes.AND: 'and',
+
+        Types.INT: 'int',
+        Types.STRING: 'string',
+        Types.BOOLEAN: 'bool'
     }
