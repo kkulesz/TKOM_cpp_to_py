@@ -29,3 +29,8 @@ class ParserUtils:
     additive_operator_tokens = \
         [TokenType.PLUS, TokenType.MINUS]
 
+    comparison_tokens =\
+        [TokenType.EQUAL, TokenType.NOT_EQUAL, TokenType.GREATER_EQUAL, TokenType.GREATER, TokenType.LESS_EQUAL, TokenType.LESS]
+
+    boolean_tokens = \
+        [TokenType.AND, TokenType.OR]

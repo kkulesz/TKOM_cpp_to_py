@@ -32,7 +32,7 @@ class TokenType(Enum):
     OR = auto()
     NOT = auto()
 
-    # bool operators
+    # comparison operators
     LESS = auto()
     LESS_EQUAL = auto()
     EQUAL = auto()

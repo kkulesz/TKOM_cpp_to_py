@@ -31,7 +31,7 @@ class VariableDeclaration(AstNode):
         self.type = Type(type_token)
         self.name = Id(id_token)
         if value is None:
-            self.value = Dictionaries.default_values[self.type]
+            self.value = Type.get_default_value(self.type)
         else:
             self.value = value
 
@@ -66,8 +66,21 @@ class FunctionInvocation(AstNode):
         return f"FunctionInvocation {self.name} {self.arguments}"
 
 
-class Condition(AstNode):
-    pass
+# class SingleCondition(AstNode):
+#     def __init__(self, left, operator_token=None, right=None):
+#         self.left = left
+#         self.operator = None
+#         self.right = None
+#         if operator_token:
+#             self.operator = ComparisonOperator(operator_token)
+#             self.right = right
+#
+#     def __repr__(self):
+#         return f"SingleCond: {self.left}{self.operator}{self.right}"
+#
+#
+# class ComplexCondition(AstNode):
+#     pass
 
 
 class ArithmeticExpression(AstNode):
@@ -86,3 +99,14 @@ class PrintStatement(AstNode):
 
     def __repr__(self):
         return f"PrintStatement: {self.to_print};"
+
+
+class ReturnExpression(AstNode):
+    def __init__(self, value=None):
+        self.value = value
+
+    def __repr__(self):
+        return_value = ""
+        if self.value is not None:
+            return_value = ":" + str(self.value)
+        return f"Return{return_value};"

@@ -18,7 +18,7 @@ class ArithmeticOperatorTypes(Enum):
 
 
 @unique
-class BooleanOperatorTypes(Enum):
+class ComparisonOperatorTypes(Enum):
     EQUAL = auto()
     NOT_EQUAL = auto()
     GREATER = auto()
@@ -54,13 +54,13 @@ class Dictionaries:
         TokenType.FORWARD_SLASH: ArithmeticOperatorTypes.DIVIDE
     }
 
-    token_to_boolean_operator = {
-        TokenType.EQUAL: BooleanOperatorTypes.EQUAL,
-        TokenType.NOT_EQUAL: BooleanOperatorTypes.NOT_EQUAL,
-        TokenType.GREATER: BooleanOperatorTypes.GREATER,
-        TokenType.GREATER_EQUAL: BooleanOperatorTypes.GREATER_EQUAL,
-        TokenType.LESS: BooleanOperatorTypes.LESS,
-        TokenType.LESS_EQUAL: BooleanOperatorTypes.LESS_EQUAL
+    token_to_comparison_operator = {
+        TokenType.EQUAL: ComparisonOperatorTypes.EQUAL,
+        TokenType.NOT_EQUAL: ComparisonOperatorTypes.NOT_EQUAL,
+        TokenType.GREATER: ComparisonOperatorTypes.GREATER,
+        TokenType.GREATER_EQUAL: ComparisonOperatorTypes.GREATER_EQUAL,
+        TokenType.LESS: ComparisonOperatorTypes.LESS,
+        TokenType.LESS_EQUAL: ComparisonOperatorTypes.LESS_EQUAL
     }
 
     token_to_logical_operator = {
@@ -75,12 +75,12 @@ class Dictionaries:
         ArithmeticOperatorTypes.DIVIDE: '/',
         ArithmeticOperatorTypes.MULTIPLY: '*',
 
-        BooleanOperatorTypes.EQUAL: '==',
-        BooleanOperatorTypes.NOT_EQUAL: '!=',
-        BooleanOperatorTypes.GREATER: '>',
-        BooleanOperatorTypes.GREATER_EQUAL: '>=',
-        BooleanOperatorTypes.LESS: '<',
-        BooleanOperatorTypes.LESS_EQUAL: '<=',
+        ComparisonOperatorTypes.EQUAL: '==',
+        ComparisonOperatorTypes.NOT_EQUAL: '!=',
+        ComparisonOperatorTypes.GREATER: '>',
+        ComparisonOperatorTypes.GREATER_EQUAL: '>=',
+        ComparisonOperatorTypes.LESS: '<',
+        ComparisonOperatorTypes.LESS_EQUAL: '<=',
 
         LogicalOperatorTypes.NOT: 'not',
         LogicalOperatorTypes.OR: 'or',

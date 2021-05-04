@@ -19,8 +19,19 @@ class FunctionDeclaration(AstNode):
 
 
 class IfStatement(AstNode):
-    pass
+    def __init__(self, condition, if_instructions, else_instructions):
+        self.condition = condition
+        self.if_instructions = if_instructions
+        self.else_instructions = else_instructions
+
+    def __repr__(self):
+        return f"IfStatement ({self.condition}) {self.if_instructions} | {self.else_instructions}"
 
 
 class WhileStatement(AstNode):
-    pass
+    def __init__(self, condition, instructions):
+        self.condition = condition
+        self.instructions = instructions
+
+    def __repr__(self):
+        return f"WhileStatement ({self.condition}) {self.instructions}"

@@ -26,6 +26,7 @@ class Parser:
                 pass  # error no instruction
             print(new_ins)
             program.append(new_ins)
+            # if isinstance(new_ins, IfStatement):
             self.__get_next_token()
 
         return program
@@ -33,10 +34,11 @@ class Parser:
     def __parse_instruction(self):
         # instead of if-else everywhere
         return self.__parse_declaration() or \
-               self.__parse_if() or \
+               self.__parse_id_starting() or \
                self.__parse_print() or \
+               self.__parse_return() or \
                self.__parse_while() or \
-               self.__parse_id_starting()
+               self.__parse_if()
 
     def __parse_declaration(self):
         maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
@@ -74,7 +76,8 @@ class Parser:
             additive_factor = self.__parse_arithmetic_expression()
             self.__demand_current_token(TokenType.CL_BRACKET)
 
-        self.__get_next_token()
+        if additive_factor:
+            self.__get_next_token()
         return additive_factor
 
     def __parse_multiplicative_factor(self):
@@ -102,7 +105,26 @@ class Parser:
 
         return result
 
+    # def __parse_single_condition(self):
+    #     left = self.__parse_arithmetic_expression()
+    #     maybe_comparison_operator = None
+    #     maybe_right = None
+    #     if left:
+    #         maybe_comparison_operator = self.__check_if_one_of_tokens(ParserUtils.comparison_tokens)
+    #         self.__get_next_token()
+    #         if maybe_comparison_operator:
+    #             maybe_right = self.__parse_arithmetic_expression()
+    #             if not maybe_right:
+    #                 ParserError(self.__get_position(), "expected literal, id or math expression!")
+    #     return SingleCondition(left, maybe_comparison_operator, maybe_right)
+    #
+    # def __parse_condition(self):
+    #     return self.__parse_single_condition()
+
     def __parse_r_value(self):
+        return self.__parse_arithmetic_expression()
+
+    def __parse_condition(self):
         return self.__parse_arithmetic_expression()
 
     def __parse_function_declaration_arguments(self):
@@ -196,26 +218,54 @@ class Parser:
 
         return FunctionInvocation(id_token, arguments)
 
-    def __parse_if(self):
-        # if ( <condition> ) {
-        # __parse_statement
-        # }
-        # self.__parse_else()
-        pass
+    def __parse_return(self):
+        if not self.__check_current_token(TokenType.RETURN_KW):
+            return None
 
-    def __parse_else(self):
-        # else {
-        # __parse_statement
-        # }
-        pass
+        self.__get_next_token()
+        maybe_return_value = self.__parse_r_value()
+        self.__demand_current_token(TokenType.SEMICOLON)
+        return ReturnExpression(maybe_return_value)
+
+    def __parse_if(self):
+        if not self.__check_current_token(TokenType.IF_KW):
+            return None
+        condition = None
+        if_instructions = None
+        else_instruction = None
+        self.__demand_next_token(TokenType.OP_BRACKET)
+        self.__get_next_token()
+        condition = self.__parse_condition()
+        if not condition:
+            ParserError(self.__get_position(), "condition is a must in if statement!")
+        self.__demand_current_token(TokenType.CL_BRACKET)
+        self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
+        #TODO: instructions
+        if_instructions = []
+        self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        # if self.__check_next_token(TokenType.ELSE_KW):
+        #     self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
+        #     #TODO: instructions
+        #     else_instruction = []
+        #     self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+
+        return IfStatement(condition, if_instructions, else_instruction)
 
     def __parse_while(self):
-        # while (
-        # __parse_condition
-        # ) {
-        # __parse_statement
-        # }
-        pass
+        if not self.__check_current_token(TokenType.WHILE_KW):
+            return None
+
+        self.__demand_next_token(TokenType.OP_BRACKET)
+        self.__get_next_token()
+        condition = self.__parse_condition()
+        if not condition:
+            ParserError(self.__get_position(), "condition is a must in while statement!")
+        self.__demand_current_token(TokenType.CL_BRACKET)
+        self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
+        #TODO: instructions
+        instructions = []
+        self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        return WhileStatement(condition, instructions)
 
     def __parse_print(self):
         if not self.__check_current_token(TokenType.COUT_KW):

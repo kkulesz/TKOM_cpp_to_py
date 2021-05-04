@@ -24,15 +24,15 @@ class ArithmeticOperator(AstNode):
         return Dictionaries.primitive_to_string[self.type]
 
 
-class BooleanOperator(AstNode):
+class ComparisonOperator(AstNode):
     def __init__(self, token):
-        self.type = BooleanOperator.get_type_from_token(token)
+        self.type = ComparisonOperator.get_type_from_token(token)
 
     @staticmethod
     def get_type_from_token(token_operator):
         token_type = token_operator.get_type()
-        if token_type in Dictionaries.token_to_boolean_operator:
-            return Dictionaries.token_to_boolean_operator[token_type]
+        if token_type in Dictionaries.token_to_comparison_operator:
+            return Dictionaries.token_to_comparison_operator[token_type]
         else:
             ParserDevelopmentError(token_operator.get_position(), "bad token in boolean operation!").fatal()
 
@@ -68,3 +68,7 @@ class Type(AstNode):
 
     def __repr__(self):
         return Dictionaries.primitive_to_string[self.type]
+
+    @staticmethod
+    def get_default_value(type_node):
+        return Dictionaries.default_values[type_node.type]
