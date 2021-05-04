@@ -11,5 +11,11 @@ std::cout<<"uejjeje"<<std::endl;
 aca = aca;
 i = 9;
 i = ((9*1)+2)*3;
-int fun(a, b, c){
+int fun(){
 }
+
+int fun2(int a, std::string b){
+}
+
+fun3();
+fun4(a,b, "string");

@@ -15,7 +15,7 @@ class VariableDeclaration(AstNode):
             self.value = value
 
     def __repr__(self):
-        return f"VariableDeclaration: {self.type} {self.name} = {self.value}; "
+        return f"VariableDeclaration: {self.type} {self.name} = {self.value};"
 
 
 class VariableAssignment(AstNode):
@@ -24,7 +24,25 @@ class VariableAssignment(AstNode):
         self.value = value
 
     def __repr__(self):
-        return f"VariableAssignment: {self.name} = {self.value}; "
+        return f"VariableAssignment: {self.name} = {self.value};"
+
+
+class FunctionArgument(AstNode):
+    def __init__(self, type_token, id_token):
+        self.type = Type(type_token)
+        self.name = Id(id_token)
+
+    def __repr__(self):
+        return f"FunArg:{self.type}-{self.name}"
+
+
+class FunctionInvocation(AstNode):
+    def __init__(self, id_token, arguments):
+        self.name = Id(id_token)
+        self.arguments = arguments
+
+    def __repr__(self):
+        return f"FunctionInvocation {self.name} {self.arguments}"
 
 
 class Condition(AstNode):

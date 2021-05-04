@@ -1,4 +1,4 @@
-from src.errors import ParserSyntaxError
+from src.errors import ParserSyntaxError, ParserError
 from src.lexer.token import TokenType
 from src.parser.ast.complex import *
 from src.parser.ast.semi_complex import *
@@ -7,11 +7,9 @@ from src.parser.parser_utils import ParserUtils
 
 
 # TODO: następnie:
+#   __parse condition
 #   __parse_function_declaration
 #       __parse scope
-#   __parse_id_starting
-#       __variable assignment
-#       __function_invocation
 
 
 class Parser:
@@ -108,19 +106,23 @@ class Parser:
         return self.__parse_arithmetic_expression()
 
     def __parse_function_declaration_arguments(self):
-        maybe_id_token = self.__check_next_token(TokenType.IDENTIFIER)
-        if not maybe_id_token:
-            return None
-
-        arguments_fo_far = [Id(maybe_id_token)]
+        maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
+        if not maybe_type_token:
+            return []
+        id_token = self.__demand_next_token(TokenType.IDENTIFIER)
+        arguments_fo_far = [FunctionArgument(maybe_type_token, id_token)]
         while self.__check_next_token(TokenType.COMA):
-            arguments_fo_far.append(Id(self.__demand_next_token(TokenType.IDENTIFIER)))
+            self.__get_next_token()
+            type_token = self.__demand_one_of_tokens(ParserUtils.type_tokens, "type token")
+            id_token = self.__demand_next_token(TokenType.IDENTIFIER)
+            arguments_fo_far.append(FunctionArgument(type_token, id_token))
 
         return arguments_fo_far
 
     def __parse_function_declaration(self, type_token, id_token):
         if not self.__check_current_token(TokenType.OP_BRACKET):
             return None
+        self.__get_next_token()
         arguments = self.__parse_function_declaration_arguments()
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
@@ -146,7 +148,7 @@ class Parser:
         if maybe_assignment:
             return maybe_assignment
 
-        maybe_function_invocation = self.__parse_function_invocation()
+        maybe_function_invocation = self.__parse_function_invocation(maybe_id_token)
         if maybe_function_invocation:
             return maybe_function_invocation
 
@@ -162,11 +164,38 @@ class Parser:
         self.__demand_current_token(TokenType.SEMICOLON)
         return VariableAssignment(id_token, value)
 
-    def __parse_function_invocation(self):
-        # __demand id (
-        # parse_arguments
-        # ) ;
-        pass
+    def __get_literal_or_id(self):
+        maybe_id_token = self.__check_current_token(TokenType.IDENTIFIER)
+        if maybe_id_token:
+            return Id(maybe_id_token)
+
+        maybe_literal_token = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
+        if maybe_literal_token:
+            return Literal(maybe_literal_token)
+
+        ParserError(self.__get_position(), "invalid function argument token!")
+
+    def __parse_function_invocation_arguments(self):
+        maybe_id_token = self.__check_if_one_of_tokens(ParserUtils.function_invocation_tokens)
+        if not maybe_id_token:
+            return []
+
+        arguments_so_far = [Id(maybe_id_token)]
+        while self.__check_next_token(TokenType.COMA):
+            self.__get_next_token()
+            arguments_so_far.append(self.__get_literal_or_id())
+
+        return arguments_so_far
+
+    def __parse_function_invocation(self, id_token):
+        if not self.__check_current_token(TokenType.OP_BRACKET):
+            return None
+        self.__get_next_token()
+        arguments = self.__parse_function_invocation_arguments()
+        self.__demand_current_token(TokenType.CL_BRACKET)
+        self.__demand_next_token(TokenType.SEMICOLON)
+
+        return FunctionInvocation(id_token, arguments)
 
     def __parse_if(self):
         # if ( <condition> ) {

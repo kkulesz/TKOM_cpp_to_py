@@ -20,6 +20,9 @@ class ParserUtils:
     literal_tokens = \
         [TokenType.INT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE_KW, TokenType.FALSE_KW]
 
+    function_invocation_tokens = \
+        literal_tokens + [TokenType.IDENTIFIER]
+
     multiplicative_operator_tokens = \
         [TokenType.STAR, TokenType.FORWARD_SLASH]
 
