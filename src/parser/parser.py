@@ -10,6 +10,7 @@ class Parser:
     def __init__(self, lexer):
         self.__lexer = lexer
         self.__current_token = None
+        self.__is_consumed = False
 
     def parse(self):
         program = []
@@ -83,8 +84,7 @@ class Parser:
         multiplicative_factor = self.__parse_additive_factor()
         if multiplicative_factor:
             while self.__check_if_one_of_tokens(ParserUtils.multiplicative_operator_tokens):
-                multiplicative_token = self.__demand_one_of_tokens(ParserUtils.multiplicative_operator_tokens,
-                                                                   "multiplicative operator")
+                multiplicative_token = self.__get_current_token()
                 self.__get_next_token()
                 multiplicative_factor = ArithmeticExpression(multiplicative_factor,
                                                              ArithmeticOperator(multiplicative_token),
@@ -97,7 +97,7 @@ class Parser:
 
         if result:
             while self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens):
-                additive_token = self.__demand_one_of_tokens(ParserUtils.additive_operator_tokens, "additive operator")
+                additive_token = self.__get_current_token()
                 self.__get_next_token()
                 result = ArithmeticExpression(result, ArithmeticOperator(additive_token),
                                               self.__parse_additive_factor())
@@ -305,7 +305,8 @@ class Parser:
 
     # check functions
     def __check_current_token(self, expected_token_type):
-        if self.__current_token.get_type() == expected_token_type:
+        if self.__current_token.get_type() == expected_token_type and not self.__is_consumed:
+            self.__is_consumed = True
             return self.__current_token
         return None
 
@@ -324,6 +325,7 @@ class Parser:
         return self.__current_token
 
     def __get_next_token(self):
+        self.__is_consumed = False
         self.__current_token = self.__lexer.build_and_get_token()
         return self.__current_token
 

@@ -1,12 +1,15 @@
+if(a+b){} else{}
 if(true){}
 if(a){} else {}
-if(a+b){} else{}
-
 if(true){
     int a = a;
     if(a){
     }
     return a;
+}
+if(true){
+    if(true){
+    }
 }
 int a;
 int aa =1;
