@@ -5,7 +5,7 @@ class GenericError(Exception):
 
     def fatal(self):
         print(self.message)
-        exit()
+        exit(-1)
 
     def warning(self):
         print(self.message)

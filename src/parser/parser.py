@@ -17,13 +17,10 @@ class Parser:
         self.__get_next_token()
         while self.__get_current_token().get_type() != TokenType.EOF:
             new_ins = self.__parse_instruction()
-            if new_ins is None:
-                pass  # error no instruction
             print(new_ins)
             program.append(new_ins)
-            if isinstance(new_ins, IfStatement) and new_ins.else_instructions is None:
-                continue
-            self.__get_next_token()
+            if self.__is_consumed:
+                self.__get_next_token()
 
         return program
 
@@ -114,7 +111,7 @@ class Parser:
     #         if maybe_comparison_operator:
     #             maybe_right = self.__parse_arithmetic_expression()
     #             if not maybe_right:
-    #                 ParserError(self.__get_position(), "expected literal, id or math expression!")
+    #                 ParserError(self.__get_position(), "expected literal, id or math expression!").fatal()
     #     return SingleCondition(left, maybe_comparison_operator, maybe_right)
     #
     # def __parse_condition(self):
@@ -130,6 +127,7 @@ class Parser:
         maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
         if not maybe_type_token:
             return []
+
         id_token = self.__demand_next_token(TokenType.IDENTIFIER)
         arguments_fo_far = [FunctionArgument(maybe_type_token, id_token)]
         while self.__check_next_token(TokenType.COMA):
@@ -143,6 +141,7 @@ class Parser:
     def __parse_function_declaration(self, type_token, id_token):
         if not self.__check_current_token(TokenType.OP_BRACKET):
             return None
+
         self.__get_next_token()
         arguments = self.__parse_function_declaration_arguments()
         self.__demand_current_token(TokenType.CL_BRACKET)
@@ -150,6 +149,7 @@ class Parser:
         instructions = []
         while not self.__check_next_token(TokenType.CL_CURLY_BRACKET):
             instructions.append(self.__parse_instruction())
+
         return FunctionDeclaration(type_token, id_token, arguments, instructions)
 
     def __parse_variable_declaration(self, maybe_type_token, id_token):
@@ -173,7 +173,7 @@ class Parser:
         if maybe_function_invocation:
             return maybe_function_invocation
 
-        ParserError(self.__get_position(), "invalid token after id!")
+        ParserError(self.__get_position(), f"invalid token({self.__get_current_token()}) after id!").fatal()
 
     def __parse_assignment(self, id_token):
         if not self.__check_next_token(TokenType.ASSIGN):
@@ -182,6 +182,7 @@ class Parser:
         self.__get_next_token()
         value = self.__parse_r_value()
         self.__demand_current_token(TokenType.SEMICOLON)
+
         return VariableAssignment(id_token, value)
 
     def __get_literal_or_id(self):
@@ -193,7 +194,7 @@ class Parser:
         if maybe_literal_token:
             return Literal(maybe_literal_token)
 
-        ParserError(self.__get_position(), "invalid function argument token!")
+        ParserError(self.__get_position(), "invalid function argument token!").fatal()
 
     def __parse_function_invocation_arguments(self):
         maybe_id_token = self.__check_if_one_of_tokens(ParserUtils.function_invocation_tokens)
@@ -210,6 +211,7 @@ class Parser:
     def __parse_function_invocation(self, id_token):
         if not self.__check_current_token(TokenType.OP_BRACKET):
             return None
+
         self.__get_next_token()
         arguments = self.__parse_function_invocation_arguments()
         self.__demand_current_token(TokenType.CL_BRACKET)
@@ -224,14 +226,13 @@ class Parser:
         self.__get_next_token()
         maybe_return_value = self.__parse_r_value()
         self.__demand_current_token(TokenType.SEMICOLON)
+
         return ReturnExpression(maybe_return_value)
 
     def __parse_if(self):
         if not self.__check_current_token(TokenType.IF_KW):
             return None
-        condition = None
-        if_instructions = None
-        else_instruction = None
+
         self.__demand_next_token(TokenType.OP_BRACKET)
         self.__get_next_token()
         condition = self.__parse_condition()
@@ -240,9 +241,12 @@ class Parser:
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
         if_instructions = self.__parse_scope()
+
+        else_instruction = None
         if self.__check_next_token(TokenType.ELSE_KW):
             self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
             else_instruction = self.__parse_scope()
+
         return IfStatement(condition, if_instructions, else_instruction)
 
     def __parse_while(self):
@@ -276,7 +280,7 @@ class Parser:
         while not self.__check_current_token(TokenType.CL_CURLY_BRACKET):
             new_instruction = self.__parse_instruction()
             scope.append(new_instruction)
-            if not (isinstance(new_instruction, IfStatement) and new_instruction.else_instructions is None):
+            if self.__is_consumed:
                 self.__get_next_token()
         return scope
 

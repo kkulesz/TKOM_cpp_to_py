@@ -27,7 +27,6 @@ class Literal(AstNode):
 
 class VariableDeclaration(AstNode):
     def __init__(self, type_token, id_token, value=None):
-        # self.type = Dictionaries.token_to_types[type_token.get_type()]
         self.type = Type(type_token)
         self.name = Id(id_token)
         if value is None:
