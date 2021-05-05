@@ -31,6 +31,7 @@ class Parser:
                             self.__parse_print() or \
                             self.__parse_return() or \
                             self.__parse_while() or \
+                            self.__parse_comments() or \
                             self.__parse_if()
 
         if not maybe_instruction:
@@ -283,6 +284,17 @@ class Parser:
             if self.__is_consumed:
                 self.__get_next_token()
         return scope
+
+    def __parse_comments(self):
+        maybe_single_line = self.__check_current_token(TokenType.SINGLE_LINE_COMMENT)
+        if maybe_single_line:
+            return SingleLineComment(maybe_single_line)
+
+        maybe_multi_line = self.__check_current_token(TokenType.MULTI_LINE_COMMENT)
+        if maybe_multi_line:
+            return MultiLineComment(maybe_multi_line)
+
+        return None
 
     # demand functions
     def __demand_one_of_tokens(self, list_of_tokens_types, expected_message):

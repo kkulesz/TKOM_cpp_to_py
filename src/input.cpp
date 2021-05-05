@@ -23,7 +23,10 @@ bool bb = true;
 
 std::string c;
 std::string c= "jaki napis";
-
+// komentarz
+/*
+aaaaa
+*/
 std::cout<<esssa<<std::endl;
 std::cout<<a+3<<std::endl;
 std::cout<<false<<std::endl;

@@ -72,3 +72,19 @@ class Type(AstNode):
     @staticmethod
     def get_default_value(type_node):
         return Dictionaries.default_values[type_node.type]
+
+
+class SingleLineComment(AstNode):
+    def __init__(self, single_line_token):
+        self.comment = single_line_token.get_value()
+
+    def __repr__(self):
+        return f"SingleComment: {self.comment}"
+
+
+class MultiLineComment(AstNode):
+    def __init__(self, multi_line_comment):
+        self.comment = multi_line_comment.get_value()
+
+    def __repr__(self):
+        return f"MultiComment: {self.comment}"
