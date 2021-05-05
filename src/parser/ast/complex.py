@@ -6,16 +6,13 @@ from src.parser.ast.primitives import *
 
 class FunctionDeclaration(AstNode):
     def __init__(self, type_token, id_token, arguments, instructions):
-        """
-        TODO: return maybe?
-        """
         self.type = Type(type_token)
         self.name = Id(id_token)
         self.arguments = arguments
         self.instructions = instructions
 
     def __repr__(self):
-        return f"FunctionDeclaration: {self.type} {self.name} ({self.arguments})  {self.instructions}"
+        return f"FunctionDeclaration: {self.type} {self.name} ({self.arguments}) <{self.instructions}>;"
 
 
 class IfStatement(AstNode):
@@ -25,7 +22,7 @@ class IfStatement(AstNode):
         self.else_instructions = else_instructions
 
     def __repr__(self):
-        return f"IfStatement ({self.condition}) {self.if_instructions} | {self.else_instructions}"
+        return f"IfStatement ({self.condition}) {self.if_instructions} Else: {self.else_instructions}"
 
 
 class WhileStatement(AstNode):

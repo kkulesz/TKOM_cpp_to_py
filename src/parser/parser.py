@@ -6,10 +6,6 @@ from src.parser.ast.primitives import *
 from src.parser.parser_utils import ParserUtils
 
 
-# TODO: następnie:
-#       __parse scope
-
-
 class Parser:
     def __init__(self, lexer):
         self.__lexer = lexer
@@ -32,12 +28,16 @@ class Parser:
 
     def __parse_instruction(self):
         # instead of if-else everywhere
-        return self.__parse_declaration() or \
-               self.__parse_id_starting() or \
-               self.__parse_print() or \
-               self.__parse_return() or \
-               self.__parse_while() or \
-               self.__parse_if()
+        maybe_instruction = self.__parse_declaration() or \
+                            self.__parse_id_starting() or \
+                            self.__parse_print() or \
+                            self.__parse_return() or \
+                            self.__parse_while() or \
+                            self.__parse_if()
+
+        if not maybe_instruction:
+            ParserError(self.__get_position(), "unknown instruction!").fatal()
+        return maybe_instruction
 
     def __parse_declaration(self):
         maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
@@ -148,8 +148,8 @@ class Parser:
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
         instructions = []
-        # TODO: DEMAND SCOPE( instructions.append while return)
-        self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        while not self.__check_next_token(TokenType.CL_CURLY_BRACKET):
+            instructions.append(self.__parse_instruction())
         return FunctionDeclaration(type_token, id_token, arguments, instructions)
 
     def __parse_variable_declaration(self, maybe_type_token, id_token):
@@ -239,15 +239,10 @@ class Parser:
             ParserError(self.__get_position(), "condition is a must in if statement!").fatal()
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
-        # TODO: instructions
-        if_instructions = []
-        self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        if_instructions = self.__parse_scope()
         if self.__check_next_token(TokenType.ELSE_KW):
             self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
-            # TODO: instructions
-            else_instruction = []
-            self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
-
+            else_instruction = self.__parse_scope()
         return IfStatement(condition, if_instructions, else_instruction)
 
     def __parse_while(self):
@@ -261,9 +256,7 @@ class Parser:
             ParserError(self.__get_position(), "condition is a must in while statement!").fatal()
         self.__demand_current_token(TokenType.CL_BRACKET)
         self.__demand_next_token(TokenType.OP_CURLY_BRACKET)
-        # TODO: instructions
-        instructions = []
-        self.__demand_next_token(TokenType.CL_CURLY_BRACKET)
+        instructions = self.__parse_scope()
         return WhileStatement(condition, instructions)
 
     def __parse_print(self):
@@ -276,6 +269,16 @@ class Parser:
         self.__demand_next_token(TokenType.ENDL_KW)  # TODO: make this optional and set flag in statement
         self.__demand_next_token(TokenType.SEMICOLON)
         return PrintStatement(statement_to_print)
+
+    def __parse_scope(self):
+        scope = []
+        self.__get_next_token()
+        while not self.__check_current_token(TokenType.CL_CURLY_BRACKET):
+            new_instruction = self.__parse_instruction()
+            scope.append(new_instruction)
+            if not (isinstance(new_instruction, IfStatement) and new_instruction.else_instructions is None):
+                self.__get_next_token()
+        return scope
 
     # demand functions
     def __demand_one_of_tokens(self, list_of_tokens_types, expected_message):
