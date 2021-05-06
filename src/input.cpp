@@ -1,26 +1,11 @@
-if(a+b){} else{}
-if(true){}
-if(a){} else {}
-if(true){
-    int a = a;
-    if(a){
-    }
-    return a;
-}
-if(true){
-    if(true){
-    }
-}
 int a;
 int aa =1;
 int aaa = 1+2;
 int aaaa = (1+2);
 int aaaaa = 1* ((1+2)*2);
 int aah = (aaa*"string")+(2+true);
-
 bool b;
 bool bb = true;
-
 std::string c;
 std::string c= "jaki napis";
 // komentarz
@@ -59,11 +44,31 @@ fun3();
 fun4(a,b, "string");
 
 
-
+if(a+b){} else{}
+if(true){}
+if(a){} else {}
+if(true){
+    int a = a;
+    if(a){
+    }
+    return a;
+}
+if(true){
+    if(true){
+    }
+}
 
 while(a){}
 while(a*b){}
 while(1){
     int a = a+b;
+    while(true){
+        int a;
+        if(true){
+            int a = 0;
+        }else{
+            int b = c;
+        }
+    }
 }
 
