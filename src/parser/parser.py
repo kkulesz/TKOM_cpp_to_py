@@ -10,10 +10,10 @@ class Parser:
     def __init__(self, lexer):
         self.__lexer = lexer
         self.__current_token = None
+        self.__get_next_token()
 
     def parse(self):
         program = []
-        self.__get_next_token()
         while self.__get_current_token().get_type() != TokenType.EOF:
             new_ins = self.__parse_instruction()
             print(new_ins)
@@ -53,7 +53,7 @@ class Parser:
         self.__demand_token(TokenType.SEMICOLON)
         return VariableDeclaration(maybe_type_token, id_token)
 
-    def __get_id_or_literal(self):
+    def __parse_id_or_literal(self):
         maybe_literal = self.__check_if_one_of_tokens_new(ParserUtils.literal_tokens)
         if maybe_literal:
             return Literal(maybe_literal)
@@ -65,7 +65,7 @@ class Parser:
         return None
 
     def __parse_additive_factor(self):
-        additive_factor = self.__get_id_or_literal()
+        additive_factor = self.__parse_id_or_literal()
         if additive_factor:
             return additive_factor
 
@@ -104,10 +104,20 @@ class Parser:
         return result
 
     def __parse_r_value(self):
-        return self.__parse_arithmetic_expression()
+        return self.__parse_arithmetic_expression() or self.__parse_condition()
 
     def __parse_condition(self):
-        return self.__parse_arithmetic_expression()
+        maybe_left_id_or_literal = self.__parse_id_or_literal()
+        if not maybe_left_id_or_literal:
+            return None
+
+        maybe_comparison_token = self.__check_if_one_of_tokens_new(ParserUtils.comparison_tokens)
+        if maybe_comparison_token:
+            maybe_right_id_or_literal = self.__parse_id_or_literal()
+            if not maybe_right_id_or_literal:
+                ParserError(self.__get_position(), "expected literal or id").fatal()
+            return SingleCondition(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
+        return maybe_left_id_or_literal
 
     def __parse_function_declaration_arguments(self):
         maybe_type_token = self.__check_if_one_of_tokens_new(ParserUtils.type_tokens)
@@ -175,7 +185,7 @@ class Parser:
 
         arguments_so_far = [Id(maybe_id_token)]
         while self.__check_token(TokenType.COMA):
-            arguments_so_far.append(self.__get_id_or_literal())
+            arguments_so_far.append(self.__parse_id_or_literal())
 
         return arguments_so_far
 

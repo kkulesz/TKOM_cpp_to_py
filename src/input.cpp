@@ -44,7 +44,7 @@ fun3();
 fun4(a,b, "string");
 
 
-if(a+b){} else{}
+if(a){} else{}
 if(true){}
 if(a){} else {}
 if(true){
@@ -59,7 +59,9 @@ if(true){
 }
 
 while(a){}
-while(a*b){}
+while(a<100){
+    a = a+1;
+}
 while(1){
     int a = a+b;
     while(true){

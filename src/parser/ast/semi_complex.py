@@ -65,21 +65,17 @@ class FunctionInvocation(AstNode):
         return f"FunctionInvocation {self.name} {self.arguments}"
 
 
-# class SingleCondition(AstNode):
-#     def __init__(self, left, operator_token=None, right=None):
-#         self.left = left
-#         self.operator = None
-#         self.right = None
-#         if operator_token:
-#             self.operator = ComparisonOperator(operator_token)
-#             self.right = right
-#
-#     def __repr__(self):
-#         return f"SingleCond: {self.left}{self.operator}{self.right}"
-#
-#
-# class ComplexCondition(AstNode):
-#     pass
+class SingleCondition(AstNode):
+    def __init__(self, left, operator_token=None, right=None):
+        self.left = left
+        self.operator = None
+        self.right = None
+        if operator_token:
+            self.operator = ComparisonOperator(operator_token)
+            self.right = right
+
+    def __repr__(self):
+        return f"SingleCond: {self.left}{self.operator}{self.right}"
 
 
 class ArithmeticExpression(AstNode):

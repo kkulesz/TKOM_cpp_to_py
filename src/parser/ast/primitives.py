@@ -36,6 +36,9 @@ class ComparisonOperator(AstNode):
         else:
             ParserDevelopmentError(token_operator.get_position(), "bad token in boolean operation!").fatal()
 
+    def __repr__(self):
+        return Dictionaries.primitive_to_string[self.type]
+
 
 class LogicalOperator(AstNode):
     def __init__(self, token):
