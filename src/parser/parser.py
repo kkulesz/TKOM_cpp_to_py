@@ -16,7 +16,7 @@ class Parser:
         program = []
         while self.__get_current_token().get_type() != TokenType.EOF:
             new_ins = self.__parse_instruction()
-            print(new_ins)
+            # print(new_ins)
             program.append(new_ins)
 
         return program
@@ -66,10 +66,8 @@ class Parser:
 
     def __parse_additive_factor(self):
         additive_factor = self.__parse_id_or_literal()
-        if additive_factor:
-            return additive_factor
 
-        if self.__check_token(TokenType.OP_BRACKET):
+        if not additive_factor and self.__check_token(TokenType.OP_BRACKET):
             # TODO: zastanowic sie co z nawiasami, czy trzeba jakos explicite to zapisywac czy bedzie wynikalo z
             #  kontekstu
             additive_factor = self.__parse_arithmetic_expression()
@@ -97,8 +95,9 @@ class Parser:
         if result:
             additive_token = self.__check_if_one_of_tokens_new(ParserUtils.additive_operator_tokens)
             while additive_token:
-                result = ArithmeticExpression(result, ArithmeticOperator(additive_token),
-                                              self.__parse_additive_factor())
+                result = ArithmeticExpression(result,
+                                              ArithmeticOperator(additive_token),
+                                              self.__parse_multiplicative_factor())
                 additive_token = self.__check_if_one_of_tokens_new(ParserUtils.additive_operator_tokens)
 
         return result
@@ -179,11 +178,11 @@ class Parser:
         return VariableAssignment(id_token, value)
 
     def __parse_function_invocation_arguments(self):
-        maybe_id_token = self.__check_if_one_of_tokens_new(ParserUtils.function_invocation_tokens)
-        if not maybe_id_token:
+        maybe_argument = self.__parse_id_or_literal()
+        if not maybe_argument:
             return []
 
-        arguments_so_far = [Id(maybe_id_token)]
+        arguments_so_far = [maybe_argument]
         while self.__check_token(TokenType.COMA):
             arguments_so_far.append(self.__parse_id_or_literal())
 
