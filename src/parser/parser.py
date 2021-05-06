@@ -10,7 +10,6 @@ class Parser:
     def __init__(self, lexer):
         self.__lexer = lexer
         self.__current_token = None
-        # self.__is_consumed = False
 
     def parse(self):
         program = []
@@ -23,20 +22,6 @@ class Parser:
         return program
 
     def __parse_instruction(self):
-        '''
-        ZE_SCOPEM:
-            -while
-            -if z else
-
-        NIESKONSUMOWANE:
-            __parse_declaration
-            __parse_id_starting
-            __parse_print
-            -if bez else
-            __parse_return
-            --komenatrze
-
-        '''
         # instead of if-else everywhere
         maybe_instruction = self.__parse_declaration() or \
                             self.__parse_id_starting() or \
@@ -287,7 +272,7 @@ class Parser:
                           ).fatal()
 
     def __check_token(self, expected_token_type):
-        if self.__current_token.get_type() == expected_token_type and not self.__is_consumed:
+        if self.__current_token.get_type() == expected_token_type:
             token = self.__current_token
             self.__get_next_token()
             return token
@@ -314,7 +299,6 @@ class Parser:
         return self.__current_token
 
     def __get_next_token(self):
-        self.__is_consumed = False
         self.__current_token = self.__lexer.build_and_get_token()
         return self.__current_token
 
