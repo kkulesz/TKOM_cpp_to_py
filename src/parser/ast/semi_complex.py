@@ -9,7 +9,7 @@ class Literal(AstNode):
         self.type, self.value = Literal.init_literal(literal_token)
 
     def __repr__(self):
-        return f"(Literal={self.value})"
+        return f"literal={self.value}"
 
     @staticmethod
     def init_literal(literal_token):
@@ -35,7 +35,7 @@ class VariableDeclaration(AstNode):
             self.value = value
 
     def __repr__(self):
-        return f"VariableDeclaration: {self.type} {self.name} = {self.value};"
+        return f"VarDecl: {self.type} {self.name} = {self.value};"
 
 
 class VariableAssignment(AstNode):
@@ -44,7 +44,7 @@ class VariableAssignment(AstNode):
         self.value = value
 
     def __repr__(self):
-        return f"VariableAssignment: {self.name} = {self.value};"
+        return f"VarAssign: {self.name} = {self.value};"
 
 
 class FunctionArgument(AstNode):
@@ -53,7 +53,7 @@ class FunctionArgument(AstNode):
         self.name = Id(id_token)
 
     def __repr__(self):
-        return f"FunArg:{self.type}-{self.name}"
+        return f"FunArg:({self.type}-{self.name})"
 
 
 class FunctionInvocation(AstNode):
@@ -62,7 +62,10 @@ class FunctionInvocation(AstNode):
         self.arguments = arguments
 
     def __repr__(self):
-        return f"FunctionInvocation {self.name} {self.arguments}"
+        arg_str = str(self.arguments)
+        if len(self.arguments) == 0:
+            arg_str = ""
+        return f"FunInvocation-{self.name}({arg_str})"
 
 
 class SingleCondition(AstNode):
@@ -75,7 +78,7 @@ class SingleCondition(AstNode):
             self.right = right
 
     def __repr__(self):
-        return f"SingleCond: {self.left}{self.operator}{self.right}"
+        return f"SingleCond: ({self.left}{self.operator}{self.right})"
 
 
 class ArithmeticExpression(AstNode):
@@ -85,7 +88,7 @@ class ArithmeticExpression(AstNode):
         self.right_operand = right_operand
 
     def __repr__(self):
-        return f"ArithmeticExpr: ({self.left_operand}{self.operator}{self.right_operand})"
+        return f"ArithExpr: ({self.left_operand}{self.operator}{self.right_operand})"
 
 
 class PrintStatement(AstNode):
@@ -93,7 +96,7 @@ class PrintStatement(AstNode):
         self.to_print = to_print
 
     def __repr__(self):
-        return f"PrintStatement: {self.to_print};"
+        return f"PrintStmt: {self.to_print};"
 
 
 class ReturnExpression(AstNode):
@@ -104,4 +107,4 @@ class ReturnExpression(AstNode):
         return_value = ""
         if self.value is not None:
             return_value = ":" + str(self.value)
-        return f"Return{return_value};"
+        return f"Return {return_value};"

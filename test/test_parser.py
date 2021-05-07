@@ -17,7 +17,9 @@ class ParserTest(unittest.TestCase):
             self.assertTrue(isinstance(curr_ins, curr_exp))
 
     def test_single_comment(self):
-        input_str = """//comment"""
+        input_str = """
+        //comment
+        """
         list_of_expected = [SingleLineComment]
         parser = init_parser(input_str)
         program = parser.parse()
@@ -35,133 +37,175 @@ class ParserTest(unittest.TestCase):
         self.assert_instructions(program, list_of_expected)
 
     def test_int_variable_declaration_without_init(self):
-        input_str = """int i;"""
+        input_str = """
+        int i;
+        """
         list_of_expected = [VariableDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_int_variable_declaration_with_init(self):
-        input_str = """int i = 11;"""
+        input_str = """
+        int i = 11;
+        """
         list_of_expected = [VariableDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_boolean_variable_declaration_with_init(self):
-        input_str = """bool i = true;"""
+        input_str = """
+        bool i = true;
+        """
         list_of_expected = [VariableDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_string_variable_declaration_with_init(self):
-        input_str = """std::string i = "napis";"""
+        input_str = """
+        std::string i = "napis";
+        """
         list_of_expected = [VariableDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_variable_assignment_with_int(self):
-        input_str = """i = 11;"""
+        input_str = """
+        i = 11;
+        """
         list_of_expected = [VariableAssignment]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_variable_assignment_with_string(self):
-        input_str = """i = "text";"""
+        input_str = """
+        i = "text";
+        """
         list_of_expected = [VariableAssignment]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_variable_assignment_with_boolean(self):
-        input_str = """i = false;"""
+        input_str = """
+        i = false;
+        """
         list_of_expected = [VariableAssignment]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_arithmetic_nomultiplication_nobrackets(self):
-        input_str = """i = a+b+c;"""
+        input_str = """
+        i = a+b+c;
+        """
         list_of_expected = [VariableAssignment]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_arithmetic_multiplication_nobrackets(self):
-        input_str = """i = a+b*c;"""
+        input_str = """
+        i = a+b*c;
+        """
         list_of_expected = [VariableAssignment]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_arithmetic_multiplication_brackets(self):
-        input_str = """i = d*(a+(b*c));"""
+        input_str = """
+        i = d*(a+(b*c));
+        """
         list_of_expected = [VariableAssignment]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_function_declaration_noargs_nobody(self):
-        input_str = """int fun(){}"""
+        input_str = """
+        int fun(){
+        }
+        """
         list_of_expected = [FunctionDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_function_declaration_args_nobody(self):
-        input_str = """int fun(int a, int b){}"""
+        input_str = """
+        int fun(int a, int b){
+        }
+        """
         list_of_expected = [FunctionDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_function_declaration_args_body(self):
-        input_str = """int fun(int a, int b){return a;}"""
+        input_str = """
+        int fun(int a, int b){
+            return a;
+        }"""
         list_of_expected = [FunctionDeclaration]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_function_invocation_noargs(self):
-        input_str = """fun();"""
+        input_str = """
+        fun();
+        """
         list_of_expected = [FunctionInvocation]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_function_invocation_args(self):
-        input_str = """fun(a, b, "essa", true);"""
+        input_str = """
+        fun(a, b, "essa", true);
+        """
         list_of_expected = [FunctionInvocation]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_print(self):
-        input_str = """std::cout<<"napis"<<std::endl;"""
+        input_str = """
+        std::cout<<"napis"<<std::endl;
+        """
         list_of_expected = [PrintStatement]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_return_no_value(self):
-        input_str = """return;"""
+        input_str = """
+        return;
+        """
         list_of_expected = [ReturnExpression]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_return_value(self):
-        input_str = """return true;"""
+        input_str = """
+        return true;
+        """
         list_of_expected = [ReturnExpression]
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
     def test_while_nobody(self):
-        input_str = """while(true){}"""
+        input_str = """
+        while(true){
+        }
+        """
         list_of_expected = [WhileStatement]
         parser = init_parser(input_str)
         program = parser.parse()
@@ -178,7 +222,10 @@ class ParserTest(unittest.TestCase):
         self.assert_instructions(program, list_of_expected)
 
     def test_if_nobody_noelse(self):
-        input_str = """if(true){}"""
+        input_str = """
+        if(true){
+        }
+        """
         list_of_expected = [IfStatement]
         parser = init_parser(input_str)
         program = parser.parse()
@@ -197,7 +244,9 @@ class ParserTest(unittest.TestCase):
     def test_if_nobody_else_nobody(self):
         input_str = """
         if(true){
+        
         }else{
+        
         }
         """
         list_of_expected = [IfStatement]
