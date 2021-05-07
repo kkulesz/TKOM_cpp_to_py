@@ -30,7 +30,7 @@ class VariableDeclaration(AstNode):
         self.type = Type(type_token)
         self.name = Id(id_token)
         if value is None:
-            self.value = Type.get_default_value(self.type)
+            self.value = Literal(Type.get_default_value(self.type))
         else:
             self.value = value
 

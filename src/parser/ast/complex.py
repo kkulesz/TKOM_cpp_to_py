@@ -32,7 +32,7 @@ class IfStatement(AstNode):
         if len(self.if_instructions) == 0:
             nested_if_ins = ""
 
-        nested_else_ins = str(self.if_instructions)
+        nested_else_ins = str(self.else_instructions)
         if len(self.if_instructions) == 0:
             nested_else_ins = ""
         return f"IfStmt: ({self.condition}) {{{nested_if_ins}}} Else: {{{nested_else_ins}}}"

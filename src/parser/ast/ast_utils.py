@@ -1,5 +1,5 @@
 from enum import Enum, auto, unique
-from src.lexer.token import TokenType
+from src.lexer.token import TokenType, Token
 
 
 @unique
@@ -36,9 +36,9 @@ class LogicalOperatorTypes(Enum):
 
 class Dictionaries:
     default_values = {
-        Types.INT: 0,
-        Types.STRING: '',
-        Types.BOOLEAN: False
+        Types.INT: Token(TokenType.INT_LITERAL, 0),
+        Types.STRING: Token(TokenType.STRING_LITERAL, ''),
+        Types.BOOLEAN: Token(TokenType.FALSE_KW)
     }
 
     token_to_types = {
