@@ -12,10 +12,13 @@ class FunctionDeclaration(AstNode):
         self.instructions = instructions
 
     def __repr__(self):
+        args = str(self.arguments)
+        if len(self.arguments) == 0:
+            args = ""
         nested_ins = str(self.instructions)
         if len(self.instructions) == 0:
             nested_ins = ""
-        return f"FunDecl: {self.type} {self.name} ({self.arguments}) {{{nested_ins}}}"
+        return f"FunDecl: {self.type} {self.name} ({args}) {{{nested_ins}}}"
 
 
 class IfStatement(AstNode):
@@ -32,7 +35,7 @@ class IfStatement(AstNode):
         nested_else_ins = str(self.if_instructions)
         if len(self.if_instructions) == 0:
             nested_else_ins = ""
-        return f"IfStmt ({self.condition}) {{{nested_if_ins}}} Else: {{{nested_else_ins}}}"
+        return f"IfStmt: ({self.condition}) {{{nested_if_ins}}} Else: {{{nested_else_ins}}}"
 
 
 class WhileStatement(AstNode):
@@ -44,4 +47,4 @@ class WhileStatement(AstNode):
         nested_ins = str(self.instructions)
         if len(self.instructions) == 0:
             nested_ins = ""
-        return f"WhileStmt ({self.condition}) {{{nested_ins}}}"
+        return f"WhileStmt: ({self.condition}) {{{nested_ins}}}"

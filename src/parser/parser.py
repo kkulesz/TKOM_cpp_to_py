@@ -32,11 +32,11 @@ class Parser:
                             self.__parse_if()
 
         if not maybe_instruction:
-            ParserError(self.__get_position(), "unknown instruction!").fatal()
+            ParserError(self.__get_position(), "unknown instruction!").warning()
         return maybe_instruction
 
     def __parse_declaration(self):
-        maybe_type_token = self.__check_if_one_of_tokens_new(ParserUtils.type_tokens)
+        maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
         if not maybe_type_token:
             return None
 
@@ -54,7 +54,7 @@ class Parser:
         return VariableDeclaration(maybe_type_token, id_token)
 
     def __parse_id_or_literal(self):
-        maybe_literal = self.__check_if_one_of_tokens_new(ParserUtils.literal_tokens)
+        maybe_literal = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
         if maybe_literal:
             return Literal(maybe_literal)
 
@@ -79,12 +79,12 @@ class Parser:
         multiplicative_factor = self.__parse_additive_factor()
 
         if multiplicative_factor:
-            maybe_multiplicative_token = self.__check_if_one_of_tokens_new(ParserUtils.multiplicative_operator_tokens)
+            maybe_multiplicative_token = self.__check_if_one_of_tokens(ParserUtils.multiplicative_operator_tokens)
             while maybe_multiplicative_token:
                 multiplicative_factor = ArithmeticExpression(multiplicative_factor,
                                                              ArithmeticOperator(maybe_multiplicative_token),
                                                              self.__parse_additive_factor())
-                maybe_multiplicative_token = self.__check_if_one_of_tokens_new(
+                maybe_multiplicative_token = self.__check_if_one_of_tokens(
                     ParserUtils.multiplicative_operator_tokens)
 
         return multiplicative_factor
@@ -93,12 +93,12 @@ class Parser:
         result = self.__parse_multiplicative_factor()
 
         if result:
-            additive_token = self.__check_if_one_of_tokens_new(ParserUtils.additive_operator_tokens)
+            additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
             while additive_token:
                 result = ArithmeticExpression(result,
                                               ArithmeticOperator(additive_token),
                                               self.__parse_multiplicative_factor())
-                additive_token = self.__check_if_one_of_tokens_new(ParserUtils.additive_operator_tokens)
+                additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
 
         return result
 
@@ -110,23 +110,25 @@ class Parser:
         if not maybe_left_id_or_literal:
             return None
 
-        maybe_comparison_token = self.__check_if_one_of_tokens_new(ParserUtils.comparison_tokens)
+        maybe_comparison_token = self.__check_if_one_of_tokens(ParserUtils.comparison_tokens)
         if maybe_comparison_token:
             maybe_right_id_or_literal = self.__parse_id_or_literal()
             if not maybe_right_id_or_literal:
-                ParserError(self.__get_position(), "expected literal or id").fatal()
+                ParserError(self.__get_position(),
+                            f"expected literal or id, but got {self.__get_current_token()}"
+                            ).fatal()
             return SingleCondition(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
         return maybe_left_id_or_literal
 
     def __parse_function_declaration_arguments(self):
-        maybe_type_token = self.__check_if_one_of_tokens_new(ParserUtils.type_tokens)
+        maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
         if not maybe_type_token:
             return []
 
         id_token = self.__demand_token(TokenType.IDENTIFIER)
         arguments_fo_far = [FunctionArgument(maybe_type_token, id_token)]
         while self.__check_token(TokenType.COMA):
-            type_token = self.__demand_one_of_tokens_new(ParserUtils.type_tokens, "type token")
+            type_token = self.__demand_one_of_tokens(ParserUtils.type_tokens, "type token")
             id_token = self.__demand_token(TokenType.IDENTIFIER)
             arguments_fo_far.append(FunctionArgument(type_token, id_token))
 
@@ -166,7 +168,9 @@ class Parser:
         if maybe_function_invocation:
             return maybe_function_invocation
 
-        ParserError(self.__get_position(), f"invalid token({self.__get_current_token()}) after id!").fatal()
+        ParserError(self.__get_position(),
+                    f"invalid token after id: {self.__get_current_token()}!"
+                    ).fatal()
 
     def __parse_assignment(self, id_token):
         if not self.__check_token(TokenType.ASSIGN):
@@ -214,7 +218,7 @@ class Parser:
         self.__demand_token(TokenType.OP_BRACKET)
         condition = self.__parse_condition()
         if condition is None:
-            ParserError(self.__get_position(), "condition is a must in if statement!").fatal()
+            ParserError(self.__get_position(), "condition is required in 'if statement'!").fatal()
         self.__demand_token(TokenType.CL_BRACKET)
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         if_instructions = self.__parse_scope()
@@ -233,7 +237,7 @@ class Parser:
         self.__demand_token(TokenType.OP_BRACKET)
         condition = self.__parse_condition()
         if condition is None:
-            ParserError(self.__get_position(), "condition is a must in while statement!").fatal()
+            ParserError(self.__get_position(), "condition is required in 'while statement'!").fatal()
         self.__demand_token(TokenType.CL_BRACKET)
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         instructions = self.__parse_scope()
@@ -287,15 +291,15 @@ class Parser:
             return token
         return None
 
-    def __check_if_one_of_tokens_new(self, list_of_tokens_types):
+    def __check_if_one_of_tokens(self, list_of_tokens_types):
         for token_type in list_of_tokens_types:
             maybe_token = self.__check_token(token_type)
             if maybe_token:
                 return maybe_token
         return None
 
-    def __demand_one_of_tokens_new(self, list_of_tokens_types, expected_message):
-        maybe_token = self.__check_if_one_of_tokens_new(list_of_tokens_types)
+    def __demand_one_of_tokens(self, list_of_tokens_types, expected_message):
+        maybe_token = self.__check_if_one_of_tokens(list_of_tokens_types)
         if maybe_token:
             return maybe_token
 

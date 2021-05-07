@@ -65,7 +65,7 @@ class FunctionInvocation(AstNode):
         arg_str = str(self.arguments)
         if len(self.arguments) == 0:
             arg_str = ""
-        return f"FunInvocation-{self.name}({arg_str})"
+        return f"FunInvocation: {self.name}({arg_str})"
 
 
 class SingleCondition(AstNode):
@@ -107,4 +107,4 @@ class ReturnExpression(AstNode):
         return_value = ""
         if self.value is not None:
             return_value = ":" + str(self.value)
-        return f"Return {return_value};"
+        return f"Return: {return_value};"
