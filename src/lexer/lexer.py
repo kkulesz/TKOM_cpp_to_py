@@ -22,7 +22,7 @@ class Lexer:
 
     def __ignore_whites(self):
         curr_char = self.__get_char()
-        while curr_char in [' ', '\t', '\n']:  # \n
+        while curr_char in [' ', '\t', '\n']:
             curr_char = self.__move_and_get_char()
 
     def __try_match(self):
@@ -34,6 +34,7 @@ class Lexer:
                self.__try_operators_or_comments() or \
                self.__get_undefined_and_move()
 
+    ################################
     # try methods
     def __try_eof(self):
         if self.__get_char() == '':

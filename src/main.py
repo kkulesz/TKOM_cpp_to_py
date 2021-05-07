@@ -17,9 +17,7 @@ def init_all(input_file):
     #     print(token)
     #     token = lexer.build_and_get_token()
 
-    program = parser.parse_program()
-
-    # print(program)
+    parser.parse_program()
 
 
 def main():
@@ -27,14 +25,7 @@ def main():
         print("Nie podano nazwy pliku wejściowego!")
         return
 
-    program = init_all(sys.argv[1])
-
-    # print("essa")
-    #
-    # def essa(essa):
-    #     print(essa)
-    #
-    # essa("essa")
+    init_all(sys.argv[1])
 
 
 if __name__ == "__main__":
