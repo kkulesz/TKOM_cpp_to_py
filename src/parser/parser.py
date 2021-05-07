@@ -12,7 +12,7 @@ class Parser:
         self.__current_token = None
         self.__get_next_token()
 
-    def parse(self):
+    def parse_program(self):
         program = []
         while self.__get_current_token().get_type() != TokenType.EOF:
             new_ins = self.__parse_instruction()
@@ -53,72 +53,18 @@ class Parser:
         self.__demand_token(TokenType.SEMICOLON)
         return VariableDeclaration(maybe_type_token, id_token)
 
-    def __parse_id_or_literal(self):
-        maybe_literal = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
-        if maybe_literal:
-            return Literal(maybe_literal)
-
-        maybe_id = self.__check_token(TokenType.IDENTIFIER)
-        if maybe_id:
-            return Id(maybe_id)
-
-        return None
-
-    def __parse_additive_factor(self):
-        additive_factor = self.__parse_id_or_literal()
-
-        if not additive_factor and self.__check_token(TokenType.OP_BRACKET):
-            # TODO: zastanowic sie co z nawiasami, czy trzeba jakos explicite to zapisywac czy bedzie wynikalo z
-            #  kontekstu
-            additive_factor = self.__parse_arithmetic_expression()
-            self.__demand_token(TokenType.CL_BRACKET)
-
-        return additive_factor
-
-    def __parse_multiplicative_factor(self):
-        multiplicative_factor = self.__parse_additive_factor()
-
-        if multiplicative_factor:
-            maybe_multiplicative_token = self.__check_if_one_of_tokens(ParserUtils.multiplicative_operator_tokens)
-            while maybe_multiplicative_token:
-                multiplicative_factor = ArithmeticExpression(multiplicative_factor,
-                                                             ArithmeticOperator(maybe_multiplicative_token),
-                                                             self.__parse_additive_factor())
-                maybe_multiplicative_token = self.__check_if_one_of_tokens(
-                    ParserUtils.multiplicative_operator_tokens)
-
-        return multiplicative_factor
-
-    def __parse_arithmetic_expression(self):
-        result = self.__parse_multiplicative_factor()
-
-        if result:
-            additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
-            while additive_token:
-                result = ArithmeticExpression(result,
-                                              ArithmeticOperator(additive_token),
-                                              self.__parse_multiplicative_factor())
-                additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
-
-        return result
-
-    def __parse_r_value(self):
-        return self.__parse_arithmetic_expression() or self.__parse_condition()
-
-    def __parse_condition(self):
-        maybe_left_id_or_literal = self.__parse_id_or_literal()
-        if not maybe_left_id_or_literal:
+    def __parse_function_declaration(self, type_token, id_token):
+        if not self.__check_token(TokenType.OP_BRACKET):
             return None
 
-        maybe_comparison_token = self.__check_if_one_of_tokens(ParserUtils.comparison_tokens)
-        if maybe_comparison_token:
-            maybe_right_id_or_literal = self.__parse_id_or_literal()
-            if not maybe_right_id_or_literal:
-                ParserError(self.__get_position(),
-                            f"expected literal or id, but got {self.__get_current_token()}"
-                            ).fatal()
-            return SingleCondition(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
-        return maybe_left_id_or_literal
+        arguments = self.__parse_function_declaration_arguments()
+        self.__demand_token(TokenType.CL_BRACKET)
+        self.__demand_token(TokenType.OP_CURLY_BRACKET)
+        instructions = []
+        while not self.__check_token(TokenType.CL_CURLY_BRACKET):
+            instructions.append(self.__parse_instruction())
+
+        return FunctionDeclaration(type_token, id_token, arguments, instructions)
 
     def __parse_function_declaration_arguments(self):
         maybe_type_token = self.__check_if_one_of_tokens(ParserUtils.type_tokens)
@@ -133,19 +79,6 @@ class Parser:
             arguments_fo_far.append(FunctionArgument(type_token, id_token))
 
         return arguments_fo_far
-
-    def __parse_function_declaration(self, type_token, id_token):
-        if not self.__check_token(TokenType.OP_BRACKET):
-            return None
-
-        arguments = self.__parse_function_declaration_arguments()
-        self.__demand_token(TokenType.CL_BRACKET)
-        self.__demand_token(TokenType.OP_CURLY_BRACKET)
-        instructions = []
-        while not self.__check_token(TokenType.CL_CURLY_BRACKET):
-            instructions.append(self.__parse_instruction())
-
-        return FunctionDeclaration(type_token, id_token, arguments, instructions)
 
     def __parse_variable_declaration(self, maybe_type_token, id_token):
         if not self.__check_token(TokenType.ASSIGN):
@@ -181,6 +114,72 @@ class Parser:
 
         return VariableAssignment(id_token, value)
 
+    def __parse_r_value(self):
+        return self.__parse_arithmetic_expression() or self.__parse_condition()
+
+    def __parse_arithmetic_expression(self):
+        result = self.__parse_multiplicative_factor()
+
+        if result:
+            additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
+            while additive_token:
+                result = ArithmeticExpression(result,
+                                              ArithmeticOperator(additive_token),
+                                              self.__parse_multiplicative_factor())
+                additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
+
+        return result
+
+    def __parse_multiplicative_factor(self):
+        multiplicative_factor = self.__parse_additive_factor()
+
+        if multiplicative_factor:
+            maybe_multiplicative_token = self.__check_if_one_of_tokens(ParserUtils.multiplicative_operator_tokens)
+            while maybe_multiplicative_token:
+                multiplicative_factor = ArithmeticExpression(multiplicative_factor,
+                                                             ArithmeticOperator(maybe_multiplicative_token),
+                                                             self.__parse_additive_factor())
+                maybe_multiplicative_token = self.__check_if_one_of_tokens(
+                    ParserUtils.multiplicative_operator_tokens)
+
+        return multiplicative_factor
+
+    def __parse_additive_factor(self):
+        additive_factor = self.__parse_id_or_literal()
+
+        if not additive_factor and self.__check_token(TokenType.OP_BRACKET):
+            # TODO: zastanowic sie co z nawiasami, czy trzeba jakos explicite to zapisywac czy bedzie wynikalo z
+            #  kontekstu
+            additive_factor = self.__parse_arithmetic_expression()
+            self.__demand_token(TokenType.CL_BRACKET)
+
+        return additive_factor
+
+    def __parse_condition(self):
+        maybe_left_id_or_literal = self.__parse_id_or_literal()
+        if not maybe_left_id_or_literal:
+            return None
+
+        maybe_comparison_token = self.__check_if_one_of_tokens(ParserUtils.comparison_tokens)
+        if maybe_comparison_token:
+            maybe_right_id_or_literal = self.__parse_id_or_literal()
+            if not maybe_right_id_or_literal:
+                ParserError(self.__get_position(),
+                            f"expected literal or id, but got {self.__get_current_token()}"
+                            ).fatal()
+            return SingleCondition(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
+        return maybe_left_id_or_literal
+
+    def __parse_function_invocation(self, id_token):
+        if not self.__check_token(TokenType.OP_BRACKET):
+            return None
+
+        arguments = self.__parse_function_invocation_arguments()
+        self.__demand_token(TokenType.CL_BRACKET)
+        self.__demand_token(TokenType.SEMICOLON)
+
+        return FunctionInvocation(id_token, arguments)
+
     def __parse_function_invocation_arguments(self):
         maybe_argument = self.__parse_id_or_literal()
         if not maybe_argument:
@@ -192,15 +191,16 @@ class Parser:
 
         return arguments_so_far
 
-    def __parse_function_invocation(self, id_token):
-        if not self.__check_token(TokenType.OP_BRACKET):
-            return None
+    def __parse_id_or_literal(self):
+        maybe_literal = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
+        if maybe_literal:
+            return Literal(maybe_literal)
 
-        arguments = self.__parse_function_invocation_arguments()
-        self.__demand_token(TokenType.CL_BRACKET)
-        self.__demand_token(TokenType.SEMICOLON)
+        maybe_id = self.__check_token(TokenType.IDENTIFIER)
+        if maybe_id:
+            return Id(maybe_id)
 
-        return FunctionInvocation(id_token, arguments)
+        return None
 
     def __parse_return(self):
         if not self.__check_token(TokenType.RETURN_KW):
@@ -243,6 +243,14 @@ class Parser:
         instructions = self.__parse_scope()
         return WhileStatement(condition, instructions)
 
+    def __parse_scope(self):
+        scope = []
+        while not self.__check_token(TokenType.CL_CURLY_BRACKET):
+            new_instruction = self.__parse_instruction()
+            scope.append(new_instruction)
+
+        return scope
+
     def __parse_print(self):
         if not self.__check_token(TokenType.COUT_KW):
             return None
@@ -252,14 +260,6 @@ class Parser:
         self.__demand_token(TokenType.ENDL_KW)  # TODO: make this optional and set flag in statement
         self.__demand_token(TokenType.SEMICOLON)
         return PrintStatement(statement_to_print)
-
-    def __parse_scope(self):
-        scope = []
-        while not self.__check_token(TokenType.CL_CURLY_BRACKET):
-            new_instruction = self.__parse_instruction()
-            scope.append(new_instruction)
-
-        return scope
 
     def __parse_comments(self):
         maybe_single_line = self.__check_token(TokenType.SINGLE_LINE_COMMENT)

@@ -17,7 +17,7 @@ def init_all(input_file):
     #     print(token)
     #     token = lexer.build_and_get_token()
 
-    program = parser.parse()
+    program = parser.parse_program()
 
     # print(program)
 
