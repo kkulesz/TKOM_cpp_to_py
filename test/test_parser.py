@@ -45,6 +45,60 @@ class ParserTest(unittest.TestCase):
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
 
+    def test_type_in_int_variable_declaration(self):
+        input_str = """
+        int i;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        var_type = program[0].type
+        self.assertTrue(isinstance(var_type, Type))
+
+    def test_type_in_bool_variable_declaration(self):
+        input_str = """
+        bool b;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        var_type = program[0].type
+        self.assertTrue(isinstance(var_type, Type))
+
+    def test_type_in_string_variable_declaration(self):
+        input_str = """
+        std::string b;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        var_type = program[0].type
+        self.assertTrue(isinstance(var_type, Type))
+
+    def test_default_value_in_int_variable_declaration(self):
+        input_str = """
+        int i;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        var_value = program[0].value
+        self.assertEqual(var_value, 0)
+
+    def test_default_value_in_bool_variable_declaration(self):
+        input_str = """
+        bool i;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        var_value = program[0].value
+        self.assertEqual(var_value, False)
+
+    def test_default_value_in_string_variable_declaration(self):
+        input_str = """
+        std::string i;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        var_value = program[0].value
+        self.assertEqual(var_value, "")
+
     def test_int_variable_declaration_with_init(self):
         input_str = """
         int i = 11;
@@ -53,6 +107,39 @@ class ParserTest(unittest.TestCase):
         parser = init_parser(input_str)
         program = parser.parse()
         self.assert_instructions(program, list_of_expected)
+
+    def test_int_value_in_variable_declaration_with_init(self):
+        input_str = """
+        int i = 11;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        literal = program[0].value
+        self.assertTrue(isinstance(literal, Literal))
+        literal_value = literal.value
+        self.assertEqual(literal_value, 11)
+
+    def test_bool_value_in_variable_declaration_with_init(self):
+        input_str = """
+        bool i = true;
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        literal = program[0].value
+        self.assertTrue(isinstance(literal, Literal))
+        literal_value = literal.value
+        self.assertEqual(literal_value, True)
+
+    def test_string_value_in_variable_declaration_with_init(self):
+        input_str = """
+        std::string i = "napis";
+        """
+        parser = init_parser(input_str)
+        program = parser.parse()
+        literal = program[0].value
+        self.assertTrue(isinstance(literal, Literal))
+        literal_value = literal.value
+        self.assertEqual(literal_value, "napis")
 
     def test_boolean_variable_declaration_with_init(self):
         input_str = """
