@@ -115,7 +115,7 @@ class Parser:
         return VariableAssignment(id_token, value)
 
     def __parse_r_value(self):
-        return self.__parse_arithmetic_expression() or self.__parse_condition()
+        return self.__parse_arithmetic_expression()  # TODO: maybe condition later
 
     def __parse_arithmetic_expression(self):
         result = self.__parse_multiplicative_factor()
