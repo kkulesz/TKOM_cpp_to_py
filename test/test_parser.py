@@ -4,7 +4,6 @@ import unittest
 from src.lexer.code_provider import CodeProvider
 from src.lexer.lexer import Lexer
 from src.parser.parser import Parser
-from src.parser.ast.primitives import *
 from src.parser.ast.semi_complex import *
 from src.parser.ast.complex import *
 
