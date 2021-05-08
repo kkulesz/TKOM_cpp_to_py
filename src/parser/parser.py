@@ -148,8 +148,6 @@ class Parser:
         additive_factor = self.__parse_id_or_literal()
 
         if not additive_factor and self.__check_token(TokenType.OP_BRACKET):
-            # TODO: zastanowic sie co z nawiasami, czy trzeba jakos explicite to zapisywac czy bedzie wynikalo z
-            #  kontekstu
             additive_factor = self.__parse_arithmetic_expression()
             self.__demand_token(TokenType.CL_BRACKET)
 
@@ -223,7 +221,7 @@ class Parser:
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         if_instructions = self.__parse_scope()
 
-        else_instruction = None
+        else_instruction = []
         if self.__check_token(TokenType.ELSE_KW):
             self.__demand_token(TokenType.OP_CURLY_BRACKET)
             else_instruction = self.__parse_scope()
