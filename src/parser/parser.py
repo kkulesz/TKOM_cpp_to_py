@@ -148,8 +148,6 @@ class Parser:
         additive_factor = self.__parse_id_or_literal()
 
         if not additive_factor and self.__check_token(TokenType.OP_BRACKET):
-            # TODO: zastanowic sie co z nawiasami, czy trzeba jakos explicite to zapisywac czy bedzie wynikalo z
-            #  kontekstu
             additive_factor = self.__parse_arithmetic_expression()
             self.__demand_token(TokenType.CL_BRACKET)
 
@@ -181,13 +179,13 @@ class Parser:
         return FunctionInvocation(id_token, arguments)
 
     def __parse_function_invocation_arguments(self):
-        maybe_argument = self.__parse_id_or_literal()
+        maybe_argument = self.__parse_arithmetic_expression()
         if not maybe_argument:
             return []
 
         arguments_so_far = [maybe_argument]
         while self.__check_token(TokenType.COMA):
-            arguments_so_far.append(self.__parse_id_or_literal())
+            arguments_so_far.append(self.__parse_arithmetic_expression())
 
         return arguments_so_far
 
@@ -223,7 +221,7 @@ class Parser:
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         if_instructions = self.__parse_scope()
 
-        else_instruction = None
+        else_instruction = [] # TODO: make it none
         if self.__check_token(TokenType.ELSE_KW):
             self.__demand_token(TokenType.OP_CURLY_BRACKET)
             else_instruction = self.__parse_scope()

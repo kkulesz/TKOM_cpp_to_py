@@ -4,7 +4,6 @@ import unittest
 from src.lexer.code_provider import CodeProvider
 from src.lexer.lexer import Lexer
 from src.parser.parser import Parser
-from src.parser.ast.primitives import *
 from src.parser.ast.semi_complex import *
 from src.parser.ast.complex import *
 
@@ -78,7 +77,7 @@ class ParserTest(unittest.TestCase):
         """
         parser = init_parser(input_str)
         program = parser.parse_program()
-        var_value = program[0].value
+        var_value = program[0].value.value
         self.assertEqual(var_value, 0)
 
     def test_default_value_in_bool_variable_declaration(self):
@@ -87,7 +86,7 @@ class ParserTest(unittest.TestCase):
         """
         parser = init_parser(input_str)
         program = parser.parse_program()
-        var_value = program[0].value
+        var_value = program[0].value.value
         self.assertEqual(var_value, False)
 
     def test_default_value_in_string_variable_declaration(self):
@@ -96,7 +95,7 @@ class ParserTest(unittest.TestCase):
         """
         parser = init_parser(input_str)
         program = parser.parse_program()
-        var_value = program[0].value
+        var_value = program[0].value.value
         self.assertEqual(var_value, "")
 
     def test_int_variable_declaration_with_init(self):
