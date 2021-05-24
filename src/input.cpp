@@ -5,3 +5,6 @@ bool b = true;
 int a = n;
 
 int aa = a+n;
+
+n = 10;
+n = 12;

@@ -40,11 +40,11 @@ class VariableDeclaration(AstNode):
 
 class VariableAssignment(AstNode):
     def __init__(self, id_token, value):
-        self.name = Id(id_token)
+        self.id = Id(id_token)
         self.value = value
 
     def __repr__(self):
-        return f"VarAssign: {self.name} = {self.value};"
+        return f"VarAssign: {self.id} = {self.value};"
 
 
 class FunctionArgument(AstNode):

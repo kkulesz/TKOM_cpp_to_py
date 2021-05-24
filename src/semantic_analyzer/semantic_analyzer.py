@@ -9,6 +9,7 @@ from src.errors import *
 # for arithmetic expressions
 INT_TYPE = Type(Token(TokenType.INT_KW))
 
+
 class SemanticAnalyzer:
     def __init__(self):
         pass
@@ -20,17 +21,21 @@ class SemanticAnalyzer:
         pass
 
     def __check_var_declaration(self, var_decl, var_symbols, fun_symbols):
-        var_id = var_decl.id.name
-        if var_id in var_symbols:
-            SemanticVariableRedeclarationError(var_id).fatal()
+        var_name = var_decl.id.name
+        if var_name in var_symbols:
+            SemanticVariableRedeclarationError(var_name).fatal()
         self.__check_r_value(var_decl.value, var_symbols, fun_symbols, var_decl.type)
 
-        new_var_symbol = VariableSymbol(var_decl.type, var_id)
-        var_symbols[var_id] = new_var_symbol
-
+        new_var_symbol = VariableSymbol(var_decl.type, var_name)
+        var_symbols[var_name] = new_var_symbol
 
     def __check_var_assignment(self, var_assignment, var_symbols, fun_symbols):
-        pass
+        var_name = var_assignment.id.name
+        if var_name not in var_symbols:
+            SemanticUnknownSymbolError(var_name).fatal()#TODO: moze warning, bo w pythonie przypsianie nie rozni sie od deklaracji
+
+        var_type = var_symbols[var_name].get_type()
+        self.__check_r_value(var_assignment.value, var_symbols, fun_symbols, var_type)
 
     def __check_if_stmt(self, if_stmt, var_symbols, fun_symbols, is_inside_fun, return_type):
         pass
@@ -39,7 +44,10 @@ class SemanticAnalyzer:
         pass
 
     def __check_return_expr(self, return_expr, var_symbols, fun_symbols, is_inside_fun, return_type):
-        pass
+        if not is_inside_fun:
+            pass #TODO: blad o nie byciu w fynkcji
+
+        self.__check_r_value(return_expr.value, var_symbols, fun_symbols, return_type)
 
     def __check_arithmetic_expr(self, arithmetic_expr, var_symbols, fun_symbols):
         left = arithmetic_expr.left_operand
