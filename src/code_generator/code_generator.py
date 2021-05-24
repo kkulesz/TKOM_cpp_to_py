@@ -70,9 +70,14 @@ class CodeGenerator:
 
     def __translate_fun_decl_args(self, args):
         args_str = ""
-        # TODO:
-        # for arg in args:
-        #     args_str += f""
+
+        no_of_args = len(args)
+        for i in range(no_of_args-1):
+            args_str += self.__get_id_str(args[i].id) + ', '
+
+        if no_of_args > 0:
+            args_str += self.__get_id_str(args[no_of_args-1].id)
+
         return args_str
 
     def __translate_print(self, ins, nest_level):
