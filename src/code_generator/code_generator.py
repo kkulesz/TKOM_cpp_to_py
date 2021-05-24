@@ -9,6 +9,10 @@ class CodeGenerator:
 
     def generate_program(self, program):
         python_program_str = self.__translate_scope(program, nest_level=0)
+        python_program_str += '''
+if __name__ == "__main__":
+    main()
+        '''
         return python_program_str
 
     def __translate_scope(self, list_of_instructions, nest_level):

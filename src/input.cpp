@@ -1,23 +1,16 @@
 #include<string>
 
-std::string funTwoArgs(bool b, std::string s){
-    return "";
-}
-
-bool funOneArg(int a){
-    return false;
-}
-
-int funNoArgs(){
-    std::cout<<"nananananana"<<std::endl;
-    //nanana
-    /*nanan*/
+std::string strFun(int a){
+    std::cout<<"strFun"<<std::endl;
+    return "strFunReturn";
 }
 
 int main(){
-    std::cout<<"napis"<<std::endl;
-    funNoArgs();
-    funOneArg(21+232);
-    funTwoArgs(true, "nanana");
-    return 0;
+    int i = 0;
+    while( i<10 ){
+        std::cout<<i<<std::endl;
+        strFun(i);
+        i = i + 1;
+    }
+    std::cout<<false<<std::endl;
 }

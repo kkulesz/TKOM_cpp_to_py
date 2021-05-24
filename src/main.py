@@ -25,6 +25,13 @@ def init_all(input_file):
     # print(analyzed_program)
     python_program = code_generator.generate_program(analyzed_program)
 
+    output_file = "generated.py"
+    if input_file.endswith(".cpp"):
+        output_file = input_file[:-4] + ".py"
+    file.close()
+    file = open(output_file, "w")
+    file.write(python_program)
+    file.close()
     print(python_program)
 
 
