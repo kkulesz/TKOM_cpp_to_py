@@ -4,6 +4,7 @@ from src.lexer.code_provider import CodeProvider
 from src.lexer.lexer import Lexer
 from src.lexer.token import TokenType
 from src.parser.parser import Parser
+from src.semantic_analyzer.semantic_analyzer import SemanticAnalyzer
 
 
 def init_all(input_file):
@@ -11,13 +12,18 @@ def init_all(input_file):
     code_provider = CodeProvider(file)
     lexer = Lexer(code_provider)
     parser = Parser(lexer)
+    semantic_analyzer = SemanticAnalyzer()
 
     # token = lexer.build_and_get_token()
     # while token.get_type() != TokenType.EOF:
     #     print(token)
     #     token = lexer.build_and_get_token()
 
-    parser.parse_program()
+    program = parser.parse_program()
+    analyzed_program = semantic_analyzer.start_analysis(program)
+
+    for ins in analyzed_program:
+        print(ins)
 
 
 def main():

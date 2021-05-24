@@ -28,14 +28,14 @@ class Literal(AstNode):
 class VariableDeclaration(AstNode):
     def __init__(self, type_token, id_token, value=None):
         self.type = Type(type_token)
-        self.name = Id(id_token)
+        self.id = Id(id_token)
         if value is None:
             self.value = Literal(Type.get_default_value(self.type))
         else:
             self.value = value
 
     def __repr__(self):
-        return f"VarDecl: {self.type} {self.name} = {self.value};"
+        return f"VarDecl: {self.type} {self.id} = {self.value};"
 
 
 class VariableAssignment(AstNode):

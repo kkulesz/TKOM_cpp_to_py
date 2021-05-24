@@ -16,7 +16,7 @@ class Parser:
         program = []
         while self.__get_current_token().get_type() != TokenType.EOF:
             new_ins = self.__parse_instruction()
-            print(new_ins)
+            # print(new_ins)
             program.append(new_ins)
 
         return program
