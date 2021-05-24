@@ -73,6 +73,24 @@ class SemanticReturnNotInsideFunctionBodyError(SemanticError):
         super(SemanticReturnNotInsideFunctionBodyError, self).__init__(self.message)
 
 
+class SemanticNoSuchFunctionError(SemanticError):
+    def __init__(self, fun_name):
+        self.message = f"no function named {fun_name}"
+        super(SemanticNoSuchFunctionError, self).__init__(self.message)
+
+
+class SemanticInvalidNumberOfArgsError(SemanticError):
+    def __init__(self, got, expected):
+        self.message = f"invalid number of args: expected {got}, but got {expected}"
+        super(SemanticInvalidNumberOfArgsError, self).__init__(self.message)
+
+
+class SemanticTypesOfArgsInFunInvocationError(SemanticError):
+    def __init__(self, fun_name, got, expected):
+        self.message = f"invalid types of args in function({fun_name}) arguments:\n\t expected {got}, but got {expected}"
+        super(SemanticTypesOfArgsInFunInvocationError, self).__init__(self.message)
+
+
 class SemanticAnalyzerDevelopmentError(SemanticError):
     def __init__(self, message):
         self.message = f"SEMANTIC ANALYZER DEVELOPMENT ERROR: {message}"

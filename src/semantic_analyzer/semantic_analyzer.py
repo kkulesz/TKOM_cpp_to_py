@@ -6,7 +6,7 @@ from src.semantic_analyzer.symbol import *
 
 from src.errors import *
 
-# for arithmetic expressions
+# helper
 INT_TYPE = Type(Token(TokenType.INT_KW))
 
 
@@ -34,7 +34,6 @@ class SemanticAnalyzer:
         new_fun_symbol = FunctionSymbol(return_type, fun_name, arg_types)
         fun_symbols[fun_name] = new_fun_symbol
         self.__analyze_scope(body, var_symbols, fun_symbols, is_inside_fun=True, return_type=return_type)
-
 
     def __check_var_declaration(self, var_decl, var_symbols, fun_symbols):
         var_name = var_decl.id.name
@@ -81,7 +80,33 @@ class SemanticAnalyzer:
         self.__check_r_value(right, var_symbols, fun_symbols, INT_TYPE)
 
     def __check_fun_invocation(self, fun_invocation, var_symbols, fun_symbols):
-        pass
+        fun_name = fun_invocation.id.name
+        if fun_name not in fun_symbols:
+            SemanticNoSuchFunctionError(fun_name).fatal()
+
+        args = fun_invocation.arguments
+        expected_types = fun_symbols[fun_name].arg_types
+
+        if len(args) != len(expected_types):
+            SemanticInvalidNumberOfArgsError(len(args), len(expected_types)).fatal()
+
+        invoke_arg_types = []
+        for arg in args:
+            invoke_arg_types.append(self.__get_fun_invocation_argument_type(arg, var_symbols))
+
+        for i in range(len(args)):
+            if invoke_arg_types[i] != expected_types[i]:
+                SemanticTypesOfArgsInFunInvocationError(fun_name, expected_types, invoke_arg_types).fatal()
+
+    def __get_fun_invocation_argument_type(self, arg, var_symbols):
+        if isinstance(arg, Literal):
+            return arg.type
+        elif isinstance(arg, Id):
+            return var_symbols[arg.name].type
+        elif isinstance(arg, ArithmeticExpression):
+            return INT_TYPE
+        else:
+            SemanticAnalyzerDevelopmentError(f"invalid function arg! - {arg}").fatal()
 
     def __check_print_stmt(self, print_stmt, var_symbols, fun_symbols):
         self.__check_r_value(print_stmt.to_print, var_symbols, fun_symbols, expected_type=None)
@@ -144,6 +169,5 @@ class SemanticAnalyzer:
                 self.__check_print_stmt(ins, var_symbols, fun_symbols)
             else:
                 SemanticAnalyzerDevelopmentError(f"unknown instruction in scope: {ins}!").fatal()
-        # print(var_symbols)
-        # print(fun_symbols)
+
         return list_of_instructions  # if everything is correct then function is 'transparent'

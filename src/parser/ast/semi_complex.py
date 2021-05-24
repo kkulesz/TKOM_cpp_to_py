@@ -58,14 +58,14 @@ class FunctionArgument(AstNode):
 
 class FunctionInvocation(AstNode):
     def __init__(self, id_token, arguments):
-        self.name = Id(id_token)
+        self.id = Id(id_token)
         self.arguments = arguments
 
     def __repr__(self):
         arg_str = str(self.arguments)
         if len(self.arguments) == 0:
             arg_str = ""
-        return f"FunInvocation: {self.name}({arg_str})"
+        return f"FunInvocation: {self.id}({arg_str})"
 
 
 class Comparison(AstNode):

@@ -11,8 +11,7 @@ while( a < 121){
 }
 
 int fun(int a, int b){
-    fun(a, b);
     return 10;
 }
 
-fun(10, 12);
+fun(10, 121);
