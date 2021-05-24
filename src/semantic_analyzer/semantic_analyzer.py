@@ -167,6 +167,8 @@ class SemanticAnalyzer:
                 self.__check_return_expr(ins, var_symbols, fun_symbols, is_inside_fun, return_type)
             elif isinstance(ins, PrintStatement):
                 self.__check_print_stmt(ins, var_symbols, fun_symbols)
+            elif isinstance(ins, SingleLineComment) or isinstance(ins, MultiLineComment):
+                pass  # if comment then do nothing
             else:
                 SemanticAnalyzerDevelopmentError(f"unknown instruction in scope: {ins}!").fatal()
 

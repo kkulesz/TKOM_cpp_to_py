@@ -115,9 +115,9 @@ class Parser:
         return VariableAssignment(id_token, value)
 
     def __parse_r_value(self):
-        return self.__parse_arithmetic_expression()  # TODO: maybe condition later
+        return self.__parse_arithmetic_expression(has_brackets=False)  # TODO: maybe condition later
 
-    def __parse_arithmetic_expression(self):
+    def __parse_arithmetic_expression(self, has_brackets):
         result = self.__parse_multiplicative_factor()
 
         if result:
@@ -125,12 +125,13 @@ class Parser:
             while additive_token:
                 result = ArithmeticExpression(result,
                                               ArithmeticOperator(additive_token),
-                                              self.__parse_multiplicative_factor())
+                                              self.__parse_multiplicative_factor(),
+                                              has_brackets)
                 additive_token = self.__check_if_one_of_tokens(ParserUtils.additive_operator_tokens)
 
         return result
 
-    def __parse_multiplicative_factor(self):
+    def __parse_multiplicative_factor(self, has_brackets=False):
         multiplicative_factor = self.__parse_additive_factor()
 
         if multiplicative_factor:
@@ -138,7 +139,7 @@ class Parser:
             while maybe_multiplicative_token:
                 multiplicative_factor = ArithmeticExpression(multiplicative_factor,
                                                              ArithmeticOperator(maybe_multiplicative_token),
-                                                             self.__parse_additive_factor())
+                                                             self.__parse_additive_factor(), has_brackets)
                 maybe_multiplicative_token = self.__check_if_one_of_tokens(
                     ParserUtils.multiplicative_operator_tokens)
 
@@ -148,7 +149,7 @@ class Parser:
         additive_factor = self.__parse_id_or_literal()
 
         if not additive_factor and self.__check_token(TokenType.OP_BRACKET):
-            additive_factor = self.__parse_arithmetic_expression()
+            additive_factor = self.__parse_arithmetic_expression(has_brackets=True)
             self.__demand_token(TokenType.CL_BRACKET)
 
         return additive_factor

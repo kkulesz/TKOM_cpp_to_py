@@ -79,10 +79,11 @@ class Comparison(AstNode):
 
 
 class ArithmeticExpression(AstNode):
-    def __init__(self, left_operand, operator, right_operand):
+    def __init__(self, left_operand, operator, right_operand, has_brackets):
         self.left_operand = left_operand
         self.operator = operator
         self.right_operand = right_operand
+        self.has_brackets = has_brackets
 
     def __repr__(self):
         return f"ArithExpr: ({self.left_operand}{self.operator}{self.right_operand})"
@@ -101,7 +102,4 @@ class ReturnExpression(AstNode):
         self.value = value
 
     def __repr__(self):
-        return_value = ""
-        if self.value is not None:
-            return_value = ":" + str(self.value)
-        return f"Return: {return_value};"
+        return f"Return: {self.value};"

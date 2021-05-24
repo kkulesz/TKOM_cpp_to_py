@@ -1,17 +1,8 @@
-if(true){
-    std::cout<<"siema"<<std::endl;
-}else{
-    int a = 10;
-}
-int a = 12;
-a = 15;
-std::string s = "nanana";
-while( a < 121){
-    s = "nene";
+bool fun(){
+    return false;
 }
 
-int fun(int a, int b){
-    return 10;
+int main(){
+    std::cout<<"napis"<<std::endl;
+    return 0;
 }
-
-fun(10, 121);
