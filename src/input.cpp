@@ -1,3 +1,5 @@
+#include<string>
+
 std::string funTwoArgs(bool b, std::string s){
     return "";
 }

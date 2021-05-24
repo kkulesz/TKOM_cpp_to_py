@@ -26,6 +26,8 @@ class Lexer:
             curr_char = self.__move_and_get_char()
 
     def __try_match(self):
+        self.__ignore_include_string()
+        self.__ignore_whites()
         # instead of 'if else' everywhere
         return self.__try_eof() or \
                self.__try_id_or_keyword() or \
@@ -175,6 +177,12 @@ class Lexer:
             next_character = self.__move_and_get_char()
             maybe_end_of_comment = character + next_character
         return string_of_chars #[:-1]
+
+    def __ignore_include_string(self):
+        char = self.__get_char()
+        if(char == '#'):
+            while(char != '\n'):
+                char = self.__move_and_get_char();
 
     def __move_pointer(self):
         _ = self.__code_provider.move_and_get_char()
