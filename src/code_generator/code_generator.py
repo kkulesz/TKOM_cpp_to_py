@@ -24,7 +24,8 @@ class CodeGenerator:
                self.__translate_while_stmt(ins, nest_level) or \
                self.__translate_fun_decl(ins, nest_level) or \
                self.__translate_print(ins, nest_level) or \
-               self.__translate_return(ins, nest_level)
+               self.__translate_return(ins, nest_level) or \
+               self.__translate_fun_invocation(ins, nest_level)
 
     def __translate_var_decl_or_assign(self, ins, nest_level):
         if not isinstance(ins, VariableAssignment) and not isinstance(ins, VariableDeclaration):
@@ -72,11 +73,11 @@ class CodeGenerator:
         args_str = ""
 
         no_of_args = len(args)
-        for i in range(no_of_args-1):
+        for i in range(no_of_args - 1):
             args_str += self.__get_id_str(args[i].id) + ', '
 
         if no_of_args > 0:
-            args_str += self.__get_id_str(args[no_of_args-1].id)
+            args_str += self.__get_id_str(args[no_of_args - 1].id)
 
         return args_str
 
@@ -95,6 +96,28 @@ class CodeGenerator:
         indent = self.__get_indent(nest_level)
         return_value = self.__get_r_value_str(ins.value)
         return f"{indent}return {return_value}\n"
+
+    def __translate_fun_invocation(self, ins, nest_level):
+        if not isinstance(ins, FunctionInvocation):
+            return None
+
+        indent = self.__get_indent(nest_level)
+        fun_name = ins.id.name
+        args_str = self.__get_fun_invocation_args_str(ins.arguments)
+
+        return f"{indent}{fun_name}({args_str})\n"
+
+    def __get_fun_invocation_args_str(self, args):
+        no_of_args = len(args)
+
+        args_str = ""
+        for i in range(no_of_args - 1):
+            args_str += self.__get_r_value_str(args[i]) + ', '
+
+        if no_of_args > 0:
+            args_str += self.__get_r_value_str(args[no_of_args - 1])
+
+        return args_str
 
     def __get_r_value_str(self, value):
         return self.__get_literal_str(value) or \

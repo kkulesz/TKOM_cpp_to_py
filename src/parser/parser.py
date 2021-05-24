@@ -180,13 +180,13 @@ class Parser:
         return FunctionInvocation(id_token, arguments)
 
     def __parse_function_invocation_arguments(self):
-        maybe_argument = self.__parse_arithmetic_expression()
+        maybe_argument = self.__parse_arithmetic_expression(has_brackets=False)
         if not maybe_argument:
             return []
 
         arguments_so_far = [maybe_argument]
         while self.__check_token(TokenType.COMA):
-            arguments_so_far.append(self.__parse_arithmetic_expression())
+            arguments_so_far.append(self.__parse_arithmetic_expression(has_brackets=False))
 
         return arguments_so_far
 

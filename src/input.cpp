@@ -14,5 +14,8 @@ int funNoArgs(){
 
 int main(){
     std::cout<<"napis"<<std::endl;
+    funNoArgs();
+    funOneArg(21+232);
+    funTwoArgs(true, "nanana");
     return 0;
 }
