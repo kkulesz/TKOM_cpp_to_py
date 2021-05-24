@@ -6,6 +6,8 @@ from src.semantic_analyzer.symbol import *
 
 from src.errors import *
 
+# for arithmetic expressions
+INT_TYPE = Type(Token(TokenType.INT_KW))
 
 class SemanticAnalyzer:
     def __init__(self):
@@ -40,7 +42,10 @@ class SemanticAnalyzer:
         pass
 
     def __check_arithmetic_expr(self, arithmetic_expr, var_symbols, fun_symbols):
-        pass
+        left = arithmetic_expr.left_operand
+        right = arithmetic_expr.right_operand
+        self.__check_r_value(left, var_symbols, fun_symbols, INT_TYPE)
+        self.__check_r_value(right, var_symbols, fun_symbols, INT_TYPE)
 
     def __check_fun_invocation(self, fun_invocation, var_symbols, fun_symbols):
         pass
@@ -57,7 +62,10 @@ class SemanticAnalyzer:
         elif isinstance(r_value, Id):
             self.__check_var_id(r_value, var_symbols, expected_type)
         elif isinstance(r_value, ArithmeticExpression):
-            self.__check_arithmetic_expr(r_value, var_symbols, fun_symbols)
+            if expected_type == INT_TYPE:
+                self.__check_arithmetic_expr(r_value, var_symbols, fun_symbols)
+            else:
+                SemanticNotNumberInArithmeticExprError(expected_type).fatal()
         else:
             SemanticAnalyzerDevelopmentError(f"unknown right value! - {r_value}").fatal()
 

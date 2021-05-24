@@ -60,6 +60,11 @@ class SemanticUnknownSymbolError(SemanticError):
         self.message = f"unknown symbol: {gotten_id}"
         super(SemanticUnknownSymbolError, self).__init__(self.message)
 
+class SemanticNotNumberInArithmeticExprError(SemanticError):
+    def __init__(self, gotten_type):
+        self.message = f"arithmetic expressions are desingned for integers only, not for: {gotten_type}s"
+        super(SemanticNotNumberInArithmeticExprError, self).__init__(self.message)
+
 
 class SemanticAnalyzerDevelopmentError(SemanticError):
     def __init__(self, message):
