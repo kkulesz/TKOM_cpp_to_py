@@ -1,11 +1,18 @@
-int n;
-int nn = 10;
-std::string str = "str";
-bool b = true;
-int a = n;
+if(true){
+    std::cout<<"siema"<<std::endl;
+}else{
+    int a = 10;
+}
+int a = 12;
+a = 15;
+std::string s = "nanana";
+while( a < 121){
+    s = "nene";
+}
 
-int aa = a+n;
+int fun(int a, int b){
+    fun(a, b);
+    return 10;
+}
 
-n = 10;
-n = 12;
-std::cout<<"essa"<<std::endl;
+fun(10, 12);

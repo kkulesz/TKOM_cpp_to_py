@@ -50,10 +50,10 @@ class VariableAssignment(AstNode):
 class FunctionArgument(AstNode):
     def __init__(self, type_token, id_token):
         self.type = Type(type_token)
-        self.name = Id(id_token)
+        self.id = Id(id_token)
 
     def __repr__(self):
-        return f"FunArg:({self.type}-{self.name})"
+        return f"FunArg:({self.type}-{self.id})"
 
 
 class FunctionInvocation(AstNode):

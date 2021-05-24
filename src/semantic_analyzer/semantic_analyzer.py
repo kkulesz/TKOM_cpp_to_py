@@ -18,7 +18,23 @@ class SemanticAnalyzer:
         return self.__analyze_scope(program, {}, {}, False, None)
 
     def __check_fun_declaration(self, fun_decl, var_symbols, fun_symbols):
-        pass
+        return_type = fun_decl.type
+        fun_name = fun_decl.id.name
+        args = fun_decl.arguments
+        body = fun_decl.instructions
+
+        arg_types = []
+        for arg in args:
+            arg_name = arg.id.name
+            arg_type = arg.type
+            new_var_symbol = VariableSymbol(arg_type, arg_name)
+            var_symbols[arg_name] = new_var_symbol
+            arg_types.append(arg_type)
+
+        new_fun_symbol = FunctionSymbol(return_type, fun_name, arg_types)
+        fun_symbols[fun_name] = new_fun_symbol
+        self.__analyze_scope(body, var_symbols, fun_symbols, is_inside_fun=True, return_type=return_type)
+
 
     def __check_var_declaration(self, var_decl, var_symbols, fun_symbols):
         var_name = var_decl.id.name
@@ -111,7 +127,7 @@ class SemanticAnalyzer:
     def __analyze_scope(self, list_of_instructions, var_symbols, fun_symbols, is_inside_fun, return_type):
         for ins in list_of_instructions:
             if isinstance(ins, FunctionDeclaration):
-                self.__check_fun_declaration(ins, var_symbols.copy(), fun_symbols.copy())
+                self.__check_fun_declaration(ins, var_symbols.copy(), fun_symbols)
             elif isinstance(ins, VariableDeclaration):
                 self.__check_var_declaration(ins, var_symbols, fun_symbols)
             elif isinstance(ins, VariableAssignment):
@@ -129,4 +145,5 @@ class SemanticAnalyzer:
             else:
                 SemanticAnalyzerDevelopmentError(f"unknown instruction in scope: {ins}!").fatal()
         # print(var_symbols)
+        # print(fun_symbols)
         return list_of_instructions  # if everything is correct then function is 'transparent'

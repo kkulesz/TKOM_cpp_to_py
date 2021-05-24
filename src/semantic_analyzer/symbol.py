@@ -21,7 +21,10 @@ class VariableSymbol(Symbol):
 
 
 class FunctionSymbol(Symbol):
-    def __init__(self, fun_type, fun_id, fun_args):
+    def __init__(self, fun_type, fun_id, fun_args_types):
         self.type = fun_type
         self.id = fun_id
-        self.args = fun_args
+        self.args_types = fun_args_types
+
+    def __repr__(self):
+        return f"FunDecl:{self.type} {self.id} {self.args_types}"

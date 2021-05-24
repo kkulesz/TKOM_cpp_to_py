@@ -7,7 +7,7 @@ from src.parser.ast.primitives import *
 class FunctionDeclaration(AstNode):
     def __init__(self, type_token, id_token, arguments, instructions):
         self.type = Type(type_token)
-        self.name = Id(id_token)
+        self.id = Id(id_token)
         self.arguments = arguments
         self.instructions = instructions
 
@@ -18,7 +18,7 @@ class FunctionDeclaration(AstNode):
         nested_ins = str(self.instructions)
         if len(self.instructions) == 0:
             nested_ins = ""
-        return f"FunDecl: {self.type} {self.name} ({args}) {{{nested_ins}}}"
+        return f"FunDecl: {self.type} {self.id} ({args}) {{{nested_ins}}}"
 
 
 class IfStatement(AstNode):
