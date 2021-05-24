@@ -31,7 +31,18 @@ class ParserSyntaxError(ParserError):
         super(ParserSyntaxError, self).__init__(position, self.message)
 
 
-class ParserDevelopmentError(ParserError):
+class ParserDevelopmentError(ParserError):  # for debug
     def __init__(self, position, message):
-        self.message = f"DEVELOPMENT ERROR: {message}"
+        self.message = f"PARSER DEVELOPMENT ERROR: {message}"
         super(ParserDevelopmentError, self).__init__(position, self.message)
+
+
+class SemanticError(GenericError):
+    def __init__(self):
+        pass
+
+
+class SemanticAnalyzerDevelopmentError(GenericError):
+    def __init__(self, message):
+        self.message = f"SEMANTIC ANALUZER DEVELOPMENT ERROR: {message}"
+        super(SemanticAnalyzerDevelopmentError, self).__init__(self.message)
