@@ -1,6 +1,6 @@
 class GenericError(Exception):
     def __init__(self, message):
-        self.message = message
+        self.message = f"{message}!"
         super().__init__(self.message)
 
     def fatal(self):
@@ -60,10 +60,17 @@ class SemanticUnknownSymbolError(SemanticError):
         self.message = f"unknown symbol: {gotten_id}"
         super(SemanticUnknownSymbolError, self).__init__(self.message)
 
+
 class SemanticNotNumberInArithmeticExprError(SemanticError):
     def __init__(self, gotten_type):
-        self.message = f"arithmetic expressions are desingned for integers only, not for: {gotten_type}s"
+        self.message = f"arithmetic expressions are designed for integers only, not for: {gotten_type}s"
         super(SemanticNotNumberInArithmeticExprError, self).__init__(self.message)
+
+
+class SemanticReturnNotInsideFunctionBodyError(SemanticError):
+    def __init__(self):
+        self.message = f"return statement not inside function body"
+        super(SemanticReturnNotInsideFunctionBodyError, self).__init__(self.message)
 
 
 class SemanticAnalyzerDevelopmentError(SemanticError):

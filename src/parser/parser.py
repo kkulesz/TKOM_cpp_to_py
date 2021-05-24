@@ -165,7 +165,7 @@ class Parser:
                 ParserError(self.__get_position(),
                             f"expected literal or id, but got {self.__get_current_token()}"
                             ).fatal()
-            return SingleCondition(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
+            return Comparison(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
         return maybe_left_id_or_literal
 
     def __parse_function_invocation(self, id_token):

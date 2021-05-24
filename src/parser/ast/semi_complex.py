@@ -68,14 +68,11 @@ class FunctionInvocation(AstNode):
         return f"FunInvocation: {self.name}({arg_str})"
 
 
-class SingleCondition(AstNode):
-    def __init__(self, left, operator_token=None, right=None):
+class Comparison(AstNode):
+    def __init__(self, left, operator_token, right):
         self.left = left
-        self.operator = None
-        self.right = None
-        if operator_token:
-            self.operator = ComparisonOperator(operator_token)
-            self.right = right
+        self.operator = ComparisonOperator(operator_token)
+        self.right = right
 
     def __repr__(self):
         return f"SingleCond: ({self.left}{self.operator}{self.right})"

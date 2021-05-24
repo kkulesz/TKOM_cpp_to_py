@@ -54,7 +54,7 @@ class SemanticAnalyzer:
 
     def __check_return_expr(self, return_expr, var_symbols, fun_symbols, is_inside_fun, return_type):
         if not is_inside_fun:
-            pass  # TODO: blad o nie byciu w fynkcji
+            SemanticReturnNotInsideFunctionBodyError().fatal()
 
         self.__check_r_value(return_expr.value, var_symbols, fun_symbols, return_type)
 
@@ -72,13 +72,17 @@ class SemanticAnalyzer:
 
     def __check_condition(self, condition, var_symbols, fun_symbols):
         if isinstance(condition, Literal):
-            pass
+            self.__check_literal(condition, expected_type=None)
         elif isinstance(condition, Id):
-            pass
-        elif isinstance(condition, SingleCondition):
-            pass
+            self.__check_var_id(condition, var_symbols, expected_type=None)
+        elif isinstance(condition, Comparison):
+            self.__check_comparison(condition, var_symbols)
         else:
-            pass  # TODO: development error
+            SemanticAnalyzerDevelopmentError(f"unknown condition! - {condition}").fatal()
+
+    def __check_comparison(self, comparison, var_symbols):
+        self.__check_r_value(comparison.left, var_symbols, fun_symbols=None, expected_type=INT_TYPE)
+        self.__check_r_value(comparison.right, var_symbols, fun_symbols=None, expected_type=INT_TYPE)
 
     def __check_r_value(self, r_value, var_symbols, fun_symbols, expected_type):
         if isinstance(r_value, Literal):
