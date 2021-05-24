@@ -25,7 +25,9 @@ class CodeGenerator:
                self.__translate_fun_decl(ins, nest_level) or \
                self.__translate_print(ins, nest_level) or \
                self.__translate_return(ins, nest_level) or \
-               self.__translate_fun_invocation(ins, nest_level)
+               self.__translate_fun_invocation(ins, nest_level) or \
+               self.__translate_single_line_comment(ins, nest_level) or \
+               self.__translate_multi_line_comment(ins, nest_level)
 
     def __translate_var_decl_or_assign(self, ins, nest_level):
         if not isinstance(ins, VariableAssignment) and not isinstance(ins, VariableDeclaration):
@@ -118,6 +120,22 @@ class CodeGenerator:
             args_str += self.__get_r_value_str(args[no_of_args - 1])
 
         return args_str
+
+    def __translate_single_line_comment(self, ins, nest_level):
+        if not isinstance(ins, SingleLineComment):
+            return None
+
+        indent = self.__get_indent(nest_level)
+        comment = ins.comment
+        return f"{indent}#{comment}\n"
+
+    def __translate_multi_line_comment(self, ins, nest_level):
+        if not isinstance(ins, MultiLineComment):
+            return None
+
+        indent = self.__get_indent(nest_level)
+        comment = ins.comment
+        return f"{indent}'''\n{comment}\n{indent}'''\n"
 
     def __get_r_value_str(self, value):
         return self.__get_literal_str(value) or \

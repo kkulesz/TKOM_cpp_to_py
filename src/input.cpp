@@ -10,6 +10,8 @@ bool funOneArg(int a){
 
 int funNoArgs(){
     std::cout<<"nananananana"<<std::endl;
+    //nanana
+    /*nanan*/
 }
 
 int main(){
