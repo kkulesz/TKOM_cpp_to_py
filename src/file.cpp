@@ -14,4 +14,5 @@ int main(){
         i = i + 1;
     }
     std::cout<<123<<std::endl;
+    std::cout<<"nananana"<<std::endl;
 }

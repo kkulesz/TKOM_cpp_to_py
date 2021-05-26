@@ -9,6 +9,7 @@ def main():
         strFun(i)
         i = i + 1
     print(123)
+    print("nananana")
 
 
 if __name__ == "__main__":
