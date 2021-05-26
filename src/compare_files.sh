@@ -1,4 +1,4 @@
-FILE_NAME=file
+FILE_NAME='file'
 
 #source file names
 CPP_FILE="${FILE_NAME}.cpp"
@@ -9,7 +9,7 @@ PYTHON_OUTPUT=py_output.txt
 CPP_OUTPUT=cpp_output.txt
 
 #compile cpp
-EXEC_CPP_FILE=cpp.exec
+EXEC_CPP_FILE='cpp.exec'
 g++ $CPP_FILE -o $EXEC_CPP_FILE
 
 #get output of sources
