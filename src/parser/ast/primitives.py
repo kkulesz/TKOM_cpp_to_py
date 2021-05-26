@@ -1,8 +1,8 @@
 # primitives - leaves of AST, they do not contain other nodes
 from src.parser.ast.ast_node import AstNode
 from src.parser.ast.ast_utils import *
-from src.lexer.token import TokenType, Token
-from src.errors import ParserDevelopmentError
+from src.lexer.token import TokenType
+from src.error.errors import ParserDevelopmentError
 
 
 # TODO: GET RID OF DEVELOPMENT ERRORS WHEN

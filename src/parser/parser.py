@@ -1,5 +1,4 @@
-from src.errors import ParserSyntaxError, ParserError
-from src.lexer.token import TokenType
+from src.error.errors import ParserSyntaxError, ParserError
 from src.parser.ast.complex import *
 from src.parser.ast.semi_complex import *
 from src.parser.ast.primitives import *
@@ -16,7 +15,6 @@ class Parser:
         program = []
         while self.__get_current_token().get_type() != TokenType.EOF:
             new_ins = self.__parse_instruction()
-            # print(new_ins)
             program.append(new_ins)
 
         return program

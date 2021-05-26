@@ -8,12 +8,10 @@ class CodeGenerator:
         pass
 
     def generate_program(self, program):
-        python_program_str = self.__translate_scope(program, nest_level=0)
-        python_program_str += '''
-if __name__ == "__main__":
-    main()
-        '''
-        return python_program_str
+        return self.__translate_scope(program, nest_level=0)
+
+    def generate_program_with_main(self, program):
+        return self.generate_program(program) + '''\nif __name__ == "__main__":\n    main()'''
 
     def __translate_scope(self, list_of_instructions, nest_level):
         scope_str = ""

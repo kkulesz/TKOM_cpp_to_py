@@ -8,9 +8,8 @@ def main():
         print(i)
         strFun(i)
         i = i + 1
-    print(False)
+    print(123)
 
 
 if __name__ == "__main__":
     main()
-        

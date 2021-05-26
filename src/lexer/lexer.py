@@ -1,4 +1,4 @@
-from src.errors import LexerError
+from src.error.errors import LexerError
 from src.lexer.token import TokenType, TokenDicts, Token
 
 
@@ -26,7 +26,7 @@ class Lexer:
             curr_char = self.__move_and_get_char()
 
     def __try_match(self):
-        self.__ignore_include_string()
+        self.__ignore_hash_starting()  # ignore includes and other macros
         self.__ignore_whites()
         # instead of 'if else' everywhere
         return self.__try_eof() or \
@@ -65,7 +65,7 @@ class Lexer:
             LexerError(self.__get_position(), "invalid std token!").fatal()
 
         rest_of_word = ''
-        for i in range(0,4):
+        for i in range(0, 4):
             rest_of_word += self.__move_and_get_char()
 
         if rest_of_word == "cout":
@@ -103,7 +103,7 @@ class Lexer:
             string = ''
             prev_character = curr_character
             curr_character = self.__move_and_get_char()
-            while not(curr_character == '"' and prev_character != "\\"):
+            while not (curr_character == '"' and prev_character != "\\"):
                 string += curr_character
                 prev_character = curr_character
                 curr_character = self.__move_and_get_char()
@@ -176,13 +176,14 @@ class Lexer:
             character = next_character
             next_character = self.__move_and_get_char()
             maybe_end_of_comment = character + next_character
-        return string_of_chars #[:-1]
+        return string_of_chars
 
-    def __ignore_include_string(self):
+    def __ignore_hash_starting(self):
         char = self.__get_char()
-        if(char == '#'):
-            while(char != '\n'):
-                char = self.__move_and_get_char();
+        while char == '#':
+            while char != '\n':
+                char = self.__move_and_get_char()
+            char = self.__move_and_get_char()
 
     def __move_pointer(self):
         _ = self.__code_provider.move_and_get_char()
