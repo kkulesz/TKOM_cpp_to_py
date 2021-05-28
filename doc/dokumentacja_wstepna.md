@@ -19,8 +19,8 @@ Konrad Kulesza 300247
 - wyrażenia `#include <...>` będą ignorowane. W języku wejściowym powinno być wykorzysytwane tylko `<stdio>` ze względu na `std::cout, std::endl`
 - wyrażenia `using namespace...` będą pomijane. Akceptowane są tylko jawne przestrzenie nazw
   - np. translator nie rozpozna samego `cout<<`, musi być jawnie napisane `std::cout<<`
-- jeden plik na wejściu. Poprawny składniowo(możliwy do skompilowania za pomocą `g++`) BLAD!!!! dopsiać że wyjście ma być poprawne
-- jeden plik na wyjściu
+- jeden plik na wejściu - niekoniecznie poprawny składniowo
+- jeden plik na wyjściu - poprawny składniowo
 - brak możliwości nadpisania słów kluczowych zarówno jezyka wejściowego jak i wyjściowego
 
 ### Podzbiór języka C++
@@ -32,7 +32,6 @@ Konrad Kulesza 300247
 - typy danych:
   - int
   - string
-  - float
   - boolean
 - operacje arytmetyczne(zmiennopozycyjne, stałopozycyjne)
 - wypisanie na ekran
@@ -81,6 +80,8 @@ c = 100.00
 result = (a+b)*c/20
 ```
 
+
+
 ```
 ## 2.0.if_else_statment //BLAD wywalic elif
 bool cond = true;
@@ -99,6 +100,8 @@ else:
 	a=a-2
 ```
 
+
+
 ```
 ## 3.0.for_statment
 for(int i=0; i<10; i=i+1){
@@ -108,6 +111,8 @@ for(int i=0; i<10; i=i+1){
 for i in range(0, 10):
 	print(i)
 ```
+
+
 
 ```while()
 ## 4.0.while_statment_test
@@ -120,6 +125,8 @@ i=0
 while i<20:
 	++i
 ```
+
+
 
 ```
 ## 5.0.function_declaration
@@ -134,6 +141,8 @@ def fun(a: int):
 	print(a)
 	return a
 ```
+
+
 
 ```
 ## 6.0.multiline_comment
@@ -180,17 +189,25 @@ Komunikat błędu(ostrzeżenia) będzie posiadał:
 for( i a b ); // Error! Line: 6, column: 1; Syntax error: for_statment ; parser
 ```
 
+
+
 ```
 else if{} // Error! Line: 11, column 1; Syntax error: if_else_statment ; parser
 ```
+
+
 
 ```
 class = 5; // Error! Line: 11, column 1; Keyword violation ; parser
 ```
 
+
+
 ```
 0abc = 2; // Error! Line: 11, column 1; Variable name error ; parser/analizator_semantyczny
 ```
+
+
 
 ```
 // int a=1;
@@ -321,5 +338,4 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
    - czy typy zmiennych się zgadzają?
 4. przetłumacz strukture języka c++ na odpowiadającą mu strukture w języku Python
    - zachowaj odpowiednią "tabulacje" bloków instrukcji(zmienna pilnująca "poziomu zagnieżdżenia" bloków)
-
 
