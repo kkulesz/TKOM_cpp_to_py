@@ -56,10 +56,9 @@ class Lexer:
                 return maybe_std_keyword
 
             if candidate in LexerUtils.python_forbidden_keywords:
-                LexerError(self.__get_position(), f"overwritten Python keyword-{candidate}").fatal()
+                LexerOverwrittenPythonKeywordError(self.__get_position(), candidate).fatal()
             if candidate in LexerUtils.cpp_forbidden_keywords:
-                LexerError(self.__get_position(),
-                           f"overwritten C++ keyword-{candidate}, input code cannot be executed").warning()
+                LexerOverwrittenCppKeywordError(self.__get_position(), candidate).warning()
 
             return Token(TokenType.IDENTIFIER, candidate)
 
@@ -70,7 +69,7 @@ class Lexer:
             return None
         maybe_namespace_operator = self.__get_char() + self.__move_and_get_char()
         if maybe_namespace_operator != "::":
-            LexerError(self.__get_position(), "invalid std token!").fatal()
+            LexerInvalidStdTokenError(self.__get_position()).fatal()
 
         rest_of_word = ''
         for i in range(0, 4):
@@ -85,7 +84,7 @@ class Lexer:
             rest_of_word += self.__move_and_get_char()
             if rest_of_word == "string":
                 return Token(TokenType.STRING_KW)
-        LexerError(self.__get_position(), "invalid std token!").fatal()
+        LexerInvalidStdTokenError(self.__get_position()).fatal()
 
     def __try_number(self):
         value_so_far = 0
@@ -116,7 +115,7 @@ class Lexer:
                 prev_character = curr_character
                 curr_character = self.__move_and_get_char()
                 if curr_character == "":
-                    LexerError(self.__get_position(), "no end of string provided!").warning()
+                    LexerNoEndOfStringProvidedError(self.__get_position()).warning()
                     break
 
             self.__move_pointer()  # move so next char will not be quote
@@ -151,7 +150,7 @@ class Lexer:
     def __get_undefined_and_move(self):
         char = self.__get_char()
         self.__move_pointer()  # move so we can continue after undefined
-        LexerError(self.__get_position(), "unidentified token").warning()
+        LexerUndefinedTokenError(self.__get_position()).warning()
         return Token(TokenType.UNDEFINED, char)
 
     def __read_word(self):
@@ -178,7 +177,7 @@ class Lexer:
         maybe_end_of_comment = character + next_character
         while maybe_end_of_comment != '*/':
             if maybe_end_of_comment == "":
-                LexerError(self.__get_position, "no end of multi-line comment").warning()
+                LexerNoEndOfMultilineCommentProvidedError(self.__get_position()).warning()
                 return string_of_chars
             string_of_chars += character
             character = next_character
