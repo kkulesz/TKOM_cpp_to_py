@@ -8,13 +8,37 @@ class ParserError(GenericError):
         super().__init__(self.message)
 
 
+class ParserInvalidTokenAfterIdentifierError(ParserError):
+    def __init__(self, position, token):
+        self.message = f"invalid token after id: {token.get_type()}"
+        super().__init__(position, self.message)
+
+
+class ParserExpectedLiteralOrIdentifierError(ParserError):
+    def __init__(self, position, token):
+        self.message = f"expected literal or id, but got {token.get_type()}"
+        super().__init__(position, self.message)
+
+
+class ParserNoConditionError(ParserError):
+    def __init__(self, position, stmt_name):
+        self.message = f"condition is required in '{stmt_name}'"
+        super().__init__(position, self.message)
+
+
 class ParserSyntaxError(ParserError):
     def __init__(self, position, expected_token, got_token):
         self.message = f"Expected: {expected_token}, but got: {got_token}"
-        super(ParserSyntaxError, self).__init__(position, self.message)
+        super().__init__(position, self.message)
+
+
+class ParserUnknownInstructionError(ParserError):
+    def __init__(self, position):
+        self.message = f"unknown instruction"
+        super().__init__(position, self.message)
 
 
 class ParserDevelopmentError(ParserError):  # for debug
     def __init__(self, position, message):
         self.message = f"PARSER DEVELOPMENT ERROR: {message}"
-        super(ParserDevelopmentError, self).__init__(position, self.message)
+        super().__init__(position, self.message)

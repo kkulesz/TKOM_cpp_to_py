@@ -7,13 +7,7 @@ std::string strFun(int a){
 }
 
 int main(){
-    int i = 0;
-    while( i<10 ){
-        std::cout<<i<<std::endl;
-        strFun("");
-        i = i + 1;
+    while(){
+        std::cout<<"dupa"<<std::endl;
     }
-    int auto = 12;
-    std::cout<<123<<std::endl;
-    std::cout<<"nananana"<<std::endl;
 }

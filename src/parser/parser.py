@@ -30,7 +30,7 @@ class Parser:
                             self.__parse_if()
 
         if not maybe_instruction:
-            ParserError(self.__get_position(), "unknown instruction!").warning()
+            ParserUnknownInstructionError(self.__get_position()).warning()
         return maybe_instruction
 
     def __parse_declaration(self):
@@ -99,9 +99,7 @@ class Parser:
         if maybe_function_invocation:
             return maybe_function_invocation
 
-        ParserError(self.__get_position(),
-                    f"invalid token after id: {self.__get_current_token()}!"
-                    ).fatal()
+        ParserInvalidTokenAfterIdentifierError(self.__get_position(), self.__get_current_token()).fatal()
 
     def __parse_assignment(self, id_token):
         if not self.__check_token(TokenType.ASSIGN):
@@ -112,8 +110,8 @@ class Parser:
 
         return VariableAssignment(id_token, value)
 
-    def __parse_r_value(self):
-        return self.__parse_arithmetic_expression(has_brackets=False)  # TODO: maybe condition later
+    def __parse_r_value(self):  # literal, id or whole arithmetic_expression are possible
+        return self.__parse_arithmetic_expression(has_brackets=False)
 
     def __parse_arithmetic_expression(self, has_brackets):
         result = self.__parse_multiplicative_factor()
@@ -161,9 +159,7 @@ class Parser:
         if maybe_comparison_token:
             maybe_right_id_or_literal = self.__parse_id_or_literal()
             if not maybe_right_id_or_literal:
-                ParserError(self.__get_position(),
-                            f"expected literal or id, but got {self.__get_current_token()}"
-                            ).fatal()
+                ParserExpectedLiteralOrIdentifierError(self.__get_position(), self.__get_current_token()).fatal()
             return Comparison(maybe_left_id_or_literal, maybe_comparison_token, maybe_right_id_or_literal)
         return maybe_left_id_or_literal
 
@@ -215,12 +211,12 @@ class Parser:
         self.__demand_token(TokenType.OP_BRACKET)
         condition = self.__parse_condition()
         if condition is None:
-            ParserError(self.__get_position(), "condition is required in 'if statement'!").fatal()
+            ParserNoConditionError(self.__get_position(), 'if-statement').fatal()
         self.__demand_token(TokenType.CL_BRACKET)
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         if_instructions = self.__parse_scope()
 
-        else_instruction = [] # TODO: make it none
+        else_instruction = []
         if self.__check_token(TokenType.ELSE_KW):
             self.__demand_token(TokenType.OP_CURLY_BRACKET)
             else_instruction = self.__parse_scope()
@@ -234,7 +230,7 @@ class Parser:
         self.__demand_token(TokenType.OP_BRACKET)
         condition = self.__parse_condition()
         if condition is None:
-            ParserError(self.__get_position(), "condition is required in 'while statement'!").fatal()
+            ParserNoConditionError(self.__get_position(), 'while-statement').fatal()
         self.__demand_token(TokenType.CL_BRACKET)
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         instructions = self.__parse_scope()
