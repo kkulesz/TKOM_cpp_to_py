@@ -90,8 +90,9 @@ class ArithmeticExpression(AstNode):
 
 
 class PrintStatement(AstNode):
-    def __init__(self, to_print):
+    def __init__(self, to_print, with_new_line):
         self.to_print = to_print
+        self.with_new_line = with_new_line
 
     def __repr__(self):
         return f"PrintStmt: {self.to_print};"

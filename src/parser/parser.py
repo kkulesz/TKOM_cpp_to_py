@@ -249,10 +249,12 @@ class Parser:
             return None
         self.__demand_token(TokenType.STREAM_OPERATOR)
         statement_to_print = self.__parse_r_value()
-        self.__demand_token(TokenType.STREAM_OPERATOR)
-        self.__demand_token(TokenType.ENDL_KW)  # TODO: make this optional and set flag in statement
+        with_new_line = False
+        if self.__check_token(TokenType.STREAM_OPERATOR):
+            self.__demand_token(TokenType.ENDL_KW)
+            with_new_line = True
         self.__demand_token(TokenType.SEMICOLON)
-        return PrintStatement(statement_to_print)
+        return PrintStatement(statement_to_print, with_new_line)
 
     def __parse_comments(self):
         maybe_single_line = self.__check_token(TokenType.SINGLE_LINE_COMMENT)

@@ -91,7 +91,10 @@ class CodeGenerator:
 
         indent = self.__get_indent(nest_level)
         val_to_print = self.__get_r_value_str(ins.to_print)
-        return f"{indent}print({val_to_print})\n"
+        new_line = ''
+        if not ins.with_new_line:
+            new_line = ', end=""'
+        return f"{indent}print({val_to_print}{new_line})\n"
 
     def __translate_return(self, ins, nest_level):
         if not isinstance(ins, ReturnExpression):

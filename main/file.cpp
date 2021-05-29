@@ -2,12 +2,12 @@
 #include<iostream>
 
 std::string strFun(int a){
-    std::cout<<"strFun"<<std::endl;
+    std::cout<<"strFun";
     return "strFunReturn";
 }
 
 int main(){
-    while(){
-        std::cout<<"dupa"<<std::endl;
-    }
+
+    strFun(1);
+
 }
