@@ -1,4 +1,4 @@
-from src.error.errors import ParserSyntaxError, ParserError
+from src.errors.parser_errors import *
 from src.parser.ast.complex import *
 from src.parser.ast.semi_complex import *
 from src.parser.ast.primitives import *

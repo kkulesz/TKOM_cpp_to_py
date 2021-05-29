@@ -2,10 +2,7 @@
 from src.parser.ast.ast_node import AstNode
 from src.parser.ast.ast_utils import *
 from src.lexer.token import TokenType
-from src.error.errors import ParserDevelopmentError
-
-
-# TODO: GET RID OF DEVELOPMENT ERRORS WHEN
+from src.errors.parser_errors import ParserDevelopmentError
 
 
 class ArithmeticOperator(AstNode):

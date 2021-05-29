@@ -1,9 +1,8 @@
+from src.errors.semantic_errors import *
 from src.parser.ast.semi_complex import *
 from src.parser.ast.complex import *
-
 from src.semantic_analyzer.symbol import *
 
-from src.error.errors import *
 
 # helper
 INT_TYPE = Type(Token(TokenType.INT_KW))
