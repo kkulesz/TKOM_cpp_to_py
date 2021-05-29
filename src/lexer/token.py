@@ -78,14 +78,8 @@ class Token:
     def get_value(self):
         return self.value
 
-    # for debug
     def __repr__(self):
-        # INT(6): 1,15 --example
         return f'{self.type.name} \t {self.value} \t pos({self.line}, {self.column})'
-
-    # def __str__(self):
-    #     # INT(6): 1,15 --example
-    #     return f'{self.type.name} \t {self.value} \t pos({self.line}, {self.column})'
 
 
 class TokenDicts:

@@ -1,5 +1,6 @@
 from src.error.errors import LexerError
-from src.lexer.token import TokenType, TokenDicts, Token
+from src.lexer.lexer_utils import *
+from src.lexer.token import *
 
 
 class Lexer:
@@ -53,6 +54,12 @@ class Lexer:
             if maybe_std_keyword:
                 self.__move_pointer()
                 return maybe_std_keyword
+
+            if candidate in LexerUtils.python_forbidden_keywords:
+                LexerError(self.__get_position(), f"overwritten Python keyword-{candidate}").fatal()
+            if candidate in LexerUtils.cpp_forbidden_keywords:
+                LexerError(self.__get_position(), f"overwritten C++ keyword-{candidate}, input code cannot be executed").warning()
+
             return Token(TokenType.IDENTIFIER, candidate)
 
         return None

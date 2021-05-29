@@ -13,6 +13,7 @@ int main(){
         strFun(i);
         i = i + 1;
     }
+    int asd = 12;
     std::cout<<123<<std::endl;
     std::cout<<"nananana"<<std::endl;
 }

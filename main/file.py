@@ -8,6 +8,7 @@ def main():
         print(i)
         strFun(i)
         i = i + 1
+    asd = 12
     print(123)
     print("nananana")
 
