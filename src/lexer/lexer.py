@@ -6,6 +6,8 @@ class Lexer:
     def __init__(self, code_provider):
         self.__code_provider = code_provider
         self.token = None
+        self.__ignore_whites()
+        self.__ignore_hash_starting()  # ignore includes and other macros
 
     def get_token(self):
         return self.token
@@ -26,8 +28,6 @@ class Lexer:
             curr_char = self.__move_and_get_char()
 
     def __try_match(self):
-        self.__ignore_hash_starting()  # ignore includes and other macros
-        self.__ignore_whites()
         # instead of 'if else' everywhere
         return self.__try_eof() or \
                self.__try_id_or_keyword() or \

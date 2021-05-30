@@ -196,13 +196,21 @@ class Parser:
         return arguments_so_far
 
     def __parse_id_or_literal(self):
-        maybe_literal = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
-        if maybe_literal:
-            return Literal(maybe_literal)
-
         maybe_id = self.__check_token(TokenType.IDENTIFIER)
         if maybe_id:
             return Id(maybe_id)
+
+        maybe_minus_token = self.__check_token(TokenType.MINUS)
+        if maybe_minus_token:
+            int_token = self.__demand_token(TokenType.INT_LITERAL)
+            col = maybe_minus_token.column
+            line = maybe_minus_token.line
+            new_value = -int_token.value
+            return Literal(Token(TokenType.INT_LITERAL, new_value, line, col))
+
+        maybe_literal = self.__check_if_one_of_tokens(ParserUtils.literal_tokens)
+        if maybe_literal:
+            return Literal(maybe_literal)
 
         return None
 
