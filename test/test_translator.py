@@ -50,6 +50,7 @@ class TranslatorTest(unittest.TestCase):
         input_cpp_str = str_with_includes + """
 int main(){
     std::cout<<"test_print"<<std::endl;
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)
 
@@ -59,6 +60,7 @@ int main(){
     if(true){
         std::cout<<"test_if_without_else"<<std::endl;
     }
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)
 
@@ -70,6 +72,7 @@ int main(){
     }else{
         std::cout<<"test_if_with_else"<<std::endl;
     }
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)
 
@@ -81,6 +84,7 @@ int main(){
         std::cout<<i<<std::endl;
         i = i+1;
     }
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)
 
@@ -93,6 +97,7 @@ int fun(){
 
 int main(){
     fun();
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)
 
@@ -105,6 +110,7 @@ std::string fun(std::string str){
 
 int main(){
     fun("test_string_fun");
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)
 
@@ -131,5 +137,6 @@ bool fun2(int integer){
 int main(){
     fun("test_string_fun");
     fun2(1);
+    return 0;
 }"""
         self.assert_outputs(input_cpp_str)

@@ -1,25 +1,13 @@
-def strFun(a):
-    print("strFun", end="")
-    a = 21
-    auto = a
-    auto = 21
-    print(a)
-    return "strFunReturn"
+def fun(c, d):
+    zmiennaInt = 21
+    while True:
+        a = 10
+        return a
+    print(zmiennaInt)
 
 def main():
-    strFun(1)
-    a = 10 / 2
-    print(a)
-    if True:
-        a = 10
-    else:
-        b = 10
-    #//nananana
-    '''
-
-    essa
-    
-    '''
+    fun(1, 2)
+    return 0
 
 
 if __name__ == "__main__":

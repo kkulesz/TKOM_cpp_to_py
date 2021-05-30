@@ -1,26 +1,17 @@
 #include<string>
 #include<iostream>
 
-std::string strFun(int a){
-    std::cout<<"strFun";
-    a = 21;
-    int auto = a;
-    auto = 21;
-    std::cout<<a<<std::endl;
-    return "strFunReturn";
+int fun(int c, int d){
+    int zmiennaInt = 21;
+    while(true){
+        int a = 10;
+        return a;
+    }
+    std::cout<<zmiennaInt<<std::endl;
 }
 
 int main(){
-    strFun(1);
-    int a = 10/2;
-    std::cout<<a<<std::endl;
-    if(true){
-        //essa
-    }else{
-    int b = 10;
-    }
-    ////nananana
-    /*
-    essa
-    */
+    fun(1,2);
+    return 0 ;
 }
+

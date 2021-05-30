@@ -61,6 +61,12 @@ class SemanticTypesOfArgsInFunInvocationError(SemanticError):
         super().__init__(self.message)
 
 
+class SemanticNoReturnExpressionInFunBodyError(SemanticError):
+    def __init__(self, fun_name, ):
+        self.message = f"no return statement in function - {fun_name}!"
+        super().__init__(self.message)
+
+
 class SemanticAnalyzerDevelopmentError(SemanticError):
     def __init__(self, message):
         self.message = f"SEMANTIC ANALYZER DEVELOPMENT ERROR: {message}"
