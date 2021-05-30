@@ -10,7 +10,7 @@
 
 - typy danych:
   - int
-  - string
+  - std::string
   - bool
 - komentarze - jedno- i wielolinijkowe
 - zmienne lokalne
@@ -25,24 +25,33 @@
   - argumenty
   - wartość zwracana
 
+`W porównaniu do sprawozdania wstępnego zrezygnowałem z typu danych "float" oraz wyrażenia "for" ze względu sugestię Pani prowadzącej oraz wtórność rozwiązań`
+
 #### Założenia
 
 - w kodzie dopuszczone są tylko znaki alfanumeryczne - w stringach dowolne
 - wyrażenia zaczynające się znakiem `#` na przykład  `#include<iostream>` są przezroczyste, lekser nie przekazuje ich do dalszej analizy
 - jeden plik na wejściu
 - jeden plik na wyjściu
-- nadpisywanie słów kluczowych języka wejściowego **nie** przerywa przetwarzania, ale użytkownik jest informowany, że kod wejściowy nie jest możliwy do skompilowania i wykonania.
-- nadpisywanie słów kluczowych języka wyjściowego skutkuje przerwaniem przetwarzania.
-- przypisanie wartości do zmiennej, która nie została wcześniej zadeklarowana **nie** przerywa przetwarzania, ale użytkownik jest informowany, że kod wejściowy nie jest wykonywalny.
+- kod wejściowy zgodny ze standardem języka C++11
+- kod wynikowy zgodny ze standardem języka Python 3.0
+- Dopuszczalne(ale komunikowane użytkownikowi jako ostrzeżenia) są błędy w kodzie wejściowym, które mimo tego że nie pozwalają na skompilowanie programu wejściowego to są dopuszczalne w kodzie wynikowym:
+  - nadpisywanie słów kluczowych języka wejściowego.
+  - przypisanie wartości do zmiennej, która nie została wcześniej zadeklarowana - ponieważ w języki Python przypisanie wartości do zmiennej nie różni się od deklaracji.
+- nadpisywanie słów kluczowych języka wyjściowego skutkuje przerwaniem przetwarzania, ponieważ celem tłumaczenia jest wygenerowanie programu w pełni wykonywalnego
 
 #### Gramatyka
 
 ```
+program				= [<preprocesor_macro>] <instruction_block> <end_of_file>
+
+### #include<iostream>....
+preprocesor_macro	= "#" {any_char_without_nl}  <end_of_line>
+
 ### komentarze
 comment 			= <single_line_comment> | <multi_line_comment>
 multi_line_comment 	= "/*" <string_char> "*/"
 single_line_comment = "//" <string_char> <end_of_line>
-
 
 ### instrukcje złożone
 instruction_block	= {<simple_instruction> | <complex_instruction>}
@@ -78,18 +87,19 @@ literal 			= <bool_literal> | <string_literal> | <integer_literal>
 string_literal 		= <quote> char_string <quote>
 bool_literal 		= "true" | "false"
 integer_literal 	= <non_zero_digit> {digit}
-char_string 		= (<special_char>| <char> | <end_of_ins>) {char_string}
+char_string 		= <any_char_without_eol> | <enf_of_line>
 type 				= "bool" | "int" | "std::string"
 identifier			= {char}
 
 ###operatory
 aritmetic_opeator 	= "+" | "-" | "*" | "/"
-boolean_operator 	= "&&" | "||"
 comparison_operator = "!=" | "==" | ">" | "<" | ">=" | "<="
 
 ###podstawowe
+end_of_file			= EOF
 end_of_line 		= "\n"
 end_of_ins 			= ";"
+any_char_without_eol= <char> | <special_char> | <quote> | <end_of_ins>
 char 				= <digit> | <alphabet_char>
 alphabet_char 		= [a-z] | [A-Z]
 special_char 		= "!" | "@" | "#" | "%" | "^" | "&" ...
@@ -113,7 +123,7 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 #### Opis
 
-System jest podzielony na moduły, które łącznie tworzą potok przetwarzania. Na obrazku wyżej widać, że
+System jest podzielony na moduły, które łącznie tworzą potok przetwarzania. Na obrazku wyżej widać, że błędy w kodzie wejściowym mogą być sygnalizowane na wielu poziomach. Na szczególną uwagę zasługuję `Semantic Analyzer` - jest on,w przypadku poprawnego pliku wejściowego, "przezroczystą" warstwą systemu, która definiuje tablicę symboli, waliduje otrzymane struktury i przepuszcza je bez zmiany. Dzięki niemu, moduł generowania kodu nie zgłasza błędów, ponieważ dostaje na swoje wejście sprawdzone pod każdym względem drzewo rozbioru, które musi tylko przetłumaczyć na kod wynikowy. Dzięki takiej strukturze projektu, dopisywanie kolejnych funkcjonalności i modyfikowanie przyjętych rozwiązań jest bardzo wygodne, ponieważ programista nie musi skupiać się na całości, a jedynie na fragmencie, którego dotyczy dana zmiana. 
 
 #### Opis modułów
 
@@ -128,6 +138,7 @@ System jest podzielony na moduły, które łącznie tworzą potok przetwarzania.
 - Parser:
   - Składa dostarczone Tokeny w węzły drzewa składniowego.
   - Nie pozwala na nadpisywanie słów kluczowych języka wyjściowego.
+  - Nie pozwala na tworzenie "pustych struktur", np. w instrukcji `if` musi być przynajmniej jedna instrukcja nie będąca komentarzem.
 - Semantic analyzer:
   - Przezroczysty w przypadku poprawnych struktur
   - Przepuszcza poprawne węzły AST
@@ -138,7 +149,7 @@ System jest podzielony na moduły, które łącznie tworzą potok przetwarzania.
 
 #### Struktury danych
 
-- Token - typ tokenu, wartość, pozycja
+- Token - przechowuje: typ tokenu, wartość, pozycja w kodzie wejściowym
 - Symbole
   - zmiennych - nazwa oraz typ
   - funkcji - nazwa, typ wartości zwracanej, typy argumentów wejściowych
@@ -146,12 +157,20 @@ System jest podzielony na moduły, które łącznie tworzą potok przetwarzania.
 
 #### Obsługa błędów
 
-Rodzaje błędów:
+Każdy z "środkowych" modułów systemu ma swoją rodzinę błędów. 
 
-- LekserError
+Przykłady rodzajów błędów:
+
+- LekserError 
+  - błędy na poziomie tworzenia Tokenów.
 - ParserError
+  - błędy na poziomie tworzenia AST
+  - nadpisywanie słów kluczowych 
 - SemanticError
-- DevelopmentError
+  - wywoływanie funkcji z błędnymi typami argumentów
+  - ciało funkcji bez wyrażenia `return`
+  - redeklaracja zmiennej
+- DevelopmentError - specjalny rodzaj błędu, którego końcowy użytkownik nigdy nie powinien zobaczyć. Wystąpienie tego rodzaju błędu oznacza popełnienie błędu przez programistę translatora np. gdy w definiowaniu węzła `Literal` przekażemy inny rodzaj tokenu niż token z wartością literalną. Kilkukrotnie uratował mnie od żmudnego szukania błędu w kodzie.
 
 #### We/Wy
 
@@ -211,9 +230,10 @@ Dodatkowo zdefiniowany jest skrypt `compare_outputs.sh`, który służy do poró
        		std::cout<<i<<std::endl;
        		i = i+1;
        	}
+           return 0;
        }
        ```
-
+       
        po skompilowaniu i wykonaniu skutkuje wypisaniem na standardowe wejście cyfr od 0 do 10 włącznie, każda w nowej linijce. Kod po translacji do języka Python powinien zachowywać się tak samo. 
 
 
