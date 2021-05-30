@@ -3,7 +3,7 @@ from src.errors.error import *
 
 class SemanticError(GenericError):
     def __init__(self, message):
-        self.message = f"Semantic error! -- {message}"
+        self.message = f"Semantic: {message}"
         super().__init__(self.message)
 
 

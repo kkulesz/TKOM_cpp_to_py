@@ -10,6 +10,10 @@ def main():
     strFun(1)
     a = 10 / 2
     print(a)
+    if True:
+        a = 10
+    else:
+        b = 10
     #//nananana
     '''
 

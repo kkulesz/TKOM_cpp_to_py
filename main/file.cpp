@@ -14,6 +14,11 @@ int main(){
     strFun(1);
     int a = 10/2;
     std::cout<<a<<std::endl;
+    if(true){
+        //essa
+    }else{
+    int b = 10;
+    }
     ////nananana
     /*
     essa

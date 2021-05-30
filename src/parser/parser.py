@@ -226,13 +226,15 @@ class Parser:
         self.__demand_token(TokenType.CL_BRACKET)
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         if_instructions = self.__parse_scope()
+        self.__demand_at_least_one_instruction(if_instructions, 'if-statement', self.__get_position())
 
-        else_instruction = []
+        else_instructions = []
         if self.__check_token(TokenType.ELSE_KW):
             self.__demand_token(TokenType.OP_CURLY_BRACKET)
-            else_instruction = self.__parse_scope()
+            else_instructions = self.__parse_scope()
+            self.__demand_at_least_one_instruction(else_instructions, 'else-statement', self.__get_position())
 
-        return IfStatement(condition, if_instructions, else_instruction)
+        return IfStatement(condition, if_instructions, else_instructions)
 
     def __parse_while(self):
         if not self.__check_token(TokenType.WHILE_KW):
@@ -245,6 +247,7 @@ class Parser:
         self.__demand_token(TokenType.CL_BRACKET)
         self.__demand_token(TokenType.OP_CURLY_BRACKET)
         instructions = self.__parse_scope()
+        self.__demand_at_least_one_instruction(instructions, 'while-statement', self.__get_position())
         return WhileStatement(condition, instructions)
 
     def __parse_scope(self):
@@ -277,6 +280,14 @@ class Parser:
             return MultiLineComment(maybe_multi_line)
 
         return None
+
+    def __demand_at_least_one_instruction(self, instruction_list, stmt_name, position):
+        no_of_instruction = 0;
+        for ins in instruction_list:
+            if not isinstance(ins, SingleLineComment) and not isinstance(ins, MultiLineComment):
+                no_of_instruction +=1
+        if no_of_instruction <1:
+            ParserBodyWithCoContentError(position, stmt_name).fatal()
 
     #################################
     # UTILS

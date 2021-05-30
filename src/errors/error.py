@@ -4,9 +4,9 @@ class GenericError(Exception):
         super().__init__(self.message)
 
     def fatal(self):
-        print(self.message)
+        print("Error! " + self.message)
         exit(-1)
 
     def warning(self):
-        print(self.message)
+        print("Warning! " + self.message)
 

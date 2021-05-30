@@ -287,16 +287,6 @@ class ParserTest(unittest.TestCase):
         program = parser.parse_program()
         self.assert_instructions(program, list_of_expected)
 
-    def test_while_nobody(self):
-        input_str = """
-        while(true){
-        }
-        """
-        list_of_expected = [WhileStatement]
-        parser = init_parser(input_str)
-        program = parser.parse_program()
-        self.assert_instructions(program, list_of_expected)
-
     def test_while_body(self):
         input_str = """
         while(i<10){
@@ -307,34 +297,11 @@ class ParserTest(unittest.TestCase):
         program = parser.parse_program()
         self.assert_instructions(program, list_of_expected)
 
-    def test_if_nobody_noelse(self):
-        input_str = """
-        if(true){
-        }
-        """
-        list_of_expected = [IfStatement]
-        parser = init_parser(input_str)
-        program = parser.parse_program()
-        self.assert_instructions(program, list_of_expected)
-
     def test_if_body_noelse(self):
         input_str = """
         if(true){
             std::cout<<"dziala"<<std::endl;
         }"""
-        list_of_expected = [IfStatement]
-        parser = init_parser(input_str)
-        program = parser.parse_program()
-        self.assert_instructions(program, list_of_expected)
-
-    def test_if_nobody_else_nobody(self):
-        input_str = """
-        if(true){
-        
-        }else{
-        
-        }
-        """
         list_of_expected = [IfStatement]
         parser = init_parser(input_str)
         program = parser.parse_program()

@@ -35,7 +35,7 @@ class SemanticAnalyzer:
     def __check_var_declaration(self, var_decl, var_symbols, fun_symbols):
         var_name = var_decl.id.name
         if var_name in var_symbols:
-            SemanticVariableRedeclarationError(var_name).fatal()
+            SemanticVariableRedeclarationError(var_name).warning()
         self.__check_r_value(var_decl.value, var_symbols, fun_symbols, var_decl.type)
 
         new_var_symbol = VariableSymbol(var_decl.type, var_name)

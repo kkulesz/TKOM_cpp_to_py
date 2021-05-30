@@ -4,7 +4,7 @@ from src.errors.error import *
 class ParserError(GenericError):
     def __init__(self, position, message):
         line, col = position
-        self.message = f"Parser error! line:{line} column:{col} -- {message}"
+        self.message = f"Parser: line:{line} column:{col} -- {message}"
         super().__init__(self.message)
 
 
@@ -23,6 +23,12 @@ class ParserExpectedLiteralOrIdentifierError(ParserError):
 class ParserNoConditionError(ParserError):
     def __init__(self, position, stmt_name):
         self.message = f"condition is required in '{stmt_name}'"
+        super().__init__(position, self.message)
+
+
+class ParserBodyWithCoContentError(ParserError):
+    def __init__(self, position, stmt_name):
+        self.message = f"at least one instruction is required in '{stmt_name}'"
         super().__init__(position, self.message)
 
 

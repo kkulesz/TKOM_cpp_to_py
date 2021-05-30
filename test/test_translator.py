@@ -8,7 +8,7 @@ str_with_includes = """#include <iostream>
 """
 
 
-class ParserTest(unittest.TestCase):
+class TranslatorTest(unittest.TestCase):
     def assert_outputs(self, input_cpp_str):
         cpp_file_name = 'file.cpp'
         py_file_name = 'file.py'
