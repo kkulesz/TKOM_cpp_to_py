@@ -40,5 +40,5 @@ class LexerOverwrittenPythonKeywordError(LexerError):
 
 class LexerOverwrittenCppKeywordError(LexerError):
     def __init__(self, position, keyword):
-        self.message = f"overwritten C++ keyword-{keyword}, input code cannot be executed"
+        self.message = f"overwritten C++ keyword: {keyword} - input cpp file is not able to compile"
         super().__init__(position, self.message)

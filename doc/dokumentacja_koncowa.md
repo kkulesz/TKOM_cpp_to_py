@@ -16,6 +16,7 @@
 - zmienne lokalne
 - operacje arytmetyczne
 - wypisanie na ekran
+  - z oraz bez znaku nowej linii
 - wywołania funkcji
 - instrukcje złożone:
   - if-else
@@ -27,10 +28,12 @@
 #### Założenia
 
 - w kodzie dopuszczone są tylko znaki alfanumeryczne - w stringach dowolne
-- wyrażenia zaczynające się znakiem `#` np. `#include<iostream>` są przezroczyste, lekser nie przekazuje ich do dalszej analizy
+- wyrażenia zaczynające się znakiem `#` na przykład  `#include<iostream>` są przezroczyste, lekser nie przekazuje ich do dalszej analizy
 - jeden plik na wejściu
 - jeden plik na wyjściu
-- TODO: `brak możliwości nadpisania słów kluczowych zarówno jezyka wejściowego jak i wyjściowego`
+- nadpisywanie słów kluczowych języka wejściowego **nie** przerywa przetwarzania, ale użytkownik jest informowany, że kod wejściowy nie jest możliwy do skompilowania i wykonania.
+- nadpisywanie słów kluczowych języka wyjściowego skutkuje przerwaniem przetwarzania.
+- przypisanie wartości do zmiennej, która nie została wcześniej zadeklarowana **nie** przerywa przetwarzania, ale użytkownik jest informowany, że kod wejściowy nie jest wykonywalny.
 
 #### Gramatyka
 
@@ -41,10 +44,10 @@ multi_line_comment 	= "/*" <string_char> "*/"
 single_line_comment = "//" <string_char> <end_of_line>
 
 ### deklaracja funkcji
-function_body		= "{" <instruction_block> ["return" <right_value> ";"] "}"
-function_declaration= <type> <identifier> "(" [<type><identifier>[{","<type> <identifier}]] ")""<function_body>
 instruction_block	= {<simple_instruction> | <complex_instruction>}
 scope				= "{" <instruction_block> "}"
+function_body		= "{" <instruction_block> ["return" <right_value> ";"] "}"
+function_declaration= <type> <identifier> "(" [<type><identifier>[{","<type> <identifier}]] ")""<function_body>
 
 
 ### instrukcje złożone
@@ -55,10 +58,11 @@ if_statement		= "if" "(" <condition> ")" <scope> ["else"  <scope>]
 ### instrukcje proste
 variable_declaration= <type> <identifier> [ "=" <right_value>]
 variable_assignment = <identifier> "=" <right_value>
-print_statement		= "std::cout" "<<" <right_value> "<<" "std::endl"
+print_no_new_line	= <print_with_new_line> "<<" "std::endl"
+print_with_new_line	= "std::cout" "<<" <right_value>
 function_invocation = <identifier> "(" [<right_value> {"," <right_value>}]
 
-simple_instruction 	= (<print_statement> | <variable_assignment> | <variable_declaration> | <function_invocation> ) <end_of_ins>
+simple_instruction 	= (<print_no_new_line> | <print_with_new_line> | <variable_assignment> | <variable_declaration> | <function_invocation> ) <end_of_ins>
 
 
 ### operacje arytmetyczne i warunki
@@ -150,7 +154,21 @@ Rodzaje błędów:
 
 #### We/Wy
 
-TODO: Jeden plik na wejściu, wywołanie programu....
+Przykład wykonania programu: `./translate_file file.cpp`
+
+Skutkiem wykonania jest plik o ten samej nazwie, ale rozszerzeniu `.py`, dla przykładu powyżej: `file.py`
+
+
+
+Dodatkowo zdefiniowany jest skrypt `compare_outputs.sh`, który służy do porównania wyników wykonania kodu napisane w C++ oraz przetłumaczonego do Pythona. Jego schemat działania:
+
+1. skompiluj kod .cpp
+2. wykonaj skompilowany kod oraz zapisz jego wynik to pliku `cpp_output.txt`
+3. wykonaj przetłumaczony plik .py oraz zapisz jego wynik do pliku `py_output.txt`
+4. porównaj pliki, możliwe odpowiedzi:
+   - `OK - files are the same`
+   - `ERROR - files are NOT the same`
+5. usuń pliki: wykonywalny oraz wyniki programów
 
 #### Testy
 

@@ -13,9 +13,6 @@ class VariableSymbol(Symbol):
     def get_type(self):
         return self.type
 
-    def get_name(self):
-        return self.id.id
-
     def __repr__(self):
         return f"VarSym:{self.type}-{self.id}"
 

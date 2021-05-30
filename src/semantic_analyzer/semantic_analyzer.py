@@ -3,7 +3,6 @@ from src.parser.ast.semi_complex import *
 from src.parser.ast.complex import *
 from src.semantic_analyzer.symbol import *
 
-
 # helper
 INT_TYPE = Type(Token(TokenType.INT_KW))
 
@@ -45,11 +44,13 @@ class SemanticAnalyzer:
     def __check_var_assignment(self, var_assignment, var_symbols, fun_symbols):
         var_name = var_assignment.id.name
         if var_name not in var_symbols:
-            SemanticUnknownSymbolError(var_name).fatal()
-            # TODO: moze warning, bo w pythonie przypsianie nie rozni sie od deklaracji
-
-        var_type = var_symbols[var_name].get_type()
-        self.__check_r_value(var_assignment.value, var_symbols, fun_symbols, var_type)
+            # if variable is not declared earlier then we warn user and try to guess what type is given value
+            SemanticAssignmentWithoutDeclarationError(var_name).warning()  # TODO: zastanwoic się nad tym
+            putative_type = self.__get_type_of_r_value(var_assignment.value, var_symbols)
+            var_symbols[var_name] = VariableSymbol(putative_type, var_name)
+        else:
+            var_type = var_symbols[var_name].get_type()
+            self.__check_r_value(var_assignment.value, var_symbols, fun_symbols, var_type)
 
     def __check_if_stmt(self, if_stmt, var_symbols, fun_symbols, is_inside_fun, return_type):
         condition = if_stmt.condition
@@ -100,7 +101,7 @@ class SemanticAnalyzer:
         if isinstance(arg, Literal):
             return arg.type
         elif isinstance(arg, Id):
-            return var_symbols[arg.name].type
+            return var_symbols[arg.name].get_type()
         elif isinstance(arg, ArithmeticExpression):
             return INT_TYPE
         else:
@@ -135,6 +136,14 @@ class SemanticAnalyzer:
                 SemanticNotNumberInArithmeticExprError(expected_type).fatal()
         else:
             SemanticAnalyzerDevelopmentError(f"unknown right value! - {r_value}").fatal()
+
+    def __get_type_of_r_value(self, r_value, var_symbols):
+        if isinstance(r_value, Literal):
+            return r_value.type
+        elif isinstance(r_value, Id):
+            return var_symbols[r_value.name].get_type()
+        elif isinstance(r_value, ArithmeticExpression):
+            return INT_TYPE
 
     def __check_var_id(self, var_id, var_symbols, expected_type):
         var_name = var_id.name
