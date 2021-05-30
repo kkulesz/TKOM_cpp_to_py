@@ -38,6 +38,18 @@ class ParserUnknownInstructionError(ParserError):
         super().__init__(position, self.message)
 
 
+class ParserOverwrittenPythonKeywordError(ParserError):
+    def __init__(self, position, keyword):
+        self.message = f"overwritten Python keyword-{keyword}"
+        super().__init__(position, self.message)
+
+
+class ParserOverwrittenCppKeywordError(ParserError):
+    def __init__(self, position, keyword):
+        self.message = f"overwritten C++ keyword: {keyword} - input cpp file is not able to compile"
+        super().__init__(position, self.message)
+
+
 class ParserDevelopmentError(ParserError):  # for debug
     def __init__(self, position, message):
         self.message = f"PARSER DEVELOPMENT ERROR: {message}"

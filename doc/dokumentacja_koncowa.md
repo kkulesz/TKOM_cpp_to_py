@@ -85,7 +85,7 @@ type 				= "bool" | "int" | "std::string"
 identifier			= {char}
 
 ###operatory
-aritmetic_opeator 	= "+" | "-" | "*"
+aritmetic_opeator 	= "+" | "-" | "*" | "/"
 boolean_operator 	= "&&" | "||"
 comparison_operator = "!=" | "==" | ">" | "<" | ">=" | "<="
 

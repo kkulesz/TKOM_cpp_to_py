@@ -1,5 +1,4 @@
 from src.errors.lexer_errors import *
-from src.lexer.lexer_utils import *
 from src.lexer.token import *
 
 
@@ -54,12 +53,6 @@ class Lexer:
             if maybe_std_keyword:
                 self.__move_pointer()
                 return maybe_std_keyword
-
-            if candidate in LexerUtils.python_forbidden_keywords:
-                LexerOverwrittenPythonKeywordError(self.__get_position(), candidate).fatal()
-            if candidate in LexerUtils.cpp_forbidden_keywords:
-                LexerOverwrittenCppKeywordError(self.__get_position(), candidate).warning()
-
             return Token(TokenType.IDENTIFIER, candidate)
 
         return None

@@ -82,6 +82,8 @@ class Parser:
         if not self.__check_token(TokenType.ASSIGN):
             return None
 
+        self.__check_if_not_overwriting_keywords(id_token)
+
         value = self.__parse_r_value()
         self.__demand_token(TokenType.SEMICOLON)
         return VariableDeclaration(maybe_type_token, id_token, value)
@@ -105,10 +107,19 @@ class Parser:
         if not self.__check_token(TokenType.ASSIGN):
             return None
 
+        self.__check_if_not_overwriting_keywords(id_token)
+
         value = self.__parse_r_value()
         self.__demand_token(TokenType.SEMICOLON)
 
         return VariableAssignment(id_token, value)
+
+    def __check_if_not_overwriting_keywords(self, id_token):
+        var_name = id_token.value
+        if var_name in ParserUtils.python_forbidden_keywords:
+            ParserOverwrittenPythonKeywordError(self.__get_position(), var_name).fatal()
+        if var_name in ParserUtils.cpp_forbidden_keywords:
+            ParserOverwrittenCppKeywordError(self.__get_position(), var_name).warning()
 
     def __parse_r_value(self):  # literal, id or whole arithmetic_expression are possible
         return self.__parse_arithmetic_expression(has_brackets=False)
