@@ -12,11 +12,11 @@
   - int
   - std::string
   - bool
-- komentarze - jedno- i wielolinijkowe
+- komentarze jedno- i wielolinijkowe
 - zmienne lokalne
 - operacje arytmetyczne
 - wypisanie na ekran
-  - z oraz bez znaku nowej linii
+  - z oraz bez znaku nowej linii na końcu
 - wywołania funkcji
 - instrukcje złożone:
   - if-else
@@ -30,15 +30,35 @@
 #### Założenia
 
 - w kodzie dopuszczone są tylko znaki alfanumeryczne - w stringach dowolne
+
 - wyrażenia zaczynające się znakiem `#` na przykład  `#include<iostream>` są przezroczyste, lekser nie przekazuje ich do dalszej analizy
+
 - jeden plik na wejściu
+
 - jeden plik na wyjściu
+
 - kod wejściowy zgodny ze standardem języka C++11
+
 - kod wynikowy zgodny ze standardem języka Python 3.0
-- Dopuszczalne(ale komunikowane użytkownikowi jako ostrzeżenia) są błędy w kodzie wejściowym, które mimo tego że nie pozwalają na skompilowanie programu wejściowego to są dopuszczalne w kodzie wynikowym:
+
+- dopuszczalne(ale komunikowane użytkownikowi jako ostrzeżenia) są błędy w kodzie wejściowym, które mimo tego że nie pozwalają na skompilowanie programu wejściowego to są dopuszczalne w kodzie wynikowym:
   - nadpisywanie słów kluczowych języka wejściowego.
   - przypisanie wartości do zmiennej, która nie została wcześniej zadeklarowana - ponieważ w języki Python przypisanie wartości do zmiennej nie różni się od deklaracji.
+  
 - nadpisywanie słów kluczowych języka wyjściowego skutkuje przerwaniem przetwarzania, ponieważ celem tłumaczenia jest wygenerowanie programu w pełni wykonywalnego
+
+- po przetłumaczeniu całego kodu w pliku wynikowym zostaje dodana instrukcja:
+
+   ```
+   if __name__ == '__main__':
+   	main()
+   ```
+
+  w celu możliwości wykonania danego skryptu w taki sam sposób jak plik wejściowy
+
+   
+
+  ​	
 
 #### Gramatyka
 
@@ -123,9 +143,11 @@ non_zero_digit 		= "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 #### Opis
 
+Implementacja całego systemu została wykonana w języku Python3 w IDE PyCharm oraz jednego skryptu ułatwiającego sprawdzanie wyniku napisanego w Bashu.
+
 System jest podzielony na moduły, które łącznie tworzą potok przetwarzania. Na obrazku wyżej widać, że błędy w kodzie wejściowym mogą być sygnalizowane na wielu poziomach. Na szczególną uwagę zasługuję `Semantic Analyzer` - jest on,w przypadku poprawnego pliku wejściowego, "przezroczystą" warstwą systemu, która definiuje tablicę symboli, waliduje otrzymane struktury i przepuszcza je bez zmiany. Dzięki niemu, moduł generowania kodu nie zgłasza błędów, ponieważ dostaje na swoje wejście sprawdzone pod każdym względem drzewo rozbioru, które musi tylko przetłumaczyć na kod wynikowy. Dzięki takiej strukturze projektu, dopisywanie kolejnych funkcjonalności i modyfikowanie przyjętych rozwiązań jest bardzo wygodne, ponieważ programista nie musi skupiać się na całości, a jedynie na fragmencie, którego dotyczy dana zmiana. 
 
-#### Opis modułów
+#### Punktowy opis modułów
 
 - Code Provider:
   - Wrapper na strumień wejściowych znaków.
@@ -143,9 +165,11 @@ System jest podzielony na moduły, które łącznie tworzą potok przetwarzania.
   - Przezroczysty w przypadku poprawnych struktur
   - Przepuszcza poprawne węzły AST
   - Konstruuję tablicę symboli oraz ją analizuje.
+  - Nie pozwala na m.in. przypisanie do zmiennej złego typu wyrażenia.
 - Code Generator:
   - Tłumaczy otrzymane na wejściu drzewa AST na kod w języku Python. 
   - Uwzględnia odpowiednie wcięcia w zależności od poziomu zagnieżdżenia instrukcji.
+  - Nie produkuję błędów
 
 #### Struktury danych
 
@@ -154,6 +178,8 @@ System jest podzielony na moduły, które łącznie tworzą potok przetwarzania.
   - zmiennych - nazwa oraz typ
   - funkcji - nazwa, typ wartości zwracanej, typy argumentów wejściowych
 - AstNode - klasa bazowa węzła drzewa rozbioru, każdy element drzewa dziedziczy po niej
+  - VariableAssignment, FunctionDeclaration itd...
+- Błędy - opisane niżej.
 
 #### Obsługa błędów
 
@@ -172,7 +198,7 @@ Przykłady rodzajów błędów:
   - redeklaracja zmiennej
 - DevelopmentError - specjalny rodzaj błędu, którego końcowy użytkownik nigdy nie powinien zobaczyć. Wystąpienie tego rodzaju błędu oznacza popełnienie błędu przez programistę translatora np. gdy w definiowaniu węzła `Literal` przekażemy inny rodzaj tokenu niż token z wartością literalną. Kilkukrotnie uratował mnie od żmudnego szukania błędu w kodzie.
 
-#### We/Wy
+#### Wejście/wyjście
 
 Przykład wykonania programu: `./translate_file file.cpp`
 
@@ -201,7 +227,7 @@ Dodatkowo zdefiniowany jest skrypt `compare_outputs.sh`, który służy do poró
 - Parser
   - Proste testy jednostkowe sprawdzające czy lekser z parserem komunikują się w odpowiedni sposób. W powyższym przykładzie parser powinien zwrócić węzeł AST=`VariableDeclaration` z podwęzłami `type=int`, `id=a` oraz `literal=10`
 
-- Translator
+- Translator - testy całego systemu
 
   - Najbardziej złożone testy, ich przebieg jest następujący:
 
@@ -235,6 +261,57 @@ Dodatkowo zdefiniowany jest skrypt `compare_outputs.sh`, który służy do poró
        ```
        
        po skompilowaniu i wykonaniu skutkuje wypisaniem na standardowe wejście cyfr od 0 do 10 włącznie, każda w nowej linijce. Kod po translacji do języka Python powinien zachowywać się tak samo. 
+
+---
+
+### Przykład tłumaczenia
+
+Kod wejściowy .cpp:
+
+```
+#include<string>
+#include<iostream>
+
+int fun(int arg1, int arg2){
+    int i = 10;
+    while( i > 0 ){
+        std::cout<<i<<std::endl;
+        std::cout<<"\n";
+        i = i-1;
+    }
+
+    return 12;
+}
+
+int main(){
+    fun(1,2);
+    return 0 ;
+}
+```
+
+Kod wynikowy .py:
+
+```
+def fun(arg1, arg2):
+    i = 10
+    while i > 0:
+        print(i)
+        print("\n", end="")
+        i = i - 1
+    return 12
+
+def main():
+    fun(1, 2)
+    return 0
+
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+
 
 
 
