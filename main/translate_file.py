@@ -7,4 +7,4 @@ if __name__ == "__main__":
         exit(-1)
 
     Translator.translate(sys.argv[1])
-    print("\nSUKCES: udalo wygenerowac sie plik! ;)")
+    print("\nSUKCES: udalo wygenerowac sie plik!")

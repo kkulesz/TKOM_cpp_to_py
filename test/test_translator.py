@@ -150,6 +150,7 @@ bool fun2(int integer){
         if(i == 25){
             return bVar;
         }
+        std::cout<<i<<std::endl;
         i = i+1;
     }
     
@@ -162,3 +163,49 @@ int main(){
     return 0;
 }"""
         self.assert_outputs(input_cpp_str)
+
+
+def test_even_more_complex(self):
+    input_cpp_str = str_with_includes + """
+std::string fun(std::string str){
+    std::cout<<str<<std::endl;
+    return "str";
+}
+
+bool fun2(int integer){
+    bool bVar = true;
+    int i = 21;
+    while(bVar){
+        int j = 23
+        while(i < 30){
+            j = j+1;
+            std::cout<<j<<std::endl;
+            if(true){
+                std::cout<<j;
+                if(true){
+                    std::cout<<j;
+                    if(true){
+                        std::cout<<j;
+                        if(true){
+                            std::cout<<j;
+                        }
+                    }
+                }
+            }
+        }
+        if(i == 25){
+            return bVar;
+        }
+        std::cout<<i<<std::endl;
+        i = i+1;
+    }
+
+    return false;
+}
+
+int main(){
+    fun("test_string_fun");
+    fun2(1);
+    return 0;
+}"""
+    self.assert_outputs(input_cpp_str)
