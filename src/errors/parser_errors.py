@@ -56,6 +56,12 @@ class ParserOverwrittenCppKeywordError(ParserError):
         super().__init__(position, self.message)
 
 
+class ParserVariableNotInitializedError(ParserError):
+    def __init__(self, position, var_id):
+        self.message = f"uninitialized variable: {var_id} - inserting default value"
+        super().__init__(position, self.message)
+
+
 class ParserDevelopmentError(ParserError):  # for debug
     def __init__(self, position, message):
         self.message = f"PARSER DEVELOPMENT ERROR: {message}"

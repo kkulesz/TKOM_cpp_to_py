@@ -3,7 +3,7 @@ from src.errors.error import *
 
 class SemanticError(GenericError):
     def __init__(self, message):
-        self.message = f"Semantic: {message}"
+        self.message = f"SemanticAnalyzer: {message}"
         super().__init__(self.message)
 
 
@@ -63,7 +63,7 @@ class SemanticTypesOfArgsInFunInvocationError(SemanticError):
 
 class SemanticNoReturnExpressionInFunBodyError(SemanticError):
     def __init__(self, fun_name, ):
-        self.message = f"no return statement in function - {fun_name}!"
+        self.message = f"no return statement in function - {fun_name}"
         super().__init__(self.message)
 
 

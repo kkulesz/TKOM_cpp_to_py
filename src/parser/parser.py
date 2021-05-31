@@ -49,6 +49,7 @@ class Parser:
             return maybe_variable_declaration
 
         self.__demand_token(TokenType.SEMICOLON)
+        ParserVariableNotInitializedError(self.__get_position(), id_token.value).warning()
         return VariableDeclaration(maybe_type_token, id_token)
 
     def __parse_function_declaration(self, type_token, id_token):
@@ -85,6 +86,7 @@ class Parser:
         self.__check_if_not_overwriting_keywords(id_token)
 
         value = self.__parse_r_value()
+
         self.__demand_token(TokenType.SEMICOLON)
         return VariableDeclaration(maybe_type_token, id_token, value)
 
@@ -290,11 +292,11 @@ class Parser:
         return None
 
     def __demand_at_least_one_instruction(self, instruction_list, stmt_name, position):
-        no_of_instruction = 0;
+        no_of_instruction = 0
         for ins in instruction_list:
             if not isinstance(ins, SingleLineComment) and not isinstance(ins, MultiLineComment):
-                no_of_instruction +=1
-        if no_of_instruction <1:
+                no_of_instruction += 1
+        if no_of_instruction < 1:
             ParserBodyWithCoContentError(position, stmt_name).fatal()
 
     #################################
