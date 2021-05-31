@@ -46,10 +46,18 @@ class TranslatorTest(unittest.TestCase):
 
         self.assertTrue(cpp_output == py_output)
 
-    def test_print(self):
+    def test_print_new_line(self):
         input_cpp_str = str_with_includes + """
 int main(){
     std::cout<<"test_print"<<std::endl;
+    return 0;
+}"""
+        self.assert_outputs(input_cpp_str)
+
+    def test_print_no_new_line(self):
+        input_cpp_str = str_with_includes + """
+int main(){
+    std::cout<<"test_print";
     return 0;
 }"""
         self.assert_outputs(input_cpp_str)
@@ -83,6 +91,20 @@ int main(){
     while(i<10){
         std::cout<<i<<std::endl;
         i = i+1;
+    }
+    return 0;
+}"""
+        self.assert_outputs(input_cpp_str)
+
+    def test_var_assignments(self):
+        input_cpp_str = str_with_includes + """
+int main(){
+    int number = 2*(2+2);
+    std::string str = "nananan";
+    bool trueLiteral = true;
+    if(trueLiteral){
+        std::cout<<number;
+        std::cout<<str<<std::endl;
     }
     return 0;
 }"""
